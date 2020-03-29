@@ -1,0 +1,6 @@
+name: AttackOnTitan
+author: AOT-MC
+version: 1.0
+description: Attack On Titan plugin
+main: com.aotmc.attackontitan.AttackOnTitan
+api-version: 1.15
