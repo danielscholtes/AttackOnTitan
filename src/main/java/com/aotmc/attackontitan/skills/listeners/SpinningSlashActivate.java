@@ -19,11 +19,11 @@ import net.minecraft.server.v1_15_R1.DataWatcherRegistry;
 import net.minecraft.server.v1_15_R1.EntityPlayer;
 
 
-public class SpinningSlashInteract implements Listener {
+public class SpinningSlashActivate implements Listener {
 
 	private AttackOnTitan plugin;
 	
-	public SpinningSlashInteract(AttackOnTitan plugin) {
+	public SpinningSlashActivate(AttackOnTitan plugin) {
 		this.plugin = plugin;
 	}
 	
