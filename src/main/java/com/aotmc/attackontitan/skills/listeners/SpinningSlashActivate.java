@@ -27,17 +27,29 @@ public class SpinningSlashActivate implements Listener {
 		this.plugin = plugin;
 	}
 	
+	/**
+	 * Handles player right clicking for spinning slash
+	 */
 	@EventHandler
 	public void onClick(PlayerInteractEvent event) {
 		
+		/*
+		 * Checks if player is right-cliking
+		 */
 		if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
 			return;
 		}
 		
+		/*
+		 * Checks if player is using their main hand
+		 */
 		if (event.getHand() != EquipmentSlot.HAND) {
 			return;
 		}
 		
+		/*
+		 * Checks if item is a diamond sword
+		 */
 		if (event.getItem() == null || event.getItem().getType() != Material.DIAMOND_SWORD) {
 			return;
 		}
@@ -45,6 +57,9 @@ public class SpinningSlashActivate implements Listener {
 		Player player = event.getPlayer();
 		player.sendMessage("spinning slash");
 		
+		/*
+		 * Makes player spin and applies speed for an awesome look
+		 */
 		EntityPlayer entityPlayer = (EntityPlayer) ((CraftPlayer) player).getHandle();
 		DataWatcher dataWatcher = entityPlayer.getDataWatcher();
 		dataWatcher.set(DataWatcherRegistry.a.a(7), (byte) 0x04);
