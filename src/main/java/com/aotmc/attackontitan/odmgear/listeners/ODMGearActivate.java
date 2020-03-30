@@ -45,35 +45,28 @@ public class ODMGearActivate implements Listener {
 		 * lists and maps
 		 */
 		if (data.getAttachedHook() != null && data.getAttachedHook().contains(player.getUniqueId())) {
-
-			if (data.getPlayerHooks() != null && data.getPlayerHooks().containsKey(player.getUniqueId())) {
-				for (Hook playerHook : data.getPlayerHooks().get(player.getUniqueId())) {
-					playerHook.remove();
-					data.getHooks().remove(playerHook.getHookID());
-				}
-				data.getPlayerHooks().remove(player.getUniqueId());
-			}
-			if (data.getPlayerTasks() != null && data.getPlayerTasks().containsKey(player.getUniqueId())) {
-				Bukkit.getScheduler().cancelTask(data.getPlayerTasks().get(player.getUniqueId()));
-				data.getPlayerTasks().remove(player.getUniqueId());
-			}
 			data.getAttachedHook().remove(player.getUniqueId());
 		}
 
-		/*
-		 * If player is in the process of shooting hooks, cancel that and remove him from all neccessary
-		 * lists and maps
-		 */
 		if (data.getPlayerHooks() != null && data.getPlayerHooks().containsKey(player.getUniqueId())) {
 			for (Hook playerHook : data.getPlayerHooks().get(player.getUniqueId())) {
 				playerHook.remove();
 				data.getHooks().remove(playerHook.getHookID());
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+					@Override
+					public void run() {
+						playerHook.remove();
+					}
+				}, 3L);
 			}
 			data.getPlayerHooks().remove(player.getUniqueId());
-			if (data.getPlayerTasks() != null && data.getPlayerTasks().containsKey(player.getUniqueId())) {
-				Bukkit.getScheduler().cancelTask(data.getPlayerTasks().get(player.getUniqueId()));
-				data.getPlayerTasks().remove(player.getUniqueId());
-			}
+		}
+		if (data.getPlayerTasks() != null && data.getPlayerTasks().containsKey(player.getUniqueId())) {
+			Bukkit.getScheduler().cancelTask(data.getPlayerTasks().get(player.getUniqueId()));
+			data.getPlayerTasks().remove(player.getUniqueId());
+		}
+		if (data.getDistanceHooks() != null && data.getDistanceHooks().containsKey(player.getUniqueId())) {
+			data.getDistanceHooks().remove(player.getUniqueId());
 		}
 		
 		/*

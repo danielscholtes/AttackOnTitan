@@ -91,30 +91,30 @@ public class ODMLaunch implements Listener {
 					Hook hook = data.getHooks().get(UUID.fromString(mdv2.asString()));
 					
 					/*
-					 * Removes hook from all neccessary maps and lists, 3 ticks later to prevent NPEs
+					 * Removes hook from all neccessary maps and lists
 					 */
-					Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {	
-						@Override
-						public void run() {
-							if (data.getPlayerHooks() != null && data.getPlayerHooks().containsKey(hook.getPlayer())) {
-								for (Hook playerHook : data.getPlayerHooks().get(hook.getPlayer())) {
+					if (data.getPlayerHooks() != null && data.getPlayerHooks().containsKey(hook.getPlayer())) {
+						for (Hook playerHook : data.getPlayerHooks().get(hook.getPlayer())) {
+							data.getHooks().remove(playerHook.getHookID());
+							Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+								@Override
+								public void run() {
 									playerHook.remove();
-									data.getHooks().remove(playerHook.getHookID());
 								}
-								data.getPlayerHooks().remove(hook.getPlayer());
-							}
-							if (data.getPlayerTasks() != null && data.getPlayerTasks().containsKey(hook.getPlayer())) {
-								Bukkit.getScheduler().cancelTask(data.getPlayerTasks().get(hook.getPlayer()));
-								data.getPlayerTasks().remove(hook.getPlayer());
-							}
-							if (data.getAttachedHook() != null && data.getAttachedHook().contains(hook.getPlayer())) {
-								data.getAttachedHook().remove(hook.getPlayer());
-							}
-							if (data.getDistanceHooks() != null && data.getDistanceHooks().containsKey(hook.getPlayer())) {
-								data.getDistanceHooks().remove(hook.getPlayer());
-							}
+							}, 3L);
 						}
-					}, 3L);
+						data.getPlayerHooks().remove(hook.getPlayer());
+					}
+					if (data.getPlayerTasks() != null && data.getPlayerTasks().containsKey(hook.getPlayer())) {
+						Bukkit.getScheduler().cancelTask(data.getPlayerTasks().get(hook.getPlayer()));
+						data.getPlayerTasks().remove(hook.getPlayer());
+					}
+					if (data.getAttachedHook() != null && data.getAttachedHook().contains(hook.getPlayer())) {
+						data.getAttachedHook().remove(hook.getPlayer());
+					}
+					if (data.getDistanceHooks() != null && data.getDistanceHooks().containsKey(hook.getPlayer())) {
+						data.getDistanceHooks().remove(hook.getPlayer());
+					}
 					return;
 				}
 				return;
