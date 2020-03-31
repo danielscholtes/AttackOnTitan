@@ -50,14 +50,14 @@ public class InventoryClickListener implements Listener
         {
             for (int i : slots)
             {
-                UpgradeGuiCommand.inventory.setItem(i, new ItemBuilder(Material.RED_STAINED_GLASS_PANE).withName("").withLore(" &cThis item can not ", " &cbe upgraded anymore!", "").getItem());
+                UpgradeGuiCommand.inventory.setItem(i, new ItemBuilder(Material.RED_STAINED_GLASS_PANE).withName(" ").withLore(" &cThis blade has been ", " &cupgraded to the max!", "").getItem());
             }
         }
         else
         {
             for (int i : slots)
             {
-                UpgradeGuiCommand.inventory.setItem(i, new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).withName("").withLore(" &aClick to upgrade", " &athis item!", "").getItem());
+                UpgradeGuiCommand.inventory.setItem(i, new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).withName(" ").withLore(" &aClick to upgrade ", "  &athis blade!", "").getItem());
             }
         }
     }

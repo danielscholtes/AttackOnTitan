@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class GiveCommand
 {
 
-    @Command(permission = "aot.command.give", aliases = {"give"}, usage = "give <target> (item)", requiredArgs = 2)
+    @Command(permission = "aot.command.give", aliases = {"give"}, usage = "<target> (item)", requiredArgs = 2)
     public static void execute(final Player sender, final AttackOnTitan plugin, final String[] args)
     {
         final Player target = Bukkit.getPlayerExact(args[0]);

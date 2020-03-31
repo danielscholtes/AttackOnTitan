@@ -4,7 +4,6 @@ import com.aotmc.attackontitan.AttackOnTitan;
 import com.codeitforyou.lib.api.command.CommandManager;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 public class CommandsManager
 {
@@ -14,7 +13,7 @@ public class CommandsManager
     public CommandsManager(final AttackOnTitan plugin)
     {
         this.manager = new com.codeitforyou.lib.api.command.CommandManager(Arrays.asList(
-                GiveCommand.class, UpgradeGuiCommand.class
+                GiveCommand.class, UpgradeGuiCommand.class, SpawnCommand.class
         ), "aot", plugin);
     }
 
