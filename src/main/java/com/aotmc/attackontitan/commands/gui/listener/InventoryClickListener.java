@@ -23,11 +23,6 @@ public class InventoryClickListener implements Listener
         final String nbtValue = ItemUtil.getNBTString(item, "blade");
         final String nbtLevel = ItemUtil.getNBTString(item, "level");
 
-        if (uuid == null)
-        {
-            return;
-        }
-
         if (item == null)
         {
             return;
