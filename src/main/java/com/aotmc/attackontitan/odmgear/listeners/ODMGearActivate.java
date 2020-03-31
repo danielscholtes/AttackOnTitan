@@ -72,7 +72,6 @@ public class ODMGearActivate implements Listener {
 		/*
 		 * Activates the ODM Gear
 		 */
-		player.sendMessage("Using ODM");
 		event.setCancelled(true);
 		activateGear(player);
 		
