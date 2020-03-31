@@ -1,5 +1,8 @@
 package com.aotmc.attackontitan.blades;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum Blades {
 	
 	FIRST_GEN_BLADE(1, 10, 10),
@@ -62,5 +65,45 @@ public enum Blades {
 			default:
 				return "Invalid Blade";
 		}
+	}
+
+	public List<String> getDefaultLore(final String blade, final double damage, final double durability)
+	{
+		List<String> lore = new ArrayList<>();
+
+		switch (blade)
+		{
+			case "FIRST_GEN_BLADE":
+			case "FIRST_GEN_BLADE_MK_II":
+			case "FIRST_GEN_BLADE_MK_III":
+				lore.add("");
+				lore.add(" &8• &7Damage&8: &f" + damage);
+				lore.add(" &8• &7Durability&8: &f" + durability);
+				lore.add(" &8• &7Rarity&8: &fCommon");
+				break;
+			case "SECOND_GEN_BLADE":
+			case "SECOND_GEN_BLADE_MK_II":
+			case "SECOND_GEN_BLADE_MK_III":
+				lore.add("");
+				lore.add(" &8• &7Damage&8: &f" + damage);
+				lore.add(" &8• &7Durability&8: &f" + durability);
+				lore.add(" &8• &7Rarity&8: &fUn-Common");
+				break;
+			case "THIRD_GEN_BLADE":
+			case "THIRD_GEN_BLADE_MK_II":
+			case "THIRD_GEN_BLADE_MK_III":
+				lore.add("");
+				lore.add(" &8• &7Damage&8: &f" + damage);
+				lore.add(" &8• &7Durability&8: &f" + durability);
+				lore.add(" &8• &7Rarity&8: &fRare");
+				break;
+			case "PRESTIGED_BLADE":
+				lore.add("");
+				lore.add(" &8• &7Damage&8: &f" + damage);
+				lore.add(" &8• &7Durability&8: &f" + durability);
+				lore.add(" &8• &7Rarity&8: &fEpic");
+		}
+
+		return lore;
 	}
 }

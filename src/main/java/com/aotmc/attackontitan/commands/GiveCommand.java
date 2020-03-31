@@ -9,9 +9,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GiveCommand
 {
 
@@ -35,18 +32,12 @@ public class GiveCommand
         }
 
         final Blades blades = Blades.valueOf(blade);
-        final List<String> lore = new ArrayList<>();
-
-        lore.add("");
-        lore.add(" &8• &7Damage&8: &f" + blades.getDamage());
-        lore.add(" &8• &7Durability&8: &f" + blades.getDurability());
-        lore.add("");
 
         final ItemBuilder builder = new ItemBuilder(Material.WOODEN_SWORD)
                 .withName(blades.getFormattedName(blade))
                 .withNBTString("durability", String.valueOf(blades.getDurability()))
                 .withNBTString("damage", String.valueOf(blades.getDamage()))
-                .withLore(lore);
+                .withLore(blades.getDefaultLore(blade, blades.getDamage(), blades.getDurability()));
 
         final ItemMeta meta = builder.getItem().getItemMeta();
 
