@@ -1,4 +1,4 @@
-package com.aotmc.attackontitan.swords;
+package com.aotmc.attackontitan.blades;
 
 import org.bukkit.Material;
 

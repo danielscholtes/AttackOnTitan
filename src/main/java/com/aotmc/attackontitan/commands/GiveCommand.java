@@ -1,7 +1,7 @@
 package com.aotmc.attackontitan.commands;
 
 import com.aotmc.attackontitan.AttackOnTitan;
-import com.aotmc.attackontitan.swords.FirstGenBlade;
+import com.aotmc.attackontitan.blades.FirstGenBlade;
 import com.codeitforyou.lib.api.command.Command;
 import com.codeitforyou.lib.api.item.ItemBuilder;
 import org.bukkit.Bukkit;
