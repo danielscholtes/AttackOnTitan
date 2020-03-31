@@ -6,28 +6,30 @@ import java.util.List;
 public enum Blades
 {
 
-    FIRST_GEN_BLADE(1, 10, 10, "&7⭐"),
-    FIRST_GEN_BLADE_MK_II(1, 10, 10, "&7⭐⭐"),
-    FIRST_GEN_BLADE_MK_III(1, 10, 10, "&7⭐⭐⭐"),
-    SECOND_GEN_BLADE(1, 10, 10, "&7⭐⭐⭐⭐"),
-    SECOND_GEN_BLADE_MK_II(1, 10, 10, "&7⭐⭐⭐⭐⭐"),
-    SECOND_GEN_BLADE_MK_III(1, 10, 10, "&6⭐&7⭐⭐⭐⭐"),
-    THIRD_GEN_BLADE(1, 10, 10, "&6⭐⭐&7⭐⭐⭐"),
-    THIRD_GEN_BLADE_MK_II(1, 10, 10, "&6⭐⭐⭐&7⭐⭐"),
-    THIRD_GEN_BLADE_MK_III(1, 10, 10, "&6⭐⭐⭐⭐&7⭐"),
-    PERFECTED_BLADE(1, 10, 10, "&6⭐⭐⭐⭐⭐");
+    FIRST_GEN_BLADE(1, 10, 10, "&7⭐", 1),
+    FIRST_GEN_BLADE_MK_II(1, 10, 10, "&7⭐⭐", 2),
+    FIRST_GEN_BLADE_MK_III(1, 10, 10, "&7⭐⭐⭐", 3),
+    SECOND_GEN_BLADE(1, 10, 10, "&7⭐⭐⭐⭐", 4),
+    SECOND_GEN_BLADE_MK_II(1, 10, 10, "&7⭐⭐⭐⭐⭐", 5),
+    SECOND_GEN_BLADE_MK_III(1, 10, 10, "&6⭐&7⭐⭐⭐⭐", 6),
+    THIRD_GEN_BLADE(1, 10, 10, "&6⭐⭐&7⭐⭐⭐", 7),
+    THIRD_GEN_BLADE_MK_II(1, 10, 10, "&6⭐⭐⭐&7⭐⭐", 8),
+    THIRD_GEN_BLADE_MK_III(1, 10, 10, "&6⭐⭐⭐⭐&7⭐", 9),
+    PERFECTED_BLADE(1, 10, 10, "&6⭐⭐⭐⭐⭐", 10);
 
     public final int    modelData;
     public final double damage;
     public final double durability;
     public final String rating;
+    public final int    level;
 
-    Blades(final int modelData, final double damage, final double durability, final String rating)
+    Blades(final int modelData, final double damage, final double durability, final String rating, final int level)
     {
         this.modelData = modelData;
         this.damage = damage;
         this.durability = durability;
         this.rating = rating;
+        this.level = level;
     }
 
     public int getModelData()
@@ -43,6 +45,11 @@ public enum Blades
     public double getDurability()
     {
         return durability;
+    }
+
+    public int getLevel()
+    {
+        return level;
     }
 
     public String getFormattedName(final String blade)
@@ -74,7 +81,7 @@ public enum Blades
         }
     }
 
-    public List<String> getDefaultLore(final String blade)
+    public List<String> getDefaultLore()
     {
         List<String> lore = new ArrayList<>();
 

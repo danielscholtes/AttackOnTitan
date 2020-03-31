@@ -1,6 +1,7 @@
 package com.aotmc.attackontitan;
 
 import com.aotmc.attackontitan.commands.CommandsManager;
+import com.aotmc.attackontitan.commands.gui.listener.InventoryClickListener;
 import com.aotmc.attackontitan.util.TabComplete;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -37,6 +38,7 @@ public class AttackOnTitan extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ODMGearActivate(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new ODMLaunch(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new ODMLogout(odmData), this);
+		getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
 
 		manager.registerCommand();
 		getCommand("aot").setTabCompleter(new TabComplete());

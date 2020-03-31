@@ -20,8 +20,7 @@ public class TabComplete implements TabCompleter
     @Override
     public List<String> onTabComplete(CommandSender s, Command cmd, String alias, String[] args)
     {
-
-        if (args.length > 3)
+        if (args.length > 4)
         {
             return Collections.emptyList();
         }
@@ -39,26 +38,29 @@ public class TabComplete implements TabCompleter
 
             return commands;
         }
-        else if (args.length == 2)
+        if (args[0].equals("give"))
         {
-            final List<String> players = new ArrayList<>();
-            for (Player player : Bukkit.getServer().getOnlinePlayers())
+            if (args.length == 2)
             {
-               players.add(player.getName());
+                final List<String> players = new ArrayList<>();
+                for (Player player : Bukkit.getServer().getOnlinePlayers())
+                {
+                    players.add(player.getName());
+                }
+
+                return players;
             }
-
-            return players;
-        }
-        else if (args.length == 3)
-        {
-            final List<String> blades = new ArrayList<>();
-
-            for (Blades blade : Blades.values())
+            else if (args.length == 3)
             {
-                blades.add(blade.toString());
-            }
+                final List<String> blades = new ArrayList<>();
 
-            return blades;
+                for (Blades blade : Blades.values())
+                {
+                    blades.add(blade.toString());
+                }
+
+                return blades;
+            }
         }
         return Collections.emptyList();
     }
