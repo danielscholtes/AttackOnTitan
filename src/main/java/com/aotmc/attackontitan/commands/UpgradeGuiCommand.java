@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.InventoryType;
 public class UpgradeGuiCommand
 {
 
-    public static String uuid;
+    public static String    uuid;
     public static Inventory inventory;
 
     @Command(permission = "aot.command.upgrade", aliases = {"upgrade"}, usage = "upgrade")
