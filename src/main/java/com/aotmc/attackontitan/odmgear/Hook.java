@@ -138,26 +138,29 @@ public class Hook {
 	 */
 	public void remove() {
 		/*
-		 * Stops following task and removes leash packet
+		 * Stops following task and removes leash packet and removes entities
 		 */
 		Bukkit.getScheduler().cancelTask(taskID);
-		PacketContainer packetLeash = new PacketContainer(PacketType.Play.Server.ATTACH_ENTITY);
-		packetLeash.getIntegers().write(0, playerEntity.getEntityId());
-		packetLeash.getIntegers().write(1, -1);
-		
-		for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-			try {
-				plugin.getProtocolManager().sendServerPacket(onlinePlayer, packetLeash);
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+		if (playerEntity != null) {
+			PacketContainer packetLeash = new PacketContainer(PacketType.Play.Server.ATTACH_ENTITY);
+			packetLeash.getIntegers().write(0, playerEntity.getEntityId());
+			packetLeash.getIntegers().write(1, -1);
+			
+			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+				try {
+					plugin.getProtocolManager().sendServerPacket(onlinePlayer, packetLeash);
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
 			}
+			playerEntity.remove();
 		}
-		/*
-		 * Removes entities
-		 */
-		projectileEntity.remove();
-		playerEntity.remove();
-		projectile.remove();
+		if (projectileEntity != null) {
+			projectileEntity.remove();
+		}
+		if (projectile != null) {
+			projectile.remove();
+		}
 	}
 
 
