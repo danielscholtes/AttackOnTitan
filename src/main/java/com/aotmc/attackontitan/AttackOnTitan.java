@@ -1,15 +1,17 @@
 package com.aotmc.attackontitan;
 
-import com.aotmc.attackontitan.commands.CommandsManager;
-import com.aotmc.attackontitan.commands.gui.listener.InventoryClickListener;
 import com.aotmc.attackontitan.util.TabComplete;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.aotmc.attackontitan.commands.CommandsManager;
+import com.aotmc.attackontitan.commands.gui.listener.InventoryClickListener;
 import com.aotmc.attackontitan.odmgear.ODMData;
 import com.aotmc.attackontitan.odmgear.listeners.ODMGearActivate;
 import com.aotmc.attackontitan.odmgear.listeners.ODMLaunch;
 import com.aotmc.attackontitan.odmgear.listeners.ODMLogout;
 import com.aotmc.attackontitan.skills.listeners.SpinningSlashActivate;
+import com.aotmc.attackontitan.titans.TitanData;
+import com.aotmc.attackontitan.titans.TitanZombieFire;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
@@ -17,8 +19,8 @@ public class AttackOnTitan extends JavaPlugin {
 
 	private static AttackOnTitan instance;
 	private ProtocolManager protocolManager;
-	private ODMData odmData = new ODMData();
 	private final CommandsManager manager = new CommandsManager(this);
+	private static TitanData titanData;
 
 	/**
 	 * Runs when server is loaded
@@ -34,6 +36,11 @@ public class AttackOnTitan extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 		// Registers all events
+		titanData = new TitanData(this);
+		CommandsManager manager = new CommandsManager(this);
+		ODMData odmData = new ODMData(this);
+		titanData.startFollowTask();
+		getServer().getPluginManager().registerEvents(new TitanZombieFire(), this);
 		getServer().getPluginManager().registerEvents(new SpinningSlashActivate(this), this);
 		getServer().getPluginManager().registerEvents(new ODMGearActivate(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new ODMLaunch(this, odmData), this);
@@ -51,6 +58,10 @@ public class AttackOnTitan extends JavaPlugin {
 	 */
 	public static AttackOnTitan getInstance() {
 		return instance;
+	}
+	
+	public static TitanData getTitanData() {
+		return titanData;
 	}
 
 	/**

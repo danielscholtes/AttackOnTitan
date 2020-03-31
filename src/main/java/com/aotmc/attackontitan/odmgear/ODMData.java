@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+
+import com.aotmc.attackontitan.AttackOnTitan;
+
 public class ODMData {
 
 	// Map of all active hooks
@@ -22,6 +26,35 @@ public class ODMData {
 
 	// List of all players who have their first hook attached
 	private List<UUID> attachedHook = new ArrayList<UUID>();
+	
+	private AttackOnTitan plugin;
+	
+	public ODMData(AttackOnTitan plugin) {
+		this.plugin = plugin;
+		startFollowTask();
+	}
+	
+	/**
+	 * Creates a task which will make a silverfish follow the player
+	 */
+	private void startFollowTask() {
+		/*
+		 * Every 2 ticks makes the silverfish teleport to player
+		 */
+		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
+			@Override
+			public void run() {
+				if (hooks != null) {
+					for (Hook hook : hooks.values()) {
+						if (Bukkit.getPlayer(hook.getPlayer()) == null || hook.getPlayerEntity() == null) {
+							continue;
+						}
+						hook.getPlayerEntity().teleport(Bukkit.getPlayer(hook.getPlayer()).getLocation().add(0, -0.5D, 0D));
+					}
+				}
+			}
+		}, 3L, 2L).getTaskId();
+	}
 	
 	/**
 	 * Returns map of all active hooks

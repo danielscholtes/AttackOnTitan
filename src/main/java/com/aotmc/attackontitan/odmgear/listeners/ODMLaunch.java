@@ -8,6 +8,7 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Silverfish;
+import org.bukkit.entity.Slime;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -119,6 +120,33 @@ public class ODMLaunch implements Listener {
 				}
 				return;
 			}
+			if (event.getHitEntity() instanceof Slime) {
+				for (MetadataValue mdv2 : snowball.getMetadata("HookID")) {
+					if (data.getHooks().get(UUID.fromString(mdv2.asString())) == null) {
+						return;
+					}
+					Hook hook = data.getHooks().get(UUID.fromString(mdv2.asString()));
+					
+					if (Bukkit.getPlayer(hook.getPlayer()) == null) {
+						return;
+					}
+					
+					Player p = Bukkit.getPlayer(hook.getPlayer());
+					
+					Vector velocity = event.getHitEntity().getLocation().toVector().normalize().subtract(p.getLocation().toVector());
+					p.setVelocity(velocity.normalize().multiply(2));
+					
+					/*
+					 * Plays sound and particles because it's nice and removes player from attached hooks
+					 */
+					p.playSound(p.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1, 1);
+					p.spawnParticle(Particle.CLOUD, p.getLocation(), 20);
+					data.getAttachedHook().remove(hook.getPlayer());
+					
+					launchPlayer(p, hook, velocity);
+					return;
+				}
+			}
 			location = event.getHitEntity().getLocation();
 		}
 
@@ -155,13 +183,6 @@ public class ODMLaunch implements Listener {
 				data.getDistanceHooks().put(hook.getPlayer(), distance);
 				return;
 			}
-			
-			/*
-			 * Teleports player 1 block above ground because minecraft is glitchy
-			 */
-			if (p.isOnGround()) {
-				p.teleport(p.getLocation().add(0D, 1D, 0D));
-			}
 
 			/*
 			 * Gets the distance between location and hook with a max distance of 70
@@ -180,48 +201,61 @@ public class ODMLaunch implements Listener {
 				data.getDistanceHooks().remove(hook.getPlayer());
 			}
 			
-			/*
-			 * Shoots player with a velocity that seemed about right from my testing
-			 * Don't mess with these numbers, they're good enough from the testing
-			 * We'll eventually make it so the player can upgrade the speed
-			 */
+
 			Vector velocity = hook.getVector().multiply(distance / 4.1);
 			velocity.setY(velocity.getY() - distance * 0.06);
-			p.setVelocity(velocity);
 			
-			/*
-			 * Plays sound and particles because it's nice and removes player from attached hooks
-			 */
-			p.playSound(p.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1, 1);
-			p.spawnParticle(Particle.CLOUD, p.getLocation(), 20);
-			data.getAttachedHook().remove(hook.getPlayer());
-			
-			/*
-			 * Runs a timer till the player lands, when he does land removes the hook
-			 * and removes player and hook from all neccessary lists and maps
-			 */
-			data.getPlayerTasks().put(hook.getPlayer(), new BukkitRunnable() {
-				@Override
-				public void run() {
-					if (p.isOnGround()) {
-						if (data.getPlayerHooks() != null && data.getPlayerHooks().containsKey(hook.getPlayer())) {
-							for (Hook playerHook : data.getPlayerHooks().get(hook.getPlayer())) {
-								playerHook.remove();
-								data.getHooks().remove(playerHook.getHookID());
-							}
-							data.getPlayerHooks().remove(hook.getPlayer());
-						}
-						if (data.getPlayerTasks() != null && data.getPlayerTasks().containsKey(hook.getPlayer())) {
-							data.getPlayerTasks().remove(hook.getPlayer());
-						}
-						this.cancel();
-					}
-				}
-			}.runTaskTimer(plugin, 3L, 1L).getTaskId());
+			launchPlayer(p, hook, velocity);
 			
 			return;
 		}
 		
+	}
+	
+	private void launchPlayer(Player player, Hook hook, Vector velocity) {
+		/*
+		 * Teleports player 1 block above ground because minecraft is glitchy
+		 */
+		if (player.isOnGround()) {
+			player.teleport(player.getLocation().add(0D, 1D, 0D));
+		}
+		
+		/*
+		 * Shoots player with a velocity that seemed about right from my testing
+		 * Don't mess with these numbers, they're good enough from the testing
+		 * We'll eventually make it so the player can upgrade the speed
+		 */
+		player.setVelocity(velocity);
+		
+		/*
+		 * Plays sound and particles because it's nice and removes player from attached hooks
+		 */
+		player.playSound(player.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1, 1);
+		player.spawnParticle(Particle.CLOUD, player.getLocation(), 20);
+		data.getAttachedHook().remove(hook.getPlayer());
+		
+		/*
+		 * Runs a timer till the player lands, when he does land removes the hook
+		 * and removes player and hook from all neccessary lists and maps
+		 */
+		data.getPlayerTasks().put(hook.getPlayer(), new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (player.isOnGround()) {
+					if (data.getPlayerHooks() != null && data.getPlayerHooks().containsKey(hook.getPlayer())) {
+						for (Hook playerHook : data.getPlayerHooks().get(hook.getPlayer())) {
+							playerHook.remove();
+							data.getHooks().remove(playerHook.getHookID());
+						}
+						data.getPlayerHooks().remove(hook.getPlayer());
+					}
+					if (data.getPlayerTasks() != null && data.getPlayerTasks().containsKey(hook.getPlayer())) {
+						data.getPlayerTasks().remove(hook.getPlayer());
+					}
+					this.cancel();
+				}
+			}
+		}.runTaskTimer(plugin, 3L, 1L).getTaskId());
 	}
 	
 }

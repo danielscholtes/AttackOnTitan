@@ -28,7 +28,6 @@ public class Hook {
 	private Vector vector;
 	private Silverfish projectileEntity;
 	private Silverfish playerEntity;
-	private int taskID;
 	
 	public Hook(UUID player, boolean left, AttackOnTitan plugin) {
 		this.player = player;
@@ -94,7 +93,6 @@ public class Hook {
 		double y = Math.sin(pitch) * Math.sin(yaw);
 		double z = Math.cos(pitch);
 		projectile.setVelocity(new Vector(x, z, y).normalize().multiply(5));
-		startFollowTask();
 		
 		/*
 		 * Sends a packet to all players to show a leash on the 2 silverfishes so
@@ -115,32 +113,12 @@ public class Hook {
 	}
 
 	/**
-	 * Creates a task which will make a silverfish follow the player
-	 */
-	private void startFollowTask() {
-		if (playerEntity == null || Bukkit.getPlayer(player) == null) {
-			return;
-		}
-		
-		/*
-		 * Every 2 ticks makes the silverfish teleport to player
-		 */
-		taskID = Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
-			@Override
-			public void run() {
-				playerEntity.teleport(Bukkit.getPlayer(player).getLocation().add(0, -0.5D, 0D));
-			}
-		}, 3L, 2L).getTaskId();
-	}
-
-	/**
 	 * Removes all the things related to this hook object
 	 */
 	public void remove() {
 		/*
 		 * Stops following task and removes leash packet and removes entities
 		 */
-		Bukkit.getScheduler().cancelTask(taskID);
 		if (playerEntity != null) {
 			PacketContainer packetLeash = new PacketContainer(PacketType.Play.Server.ATTACH_ENTITY);
 			packetLeash.getIntegers().write(0, playerEntity.getEntityId());
@@ -218,6 +196,15 @@ public class Hook {
 	 */
 	public Projectile getProjectile() {
 		return projectile;
+	}
+
+	/**
+	 * Returns the silverfish following the player
+	 *
+	 * @return		silverfish following player
+	 */
+	public Silverfish getPlayerEntity() {
+		return playerEntity;
 	}
 
 	/**
