@@ -1,5 +1,6 @@
 package com.aotmc.attackontitan;
 
+import com.aotmc.attackontitan.commands.CommandsManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.aotmc.attackontitan.odmgear.ODMData;
@@ -11,11 +12,11 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
 public class AttackOnTitan extends JavaPlugin {
-	
+
 	private static AttackOnTitan instance;
 	private ProtocolManager protocolManager;
 	private ODMData odmData = new ODMData();
-	
+
 	/**
 	 * Runs when server is loaded
 	 */
@@ -23,7 +24,7 @@ public class AttackOnTitan extends JavaPlugin {
 		// Loads ProtocolManager
 		protocolManager = ProtocolLibrary.getProtocolManager();
 	}
-	
+
 	/**
 	 * Runs when server is enabled
 	 */
@@ -34,25 +35,26 @@ public class AttackOnTitan extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ODMGearActivate(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new ODMLaunch(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new ODMLogout(odmData), this);
-		
+
+		new CommandsManager(this).registerCommand();
 	}
-	
+
 	/**
 	 * Returns the instance of the main plugin
-	 * 
+	 *
 	 * @return		instance of main plugin
 	 */
 	public static AttackOnTitan getInstance() {
 		return instance;
 	}
-	
+
 	/**
 	 * Returns the protocol manager
-	 * 
+	 *
 	 * @return		protocol manager
 	 */
 	public ProtocolManager getProtocolManager() {
 		return protocolManager;
 	}
-	
+
 }
