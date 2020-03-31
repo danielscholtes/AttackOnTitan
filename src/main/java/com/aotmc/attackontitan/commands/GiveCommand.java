@@ -37,7 +37,7 @@ public class GiveCommand
                 .withName(blades.getFormattedName(blade))
                 .withNBTString("durability", String.valueOf(blades.getDurability()))
                 .withNBTString("damage", String.valueOf(blades.getDamage()))
-                .withLore(blades.getDefaultLore(blade, blades.getDamage(), blades.getDurability()));
+                .withLore(blades.getDefaultLore(blade));
 
         final ItemMeta meta = builder.getItem().getItemMeta();
 
