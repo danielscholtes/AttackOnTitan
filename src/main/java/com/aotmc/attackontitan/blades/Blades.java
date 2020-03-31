@@ -15,7 +15,7 @@ public enum Blades
     THIRD_GEN_BLADE(1, 10, 10, "&6⭐⭐&7⭐⭐⭐"),
     THIRD_GEN_BLADE_MK_II(1, 10, 10, "&6⭐⭐⭐&7⭐⭐"),
     THIRD_GEN_BLADE_MK_III(1, 10, 10, "&6⭐⭐⭐⭐&7⭐"),
-    PRESTIGED_BLADE(1, 10, 10, "&6⭐⭐⭐⭐⭐");
+    PERFECTED_BLADE(1, 10, 10, "&6⭐⭐⭐⭐⭐");
 
     public final int    modelData;
     public final double damage;
@@ -67,7 +67,7 @@ public enum Blades
                 return "&dThird Generation Blade Mk. II";
             case "THIRD_GEN_BLADE_MK_III":
                 return "&dThird Generation Blade Mk. III";
-            case "PRESTIGED_BLADE":
+            case "PERFECTED_BLADE":
                 return "&5Perfected Blade";
             default:
                 return "Invalid Blade";
