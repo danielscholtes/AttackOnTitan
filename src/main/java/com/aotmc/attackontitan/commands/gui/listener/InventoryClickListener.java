@@ -14,7 +14,6 @@ import java.util.List;
 
 public class InventoryClickListener implements Listener
 {
-
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event)
     {
@@ -62,5 +61,4 @@ public class InventoryClickListener implements Listener
             }
         }
     }
-
 }
