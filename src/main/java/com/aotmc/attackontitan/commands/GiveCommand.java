@@ -45,9 +45,11 @@ public class GiveCommand
 
         final ItemBuilder builder = new ItemBuilder(Material.WOODEN_SWORD)
                 .withName(blades.getFormattedName(blade))
+                .withNBTString("blade", String.valueOf(true))
                 .withNBTString("durability", String.valueOf(blades.getDurability()))
                 .withNBTString("damage", String.valueOf(blades.getDamage()))
-                .withLore(blades.getDefaultLore(blade));
+                .withNBTString("level", String.valueOf(blades.getLevel()))
+                .withLore(blades.getDefaultLore());
 
         final ItemMeta meta = builder.getItem().getItemMeta();
 
