@@ -1,6 +1,7 @@
 package com.aotmc.attackontitan.commands;
 
 import com.aotmc.attackontitan.AttackOnTitan;
+import com.codeitforyou.lib.api.command.CommandManager;
 
 import java.util.Collections;
 
@@ -19,6 +20,11 @@ public class CommandsManager
     public void registerCommand()
     {
         this.manager.register();
+    }
+
+    public CommandManager getManager()
+    {
+        return manager;
     }
 
 }

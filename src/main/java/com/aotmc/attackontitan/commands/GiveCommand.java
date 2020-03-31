@@ -9,6 +9,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class GiveCommand
 {
 
@@ -23,7 +26,15 @@ public class GiveCommand
             return;
         }
 
-        final String blade = args[1];
+        final String blade = args[1].toUpperCase();
+
+        if (!Arrays.asList("FIRST_GEN_BLADE", "FIRST_GEN_BLADE_MK_II", "FIRST_GEN_BLADE_MK_III", "SECOND_GEN_BLADE"
+                , "SECOND_GEN_BLADE_MK_II", "SECOND_GEN_BLADE_MK_III", "THIRD_GEN_BLADE", "THIRD_GEN_BLADE_MK_II"
+                , "THIRD_GEN_BLADE_MK_III", "PERFECTED_BLADE").contains(blade))
+        {
+            sender.sendMessage("Invalid type");
+            return;
+        }
 
         if (target.getInventory().firstEmpty() == -1)
         {

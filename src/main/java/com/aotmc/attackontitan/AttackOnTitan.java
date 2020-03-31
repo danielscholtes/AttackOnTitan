@@ -1,6 +1,7 @@
 package com.aotmc.attackontitan;
 
 import com.aotmc.attackontitan.commands.CommandsManager;
+import com.aotmc.attackontitan.util.TabComplete;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.aotmc.attackontitan.odmgear.ODMData;
@@ -16,6 +17,7 @@ public class AttackOnTitan extends JavaPlugin {
 	private static AttackOnTitan instance;
 	private ProtocolManager protocolManager;
 	private ODMData odmData = new ODMData();
+	private final CommandsManager manager = new CommandsManager(this);
 
 	/**
 	 * Runs when server is loaded
@@ -36,7 +38,8 @@ public class AttackOnTitan extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ODMLaunch(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new ODMLogout(odmData), this);
 
-		new CommandsManager(this).registerCommand();
+		manager.registerCommand();
+		getCommand("aot").setTabCompleter(new TabComplete());
 	}
 
 	/**
@@ -55,6 +58,11 @@ public class AttackOnTitan extends JavaPlugin {
 	 */
 	public ProtocolManager getProtocolManager() {
 		return protocolManager;
+	}
+
+	public CommandsManager getManager()
+	{
+		return manager;
 	}
 
 }
