@@ -1,6 +1,7 @@
 package com.aotmc.attackontitan.commands.gui.listener;
 
 import com.aotmc.attackontitan.commands.UpgradeGuiCommand;
+import com.codeitforyou.lib.api.inventory.Inventory;
 import com.codeitforyou.lib.api.item.ItemBuilder;
 import com.codeitforyou.lib.api.item.ItemUtil;
 import org.bukkit.Material;
@@ -17,7 +18,7 @@ public class InventoryClickListener implements Listener
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event)
     {
-        final String uuid = UpgradeGuiCommand.uuid;
+
         final ItemStack item = event.getCurrentItem();
         final String nbtValue = ItemUtil.getNBTString(item, "blade");
         final String nbtLevel = ItemUtil.getNBTString(item, "level");

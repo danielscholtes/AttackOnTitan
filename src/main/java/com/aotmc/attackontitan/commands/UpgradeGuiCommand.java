@@ -30,7 +30,6 @@ public class UpgradeGuiCommand
                 {
                     inventory.setItem(i, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).getItem(), null);
                 }
-
             }
         }
         catch (InvalidInventoryException ex)

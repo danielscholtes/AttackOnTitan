@@ -7,10 +7,10 @@ import org.bukkit.entity.Zombie;
 
 public interface BaseTitan {
 	
-	public void spawnTitan(Location spawnLocation);
-	public Zombie getZombie();
-	public ArmorStand getArmorStand();
-	public Slime getSlime();
-	public void syncEntities();
+	void spawnTitan(Location spawnLocation);
+	Zombie getZombie();
+	ArmorStand getArmorStand();
+	Slime getSlime();
+	void syncEntities();
 
 }

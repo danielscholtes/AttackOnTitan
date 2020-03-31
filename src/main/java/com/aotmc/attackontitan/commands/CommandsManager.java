@@ -13,7 +13,8 @@ public class CommandsManager
     public CommandsManager(final AttackOnTitan plugin)
     {
         this.manager = new com.codeitforyou.lib.api.command.CommandManager(Arrays.asList(
-                GiveCommand.class, UpgradeGuiCommand.class, SpawnCommand.class
+                GiveCommand.class, UpgradeGuiCommand.class, SpawnCommand.class,
+                MaterialsGuiCommand.class, MaterialsConverterGuiCommand.class
         ), "aot", plugin);
     }
 
