@@ -10,6 +10,7 @@ import com.aotmc.attackontitan.odmgear.listeners.ODMGearActivate;
 import com.aotmc.attackontitan.odmgear.listeners.ODMLaunch;
 import com.aotmc.attackontitan.odmgear.listeners.ODMLogout;
 import com.aotmc.attackontitan.skills.listeners.SpinningSlashActivate;
+import com.aotmc.attackontitan.titans.BaseTitan;
 import com.aotmc.attackontitan.titans.TitanData;
 import com.aotmc.attackontitan.titans.TitanZombieFire;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -40,15 +41,27 @@ public class AttackOnTitan extends JavaPlugin {
 		CommandsManager manager = new CommandsManager(this);
 		ODMData odmData = new ODMData(this);
 		titanData.startFollowTask();
+		titanData.startPlayerDetectionTask();
 		getServer().getPluginManager().registerEvents(new TitanZombieFire(), this);
 		getServer().getPluginManager().registerEvents(new SpinningSlashActivate(this), this);
 		getServer().getPluginManager().registerEvents(new ODMGearActivate(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new ODMLaunch(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new ODMLogout(odmData), this);
 		getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
+		getServer().getPluginManager().registerEvents(titanData, this);
 
 		manager.registerCommand();
 		getCommand("aot").setTabCompleter(new TabComplete());
+	}
+	
+	public void onDisable() {
+		if (titanData.getTitans() != null) {
+			for (BaseTitan titan : titanData.getTitans()) {
+				titan.remove();
+			}
+			
+			titanData.getTitans().clear();
+		}
 	}
 
 	/**

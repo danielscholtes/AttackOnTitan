@@ -1,6 +1,7 @@
 package com.aotmc.attackontitan.titans;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Slime;
@@ -26,14 +27,15 @@ public class SmallTitan implements BaseTitan {
 		zombie.setCanPickupItems(false);
 		zombie.setInvulnerable(true);
 		zombie.setBaby(false);
-		zombie.setPersistent(false);
+		zombie.setTarget(null);
+		zombie.setPersistent(true);
 		
 		armorStand = (ArmorStand) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 2D, 0D), EntityType.ARMOR_STAND);
 		armorStand.setBasePlate(false);
 		armorStand.setCanPickupItems(false);
 		armorStand.setCustomNameVisible(false);
 		armorStand.setInvulnerable(true);
-		armorStand.setPersistent(false);
+		armorStand.setPersistent(true);
 		armorStand.setGravity(false);
 		armorStand.setCollidable(true);
 		
@@ -41,8 +43,7 @@ public class SmallTitan implements BaseTitan {
 		slime.setSize(2);
 		slime.setCustomNameVisible(false);
 		slime.setCanPickupItems(false);
-		slime.setInvulnerable(true);
-		slime.setPersistent(false);
+		slime.setPersistent(true);
 		slime.setAI(false);
 		slime.setGravity(false);
 	}
@@ -65,8 +66,19 @@ public class SmallTitan implements BaseTitan {
 
 	@Override
 	public void syncEntities() {
+		if (this.zombie.getLocation().add(0D, 3D, 0D).getBlock() != null && this.zombie.getLocation().add(0D, 3D, 0D).getBlock().getType() != Material.AIR) {
+			this.zombie.teleport(slime.getLocation().add(0D, -3D, 0D));
+		}
 		this.armorStand.teleport(zombie.getLocation().add(0D, 2D, 0D));
 		this.slime.teleport(zombie.getLocation().add(0D, 3D, 0D));
+	}
+
+
+	@Override
+	public void remove() {
+		this.armorStand.remove();
+		this.slime.remove();
+		this.zombie.remove();
 	}
 
 }

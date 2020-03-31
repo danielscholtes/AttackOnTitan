@@ -4,10 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 
 import com.aotmc.attackontitan.AttackOnTitan;
 
-public class TitanData {
+public class TitanData implements Listener {
 	
 	private AttackOnTitan plugin;
 	
@@ -22,11 +28,11 @@ public class TitanData {
 	}
 	
 	/**
-	 * Creates a task which will make a silverfish follow the player
+	 * Creates a task which will make synchronize all entities of a titan
 	 */
 	public void startFollowTask() {
 		/*
-		 * Every 2 ticks makes the silverfish teleport to player
+		 * Every 2 ticks makes synchronize the entities of a titan
 		 */
 		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
 			@Override
@@ -38,6 +44,40 @@ public class TitanData {
 				}
 			}
 		}, 3L, 2L).getTaskId();
+	}
+	
+	/**
+	 * Creates a task which will make a silverfish follow the player
+	 */
+	public void startPlayerDetectionTask() {
+		/*
+		 * Every 2 ticks makes the silverfish teleport to player
+		 */
+		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
+			@Override
+			public void run() {
+				if (titans != null) {
+					titanloop:
+					for (BaseTitan titan : titans) {
+						entityloop:
+						for (Entity entity : titan.getSlime().getNearbyEntities(5, 5, 5)) {
+							if (!(entity instanceof Player)) {
+								continue entityloop;
+							}
+							
+							titan.getZombie().setTarget((LivingEntity) entity);
+							continue titanloop;
+						}
+						titan.getZombie().setTarget(null);
+					}
+				}
+			}
+		}, 3L, 20 * 5L).getTaskId();
+	}
+	
+	@EventHandler
+	public void onTarget(EntityTargetLivingEntityEvent event) {
+		event.setCancelled(true);
 	}
 
 }

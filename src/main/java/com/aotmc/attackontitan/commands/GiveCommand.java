@@ -1,15 +1,17 @@
 package com.aotmc.attackontitan.commands;
 
+import java.util.Arrays;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.blades.Blades;
 import com.codeitforyou.lib.api.command.Command;
 import com.codeitforyou.lib.api.item.ItemBuilder;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Arrays;
 
 public class GiveCommand
 {
@@ -51,15 +53,16 @@ public class GiveCommand
                 .withNBTString("level", String.valueOf(blades.getLevel()))
                 .withLore(blades.getDefaultLore());
 
-        final ItemMeta meta = builder.getItem().getItemMeta();
+        ItemStack item = builder.getItem();
+        ItemMeta meta = item.getItemMeta();
 
         if (meta != null)
         {
             meta.setCustomModelData(blades.getModelData());
-            builder.getItem().setItemMeta(meta);
+            item.setItemMeta(meta);
         }
 
-        target.getInventory().addItem(builder.getItem());
+        target.getInventory().addItem(item);
     }
 
 }

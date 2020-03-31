@@ -1,7 +1,6 @@
 package com.aotmc.attackontitan.commands.gui.listener;
 
 import com.aotmc.attackontitan.commands.UpgradeGuiCommand;
-import com.codeitforyou.lib.api.inventory.Inventory;
 import com.codeitforyou.lib.api.item.ItemBuilder;
 import com.codeitforyou.lib.api.item.ItemUtil;
 import org.bukkit.Material;

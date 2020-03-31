@@ -13,6 +13,7 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -131,10 +132,11 @@ public class ODMLaunch implements Listener {
 						return;
 					}
 					
-					Player p = Bukkit.getPlayer(hook.getPlayer());
+					if (hook.getHookVector() == null) {
+						continue;
+					}
 					
-					Vector velocity = event.getHitEntity().getLocation().toVector().normalize().subtract(p.getLocation().toVector());
-					p.setVelocity(velocity.normalize().multiply(2));
+					Player p = Bukkit.getPlayer(hook.getPlayer());
 					
 					/*
 					 * Plays sound and particles because it's nice and removes player from attached hooks
@@ -143,7 +145,7 @@ public class ODMLaunch implements Listener {
 					p.spawnParticle(Particle.CLOUD, p.getLocation(), 20);
 					data.getAttachedHook().remove(hook.getPlayer());
 					
-					launchPlayer(p, hook, velocity);
+					launchPlayer(p, hook, hook.getHookVector().multiply(0.95).setY(hook.getHookVector().getY() - 0.26));
 					return;
 				}
 			}
@@ -202,7 +204,7 @@ public class ODMLaunch implements Listener {
 			}
 			
 
-			Vector velocity = hook.getVector().multiply(distance / 4.1);
+			Vector velocity = hook.getPlayerVector().multiply(distance / 4.1);
 			velocity.setY(velocity.getY() - distance * 0.06);
 			
 			launchPlayer(p, hook, velocity);
@@ -256,6 +258,17 @@ public class ODMLaunch implements Listener {
 				}
 			}
 		}.runTaskTimer(plugin, 3L, 1L).getTaskId());
+	}
+	
+	@EventHandler
+	public void onTitanHit(EntityDamageEvent event) {
+		if (!(event.getEntity() instanceof Slime)) {
+			return;
+		}
+		event.setCancelled(true);
+		if (event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getDamager() instanceof Player) {
+			Bukkit.broadcastMessage("a");
+		}
 	}
 	
 }

@@ -12,5 +12,6 @@ public interface BaseTitan {
 	ArmorStand getArmorStand();
 	Slime getSlime();
 	void syncEntities();
+	void remove();
 
 }

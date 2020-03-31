@@ -1,7 +1,6 @@
 package com.aotmc.attackontitan.skills.listeners;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.aotmc.attackontitan.AttackOnTitan;
+import com.codeitforyou.lib.api.item.ItemUtil;
 
 import net.minecraft.server.v1_15_R1.DataWatcher;
 import net.minecraft.server.v1_15_R1.DataWatcherRegistry;
@@ -50,10 +50,17 @@ public class SpinningSlashActivate implements Listener {
 		/*
 		 * Checks if item is a diamond sword
 		 */
-		if (event.getItem() == null || event.getItem().getType() != Material.DIAMOND_SWORD) {
+		if (event.getItem() == null) {
 			return;
 		}
 		
+
+        final String nbtValue = ItemUtil.getNBTString(event.getItem(), "blade");
+        
+		if (!Boolean.valueOf(nbtValue)) {
+			return;
+		}
+        
 		Player player = event.getPlayer();
 		player.sendMessage("spinning slash");
 		

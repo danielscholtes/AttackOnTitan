@@ -25,16 +25,17 @@ public class Hook {
 	private UUID hookID;
 	private boolean left;
 	private AttackOnTitan plugin;
-	private Vector vector;
+	private Vector playerVector;
 	private Silverfish projectileEntity;
 	private Silverfish playerEntity;
+	private Vector hookVector;
 	
 	public Hook(UUID player, boolean left, AttackOnTitan plugin) {
 		this.player = player;
 		this.left = left;
 		this.hookID = UUID.randomUUID();
 		this.plugin = plugin;
-		this.vector = createVector();
+		this.playerVector = createVector();
 	}
 
 	/**
@@ -85,14 +86,15 @@ public class Hook {
 		double yaw = ((p.getLocation().getYaw() + 90)  * Math.PI) / 180;
 		double pitch = ((p.getLocation().getPitch() + 88) * Math.PI) / 180;
 		if (left) {
-			yaw = ((p.getLocation().getYaw() + 95)  * Math.PI) / 180;
+			yaw = ((p.getLocation().getYaw() + 94)  * Math.PI) / 180;
 		} else {
-			yaw = ((p.getLocation().getYaw() + 85)  * Math.PI) / 180;
+			yaw = ((p.getLocation().getYaw() + 86)  * Math.PI) / 180;
 		}
 		double x = Math.sin(pitch) * Math.cos(yaw);
 		double y = Math.sin(pitch) * Math.sin(yaw);
 		double z = Math.cos(pitch);
-		projectile.setVelocity(new Vector(x, z, y).normalize().multiply(5));
+		hookVector = new Vector(x, z, y).normalize();
+		projectile.setVelocity(hookVector.multiply(5));
 		
 		/*
 		 * Sends a packet to all players to show a leash on the 2 silverfishes so
@@ -185,8 +187,18 @@ public class Hook {
 	 *
 	 * @return		vector for player
 	 */
-	public Vector getVector() {
-		return vector;
+	public Vector getPlayerVector() {
+		return playerVector;
+	}
+
+	/**
+	 * Returns the vector that was calculated for the hook
+	 * The hook will be shot with this velocity
+	 *
+	 * @return		vector for hook
+	 */
+	public Vector getHookVector() {
+		return hookVector;
 	}
 
 	/**
@@ -208,7 +220,7 @@ public class Hook {
 	}
 
 	/**
-	 * Returns whether or not the boolean is going left or right
+	 * Returns whether or not the hook is going left or right
 	 *
 	 * @return		boolean
 	 */
