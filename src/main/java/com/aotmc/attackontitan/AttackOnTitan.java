@@ -12,6 +12,7 @@ import com.aotmc.attackontitan.odmgear.listeners.ODMLogout;
 import com.aotmc.attackontitan.skills.listeners.SpinningSlashActivate;
 import com.aotmc.attackontitan.titans.Titan;
 import com.aotmc.attackontitan.titans.TitanData;
+import com.aotmc.attackontitan.titans.TitanEvents;
 import com.aotmc.attackontitan.titans.TitanZombieFire;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
@@ -48,7 +49,7 @@ public class AttackOnTitan extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ODMLaunch(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new ODMLogout(odmData), this);
 		getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
-		getServer().getPluginManager().registerEvents(titanData, this);
+		getServer().getPluginManager().registerEvents(new TitanEvents(titanData), this);
 
 		manager.registerCommand();
 		getCommand("aot").setTabCompleter(new TabComplete());

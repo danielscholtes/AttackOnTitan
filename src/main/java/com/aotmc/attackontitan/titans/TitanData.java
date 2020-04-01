@@ -6,20 +6,12 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Giant;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Zombie;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 
 import com.aotmc.attackontitan.AttackOnTitan;
 
-public class TitanData implements Listener {
+public class TitanData {
 	
 	private AttackOnTitan plugin;
 	private Random rand = new Random();
@@ -87,30 +79,6 @@ public class TitanData implements Listener {
 				}
 			}
 		}, 3L, 20 * 5L).getTaskId();
-	}
-	
-	@EventHandler
-	public void onTarget(EntityTargetLivingEntityEvent event) {
-		event.setCancelled(true);
-	}
-	
-	@EventHandler
-	public void onTitanHit(EntityDamageEvent event) {
-		if (!(event.getEntity() instanceof Slime)) {
-			return;
-		}
-		event.setCancelled(true);
-		if (event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getDamager() instanceof Player) {
-			Bukkit.broadcastMessage("a");
-		}
-	}
-	
-	@EventHandler
-	public void onDamage(EntityDamageEvent event) {
-		if (!(event.getEntity() instanceof Giant) && !(event.getEntity() instanceof Zombie)) {
-			return;
-		}
-		event.setCancelled(true);
 	}
 
 }

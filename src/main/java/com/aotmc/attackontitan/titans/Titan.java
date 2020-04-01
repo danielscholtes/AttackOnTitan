@@ -36,6 +36,7 @@ public class Titan {
 		zombie.setCanPickupItems(false);
 		zombie.setInvulnerable(true);
 		zombie.setTarget(null);
+		zombie.setRemoveWhenFarAway(false);
 		zombie.setPersistent(true);
 		
 		giant = (Giant) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.GIANT);
@@ -45,6 +46,7 @@ public class Titan {
 		giant.setCanPickupItems(false);
 		giant.setInvulnerable(true);
 		giant.setAI(false);
+		zombie.setRemoveWhenFarAway(false);
 		giant.setPersistent(true);
 		
 		slime = (Slime) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 8D, 0D), EntityType.SLIME);
@@ -54,6 +56,7 @@ public class Titan {
 		slime.setCanPickupItems(false);
 		slime.setPersistent(true);
 		slime.setAI(false);
+		zombie.setRemoveWhenFarAway(false);
 		slime.setGravity(false);
 	}
 	 
