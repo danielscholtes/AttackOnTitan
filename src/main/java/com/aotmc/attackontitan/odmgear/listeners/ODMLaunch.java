@@ -13,7 +13,6 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -43,7 +42,7 @@ public class ODMLaunch implements Listener {
 		/*
 		 * Checks if damager is a hook
 		 */
-		if (!(event.getDamager() instanceof Snowball)) {
+		if (!(event.getDamager() instanceof Snowball) || event.getEntity() instanceof Slime) {
 			return;
 		}
 		if (!((Snowball) event.getDamager()).hasMetadata("HookID")) {
@@ -145,7 +144,7 @@ public class ODMLaunch implements Listener {
 					p.spawnParticle(Particle.CLOUD, p.getLocation(), 20);
 					data.getAttachedHook().remove(hook.getPlayer());
 					
-					launchPlayer(p, hook, hook.getHookVector().multiply(0.95).setY(hook.getHookVector().getY() - 0.26));
+					launchPlayer(p, hook, hook.getHookVector().multiply(0.98).setY(hook.getHookVector().getY() - 0.28));
 					return;
 				}
 			}
@@ -258,17 +257,6 @@ public class ODMLaunch implements Listener {
 				}
 			}
 		}.runTaskTimer(plugin, 3L, 1L).getTaskId());
-	}
-	
-	@EventHandler
-	public void onTitanHit(EntityDamageEvent event) {
-		if (!(event.getEntity() instanceof Slime)) {
-			return;
-		}
-		event.setCancelled(true);
-		if (event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getDamager() instanceof Player) {
-			Bukkit.broadcastMessage("a");
-		}
 	}
 	
 }

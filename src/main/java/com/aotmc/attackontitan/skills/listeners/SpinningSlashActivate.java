@@ -54,6 +54,9 @@ public class SpinningSlashActivate implements Listener {
 			return;
 		}
 		
+		if (!event.getPlayer().hasPermission("skill.spin")) {
+			return;
+		}
 
         final String nbtValue = ItemUtil.getNBTString(event.getItem(), "blade");
         

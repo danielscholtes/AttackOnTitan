@@ -10,7 +10,7 @@ import com.aotmc.attackontitan.odmgear.listeners.ODMGearActivate;
 import com.aotmc.attackontitan.odmgear.listeners.ODMLaunch;
 import com.aotmc.attackontitan.odmgear.listeners.ODMLogout;
 import com.aotmc.attackontitan.skills.listeners.SpinningSlashActivate;
-import com.aotmc.attackontitan.titans.BaseTitan;
+import com.aotmc.attackontitan.titans.Titan;
 import com.aotmc.attackontitan.titans.TitanData;
 import com.aotmc.attackontitan.titans.TitanZombieFire;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -56,7 +56,7 @@ public class AttackOnTitan extends JavaPlugin {
 	
 	public void onDisable() {
 		if (titanData.getTitans() != null) {
-			for (BaseTitan titan : titanData.getTitans()) {
+			for (Titan titan : titanData.getTitans().values()) {
 				titan.remove();
 			}
 			
