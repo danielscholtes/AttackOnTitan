@@ -1,12 +1,15 @@
 package com.aotmc.attackontitan.commands;
 
+import java.util.Arrays;
+
+import org.bukkit.entity.Player;
+
 import com.aotmc.attackontitan.AttackOnTitan;
+import com.aotmc.attackontitan.titans.LargeTitan;
+import com.aotmc.attackontitan.titans.MediumTitan;
 import com.aotmc.attackontitan.titans.SmallTitan;
 import com.aotmc.attackontitan.titans.TitanData;
 import com.codeitforyou.lib.api.command.Command;
-import org.bukkit.entity.Player;
-
-import java.util.Arrays;
 
 public class SpawnCommand {
 	
@@ -28,8 +31,10 @@ public class SpawnCommand {
 				titanData.getTitans().add(new SmallTitan(sender.getLocation()));
 				return;
 			case "MEDIUM":
+				titanData.getTitans().add(new MediumTitan(sender.getLocation()));
 				return;
 			case "LARGE":
+				titanData.getTitans().add(new LargeTitan(sender.getLocation()));
 				return;
 			default:
 				return;

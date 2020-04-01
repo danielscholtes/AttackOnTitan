@@ -1,5 +1,6 @@
 package com.aotmc.attackontitan.titans;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -7,13 +8,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Zombie;
 
-public class SmallTitan implements BaseTitan {
+public class MediumTitan implements BaseTitan {
 	
 	private Zombie zombie;
 	private ArmorStand armorStand;
 	private Slime slime;
 
-	public SmallTitan(Location spawnLocation) {
+	public MediumTitan(Location spawnLocation) {
 		spawnTitan(spawnLocation);
 	}
 
@@ -30,7 +31,7 @@ public class SmallTitan implements BaseTitan {
 		zombie.setTarget(null);
 		zombie.setPersistent(true);
 		
-		armorStand = (ArmorStand) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 2D, 0D), EntityType.ARMOR_STAND);
+		armorStand = (ArmorStand) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 7D, 0D), EntityType.ARMOR_STAND);
 		armorStand.setBasePlate(false);
 		armorStand.setCanPickupItems(false);
 		armorStand.setCustomNameVisible(false);
@@ -39,8 +40,8 @@ public class SmallTitan implements BaseTitan {
 		armorStand.setGravity(false);
 		armorStand.setCollidable(true);
 		
-		slime = (Slime) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 3D, 0D), EntityType.SLIME);
-		slime.setSize(2);
+		slime = (Slime) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 7D, 0D), EntityType.SLIME);
+		slime.setSize(3);
 		slime.setCustomNameVisible(false);
 		slime.setCanPickupItems(false);
 		slime.setPersistent(true);
@@ -66,14 +67,15 @@ public class SmallTitan implements BaseTitan {
 
 	@Override
 	public void syncEntities() {
-		for (int i = 1; i <= 3; i++) {
+		for (int i = 1; i <= 7; i++) {
 			if (this.zombie.getLocation().add(0D, i, 0D).getBlock() != null && this.zombie.getLocation().add(0D, i, 0D).getBlock().getType() != Material.AIR) {
-				this.zombie.teleport(slime.getLocation().add(0D, -3, 0D));
+				Bukkit.broadcastMessage("medium hit head");
+				this.zombie.teleport(slime.getLocation().add(0D, -7, 0D));
 				break;
 			}
 		}
-		this.armorStand.teleport(zombie.getLocation().add(0D, 2D, 0D));
-		this.slime.teleport(zombie.getLocation().add(0D, 3D, 0D));
+		this.armorStand.teleport(zombie.getLocation().add(0D, 7D, 0D));
+		this.slime.teleport(zombie.getLocation().add(0D, 7D, 0D));
 	}
 
 

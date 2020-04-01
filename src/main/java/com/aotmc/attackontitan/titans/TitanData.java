@@ -59,14 +59,38 @@ public class TitanData implements Listener {
 				if (titans != null) {
 					titanloop:
 					for (BaseTitan titan : titans) {
-						entityloop:
-						for (Entity entity : titan.getSlime().getNearbyEntities(5, 5, 5)) {
-							if (!(entity instanceof Player)) {
-								continue entityloop;
+						if (titan instanceof SmallTitan) {
+							entityloop:
+							for (Entity entity : titan.getSlime().getNearbyEntities(3, 4, 3)) {
+								if (!(entity instanceof Player)) {
+									continue entityloop;
+								}
+								
+								titan.getZombie().setTarget((LivingEntity) entity);
+								continue titanloop;
 							}
-							
-							titan.getZombie().setTarget((LivingEntity) entity);
-							continue titanloop;
+						}
+						if (titan instanceof MediumTitan) {
+							entityloop:
+							for (Entity entity : titan.getSlime().getNearbyEntities(6, 8, 6)) {
+								if (!(entity instanceof Player)) {
+									continue entityloop;
+								}
+								
+								titan.getZombie().setTarget((LivingEntity) entity);
+								continue titanloop;
+							}
+						}
+						if (titan instanceof LargeTitan) {
+							entityloop:
+							for (Entity entity : titan.getSlime().getNearbyEntities(9, 17, 9)) {
+								if (!(entity instanceof Player)) {
+									continue entityloop;
+								}
+								
+								titan.getZombie().setTarget((LivingEntity) entity);
+								continue titanloop;
+							}
 						}
 						titan.getZombie().setTarget(null);
 					}
