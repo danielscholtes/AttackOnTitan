@@ -73,7 +73,7 @@ public class SpinningSlashActivate implements Listener {
 		EntityPlayer entityPlayer = (EntityPlayer) ((CraftPlayer) player).getHandle();
 		DataWatcher dataWatcher = entityPlayer.getDataWatcher();
 		dataWatcher.set(DataWatcherRegistry.a.a(7), (byte) 0x04);
-		player.setVelocity(player.getEyeLocation().getDirection().multiply(2.4));
+		player.setVelocity(player.getEyeLocation().getDirection().multiply(2.5));
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 11, 8, false, false, false));
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			@Override

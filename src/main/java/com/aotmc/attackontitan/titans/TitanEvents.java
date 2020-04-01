@@ -1,6 +1,9 @@
 package com.aotmc.attackontitan.titans;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
@@ -10,7 +13,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
+import com.codeitforyou.lib.api.item.ItemUtil;
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 
 public class TitanEvents implements Listener {
@@ -31,9 +36,40 @@ public class TitanEvents implements Listener {
 		if (!(event.getEntity() instanceof Slime)) {
 			return;
 		}
+		
+		if (!titanData.getTitans().containsKey(event.getEntity().getEntityId())) {
+			return;
+		}
 		event.setCancelled(true);
+		
 		if (event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getDamager() instanceof Player) {
-			Bukkit.broadcastMessage("a");
+			Player player = (Player) ((EntityDamageByEntityEvent) event).getDamager();
+	        
+			if (player.getInventory().getItemInOffHand() == null || !Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getItemInMainHand(), "blade"))) {
+				return;
+			}
+			
+			double damage = Double.parseDouble(ItemUtil.getNBTString(player.getInventory().getItemInMainHand(), "damage"));
+			if (player.getInventory().getItemInOffHand() != null && Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getItemInOffHand(), "blade"))) {
+				damage += Double.parseDouble(ItemUtil.getNBTString(player.getInventory().getItemInOffHand(), "damage"));
+			}
+			
+			Slime slime = (Slime) event.getEntity();
+			player.spawnParticle(Particle.BLOCK_CRACK, slime.getLocation().add(0D, 1.25D, 0D), 100, Bukkit.createBlockData(Material.REDSTONE_BLOCK));
+			player.playSound(player.getLocation(), "blade", 1, 1);
+			if (slime.getHealth() <= damage) {
+				titanData.getTitans().get(slime.getEntityId()).remove();;
+				titanData.getTitans().remove(slime.getEntityId());
+				player.spawnParticle(Particle.CLOUD, slime.getLocation(), 80);
+				player.spawnParticle(Particle.BLOCK_CRACK, slime.getLocation().add(0D, 1.25D, 0D), 250, Bukkit.createBlockData(Material.REDSTONE_BLOCK));
+				player.spawnParticle(Particle.BLOCK_CRACK, slime.getLocation().add(0D, -3D, 0D), 60, Bukkit.createBlockData(Material.REDSTONE_BLOCK));
+				player.spawnParticle(Particle.CLOUD, slime.getLocation().add(0D, -2D, 0D), 80);
+				player.spawnParticle(Particle.CLOUD, slime.getLocation().add(0D, -4D, 0D), 80);
+				player.spawnParticle(Particle.CLOUD, slime.getLocation().add(0D, -6D, 0D), 80);
+				player.playSound(slime.getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 1.5f, 0.4f);
+			} else {
+				slime.setHealth(slime.getHealth() - damage);
+			}
 		}
 	}
 	
@@ -61,6 +97,11 @@ public class TitanEvents implements Listener {
 		
 		titanData.getTitans().get(event.getEntity().getEntityId()).remove();
 		titanData.getTitans().remove(event.getEntity().getEntityId());
+	}
+	
+	@EventHandler
+	public void onJoin(PlayerJoinEvent event) {
+		
 	}
 
 }

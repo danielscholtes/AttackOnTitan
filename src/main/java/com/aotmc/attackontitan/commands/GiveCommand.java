@@ -48,6 +48,7 @@ public class GiveCommand
         final ItemBuilder builder = new ItemBuilder(Material.WOODEN_SWORD)
                 .withName(blades.getFormattedName(blade))
                 .withNBTString("blade", String.valueOf(true))
+                .withNBTString("bladetype", String.valueOf(blades.toString()))
                 .withNBTString("durability", String.valueOf(blades.getDurability()))
                 .withNBTString("damage", String.valueOf(blades.getDamage()))
                 .withNBTString("level", String.valueOf(blades.getLevel()))

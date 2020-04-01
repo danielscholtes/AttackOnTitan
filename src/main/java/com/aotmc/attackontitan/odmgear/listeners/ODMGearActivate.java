@@ -110,6 +110,7 @@ public class ODMGearActivate implements Listener {
 		data.getPlayerHooks().put(player.getUniqueId(), list);
 		data.getHooks().put(hookRight.getHookID(), hookRight);
 		data.getHooks().put(hookLeft.getHookID(), hookLeft);
+		//player.playSound(player.getLocation(), "odmgear", 0.5F, 1F);
 		hookRight.launchHook();
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			@Override

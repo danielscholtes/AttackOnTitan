@@ -144,7 +144,7 @@ public class ODMLaunch implements Listener {
 					p.spawnParticle(Particle.CLOUD, p.getLocation(), 20);
 					data.getAttachedHook().remove(hook.getPlayer());
 					
-					launchPlayer(p, hook, hook.getHookVector().multiply(0.98).setY(hook.getHookVector().getY() - 0.28));
+					launchPlayer(p, hook, hook.getHookVector().multiply(0.98).setY(hook.getHookVector().getY() - 0.3));
 					return;
 				}
 			}

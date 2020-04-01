@@ -58,6 +58,8 @@ public class Titan {
 		slime.setAI(false);
 		zombie.setRemoveWhenFarAway(false);
 		slime.setGravity(false);
+		slime.setMaxHealth(20);
+		slime.setHealth(slime.getMaxHealth());
 	}
 	 
 	public int getSize() {
