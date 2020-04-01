@@ -2,6 +2,7 @@ package com.aotmc.attackontitan.util;
 
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.blades.Blades;
+import com.aotmc.attackontitan.materials.Materials;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -38,16 +39,17 @@ public class TabComplete implements TabCompleter
 
             return commands;
         }
+
+        final List<String> players = new ArrayList<>();
+        for (Player player : Bukkit.getServer().getOnlinePlayers())
+        {
+            players.add(player.getName());
+        }
+
         if (args[0].equals("give"))
         {
             if (args.length == 2)
             {
-                final List<String> players = new ArrayList<>();
-                for (Player player : Bukkit.getServer().getOnlinePlayers())
-                {
-                    players.add(player.getName());
-                }
-
                 return players;
             }
             else if (args.length == 3)
@@ -60,6 +62,24 @@ public class TabComplete implements TabCompleter
                 }
 
                 return blades;
+            }
+        }
+        else if (args[0].equals("givematerial"))
+        {
+            if (args.length == 2)
+            {
+                return players;
+            }
+            else if (args.length == 3)
+            {
+                final List<String> materials = new ArrayList<>();
+
+                for (Materials material : Materials.values())
+                {
+                    materials.add(material.toString());
+                }
+
+                return materials;
             }
         }
         return Collections.emptyList();

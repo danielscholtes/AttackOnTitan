@@ -14,7 +14,8 @@ public class CommandsManager
     {
         this.manager = new com.codeitforyou.lib.api.command.CommandManager(Arrays.asList(
                 GiveCommand.class, UpgradeGuiCommand.class, SpawnCommand.class,
-                MaterialsGuiCommand.class, MaterialsConverterGuiCommand.class
+                MaterialsGuiCommand.class, MaterialsConverterGuiCommand.class,
+                GiveMaterialCommand.class
         ), "aot", plugin);
     }
 

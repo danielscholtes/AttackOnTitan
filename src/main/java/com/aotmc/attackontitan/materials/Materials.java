@@ -7,9 +7,9 @@ import java.util.List;
 
 public enum Materials
 {
-    TITAN_FRAGMENT(Material.LIGHT_GRAY_DYE, "Common"),
-    TITAN_CRYSTAL(Material.BLUE_DYE, "Un-Common"),
-    LARGE_TITAN_CRYSTAL(Material.NETHER_STAR, "Rare");
+    TITAN_FRAGMENT(Material.LIGHT_GRAY_DYE, "&6⭐&7⭐⭐"),
+    TITAN_CRYSTAL(Material.BLUE_DYE, "&6⭐⭐&7⭐"),
+    LARGE_TITAN_CRYSTAL(Material.NETHER_STAR, "&6⭐⭐⭐");
 
     public final Material material;
     public final String rarity;
@@ -52,6 +52,18 @@ public enum Materials
         lore.add("");
         lore.add(" &8• &7Rarity&8: &f" + rarity);
         lore.add(" &8• &7Left-Click for information!");
+        lore.add("");
+
+        return lore;
+    }
+
+    public List<String> getItemLore()
+    {
+        final List<String> lore = new ArrayList<>();
+
+        lore.add("");
+        lore.add(" &8• &7Rarity&8: &f" + rarity);
+        lore.add(" &8• &7Use &f/aot materials &7for info!");
         lore.add("");
 
         return lore;

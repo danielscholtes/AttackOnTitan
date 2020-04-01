@@ -30,7 +30,7 @@ public class MaterialsConverterGuiCommand
 
                 if (i == 0 || i == 9 || i == 18)
                 {
-                    inventory.setItem(i, new ItemBuilder(Material.RED_STAINED_GLASS_PANE).withName("&cCancel").withLore("", " &8• &7Click to cancel!", "").getItem(), ((player, action) ->
+                    inventory.setItem(i, new ItemBuilder(Material.RED_STAINED_GLASS_PANE).withName("&cCancel").withLore("", " &8• &7Click to cancel!", "").withNBTString("inventory", "converter").getItem(), ((player, action) ->
                     {
                         if (action == ClickType.LEFT)
                         {
@@ -41,7 +41,7 @@ public class MaterialsConverterGuiCommand
                 }
                 else if (i == 8 || i == 17 || i == 26)
                 {
-                    inventory.setItem(i, new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).withName("&aConvert").withLore("", " &8• &7Click to convert!", "").getItem(), ((player, action) ->
+                    inventory.setItem(i, new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).withName("&aConvert").withLore("", " &8• &7Click to convert!", "").withNBTString("inventory", "converter").getItem(), ((player, action) ->
                     {
                         if (action == ClickType.LEFT)
                         {
@@ -52,13 +52,13 @@ public class MaterialsConverterGuiCommand
                 }
                 else if (i == 4 || i == 13 || i == 22)
                 {
-                    inventory.setItem(i, new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE).withName(" ").withLore(" &7<- Input Material", "", " &7Output Material ->", "").getItem());
+                    inventory.setItem(i, new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE).withName(" ").withLore(" &7<- Input Material", "", " &7Output Material ->", "").withNBTString("inventory", "converter").getItem());
                 }
                 else
                 {
                     if (i != 11 && i != 15)
                     {
-                        inventory.setItem(i, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).withName(" ").getItem());
+                        inventory.setItem(i, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).withName(" ").withNBTString("inventory", "converter").getItem());
                     }
                 }
             }

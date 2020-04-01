@@ -13,7 +13,6 @@ import org.bukkit.event.inventory.InventoryType;
 public class UpgradeGuiCommand
 {
 
-    public static String    uuid;
     public static Inventory inventory;
 
     @Command(permission = "aot.command.upgrade", aliases = {"upgrade"}, usage = "upgrade")
@@ -28,7 +27,7 @@ public class UpgradeGuiCommand
             {
                 if (i != 13)
                 {
-                    inventory.setItem(i, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).getItem(), null);
+                    inventory.setItem(i, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).withNBTString("inventory", "upgrade-blade").getItem(), null);
                 }
             }
         }
@@ -40,7 +39,6 @@ public class UpgradeGuiCommand
         if (inventory != null)
         {
             inventory.open(sender);
-            uuid = inventory.getUuid().toString();
         }
 
     }
