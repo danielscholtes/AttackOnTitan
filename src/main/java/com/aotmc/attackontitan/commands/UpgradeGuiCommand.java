@@ -25,9 +25,17 @@ public class UpgradeGuiCommand
             inventory = new Inventory(InventoryType.CHEST, StringUtil.translate("          &8Blade Upgrades"), plugin);
             for (int i = 0; i < 27; i++)
             {
-                if (i != 13)
+                if (i == 13)
                 {
-                    inventory.setItem(i, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).withNBTString("inventory", "upgrade-blade").getItem(), null);
+                    inventory.setItem(i, new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE).withNBTString("upgrade-inventory", "upgrade-slot").getItem(), ((player, action) ->
+                    {
+
+
+                    }));
+                }
+                else
+                {
+                    inventory.setItem(i, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).withNBTString("upgrade-inventory", "filler").getItem());
                 }
             }
         }
