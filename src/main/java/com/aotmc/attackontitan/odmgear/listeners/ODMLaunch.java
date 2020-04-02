@@ -140,8 +140,6 @@ public class ODMLaunch implements Listener {
 					/*
 					 * Plays sound and particles because it's nice and removes player from attached hooks
 					 */
-					p.playSound(p.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1, 1);
-					p.spawnParticle(Particle.CLOUD, p.getLocation(), 20);
 					data.getAttachedHook().remove(hook.getPlayer());
 					
 					launchPlayer(p, hook, hook.getHookVector().multiply(0.98).setY(hook.getHookVector().getY() - 0.3));
@@ -231,8 +229,8 @@ public class ODMLaunch implements Listener {
 		/*
 		 * Plays sound and particles because it's nice and removes player from attached hooks
 		 */
-		player.playSound(player.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1, 1);
-		player.spawnParticle(Particle.CLOUD, player.getLocation(), 20);
+		player.getWorld().playSound(player.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.5f, 1f);
+		player.getWorld().spawnParticle(Particle.CLOUD, player.getLocation(), 20);
 		data.getAttachedHook().remove(hook.getPlayer());
 		
 		/*

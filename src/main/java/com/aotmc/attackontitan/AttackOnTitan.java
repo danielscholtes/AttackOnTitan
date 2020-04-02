@@ -1,6 +1,13 @@
 package com.aotmc.attackontitan;
 
 import com.aotmc.attackontitan.util.TabComplete;
+import com.codeitforyou.lib.api.item.ItemUtil;
+
+import java.lang.reflect.InvocationTargetException;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.aotmc.attackontitan.commands.CommandsManager;
@@ -43,6 +50,7 @@ public class AttackOnTitan extends JavaPlugin {
 		ODMData odmData = new ODMData(this);
 		titanData.startFollowTask();
 		titanData.startPlayerDetectionTask();
+		
 		getServer().getPluginManager().registerEvents(new TitanZombieFire(), this);
 		getServer().getPluginManager().registerEvents(new SpinningSlashActivate(this), this);
 		getServer().getPluginManager().registerEvents(new ODMGearActivate(this, odmData), this);

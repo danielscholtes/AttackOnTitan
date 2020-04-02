@@ -1,6 +1,8 @@
 package com.aotmc.attackontitan.titans;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -15,6 +17,7 @@ public class TitanData {
 	
 	private AttackOnTitan plugin;
 	private Random rand = new Random();
+	private List<Titan> toRemove = new ArrayList<Titan>();
 	
 	public TitanData(AttackOnTitan plugin) {
 		this.plugin = plugin;
@@ -58,6 +61,10 @@ public class TitanData {
 				if (titans != null) {
 					titanloop:
 					for (Titan titan : titans.values()) {
+						if (!titan.getGiant().isValid()) {
+							toRemove.add(titan);
+							continue titanloop;
+						}
 						entityloop:
 						for (Entity entity : titan.getSlime().getNearbyEntities(5, 5, 5)) {
 							if (!(entity instanceof Player)) {
@@ -75,6 +82,13 @@ public class TitanData {
 							titan.getZombie().setAI(true);
 						}
 						titan.getZombie().setTarget(null);
+					}
+					if (toRemove != null) {
+						for (Titan titan : toRemove) {
+							titans.remove(titan.getSlime().getEntityId());
+							titan.remove();
+						}
+						toRemove.clear();
 					}
 				}
 			}

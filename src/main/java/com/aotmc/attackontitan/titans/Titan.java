@@ -36,7 +36,6 @@ public class Titan {
 		zombie.setCanPickupItems(false);
 		zombie.setInvulnerable(true);
 		zombie.setTarget(null);
-		zombie.setRemoveWhenFarAway(false);
 		zombie.setPersistent(true);
 		
 		giant = (Giant) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.GIANT);
@@ -46,7 +45,6 @@ public class Titan {
 		giant.setCanPickupItems(false);
 		giant.setInvulnerable(true);
 		giant.setAI(false);
-		zombie.setRemoveWhenFarAway(false);
 		giant.setPersistent(true);
 		
 		slime = (Slime) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 8D, 0D), EntityType.SLIME);
@@ -56,7 +54,6 @@ public class Titan {
 		slime.setCanPickupItems(false);
 		slime.setPersistent(true);
 		slime.setAI(false);
-		zombie.setRemoveWhenFarAway(false);
 		slime.setGravity(false);
 		slime.setMaxHealth(20);
 		slime.setHealth(slime.getMaxHealth());
@@ -73,19 +70,61 @@ public class Titan {
 	public Giant getGiant() {
 		return this.giant;
 	}
+	
+	@SuppressWarnings("deprecation")
+	public void createNewGiant() {
+		this.giant.remove();
+		this.giant = (Giant) this.slime.getLocation().getWorld().spawnEntity(this.slime.getLocation().add(0D, -7.1D, 0D), EntityType.GIANT);
+		this.giant.setSilent(true);
+		this.giant.setCustomNameVisible(true);
+		this.giant.setCustomName(ChatColor.translateAlternateColorCodes('&', "&6" + size + " Meter Titan"));
+		this.giant.setCanPickupItems(false);
+		this.giant.setInvulnerable(true);
+		this.giant.setAI(false);
+		this.giant.setPersistent(true);
+	}
 
 	public Slime getSlime() {
 		return this.slime;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void createNewSlime() {
+		this.slime.remove();
+		this.slime = (Slime) this.giant.getWorld().spawnEntity(this.giant.getLocation().add(0D, 7.1D, 0D), EntityType.SLIME);
+		this.slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 0, false, false));
+		this.slime.setSize(5);
+		this.slime.setCustomNameVisible(false);
+		this.slime.setCanPickupItems(false);
+		this.slime.setPersistent(true);
+		this.slime.setAI(false);
+		this.slime.setGravity(false);
+		this.slime.setMaxHealth(20);
+		this.slime.setHealth(slime.getMaxHealth());
 	}
 
 	public Zombie getZombie() {
 		return this.zombie;
 	}
 
+	@SuppressWarnings("deprecation")
+	public void createNewZombie() {
+		this.zombie.remove();
+		this.zombie = (Zombie) this.giant.getWorld().spawnEntity(this.giant.getLocation(), EntityType.ZOMBIE);
+		this.zombie.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 0, false, false));
+		this.zombie.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 99999999, 1, false, false));
+		this.zombie.setSilent(true);
+		this.zombie.setCustomNameVisible(false);
+		this.zombie.setCanPickupItems(false);
+		this.zombie.setInvulnerable(true);
+		this.zombie.setTarget(null);
+		this.zombie.setPersistent(true);
+	}
+
 	public void syncEntities() {
 		for (int i = 1; i <= 10; i++) {
 			if (this.zombie.getLocation().add(0D, i, 0D).getBlock() != null && this.zombie.getLocation().add(0D, i, 0D).getBlock().getType() != Material.AIR) {
-				this.zombie.teleport(slime.getLocation().add(0D, -7.5D, 0D));
+				this.zombie.teleport(slime.getLocation().add(0D, -7.1D, 0D));
 				break;
 			}
 		}
@@ -104,7 +143,7 @@ public class Titan {
 		Location loc = new Location(this.giant.getWorld(), this.giant.getLocation().getX() - newX, this.giant.getLocation().getY(),
 				this.giant.getLocation().getZ() - newZ, this.giant.getLocation().getYaw(), this.giant.getLocation().getPitch());
 		
-		this.slime.teleport(loc.add(0D, 7.5D, 0D));
+		this.slime.teleport(loc.add(0D, 7.1D, 0D));
 	}
 
 	public void remove() {

@@ -13,10 +13,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 
+import com.aotmc.attackontitan.util.Utils;
 import com.codeitforyou.lib.api.item.ItemUtil;
-import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 
 public class TitanEvents implements Listener {
 	
@@ -55,18 +54,19 @@ public class TitanEvents implements Listener {
 			}
 			
 			Slime slime = (Slime) event.getEntity();
-			player.spawnParticle(Particle.BLOCK_CRACK, slime.getLocation().add(0D, 1.25D, 0D), 100, Bukkit.createBlockData(Material.REDSTONE_BLOCK));
-			player.playSound(player.getLocation(), "blade", 1, 1);
+			player.getWorld().spawnParticle(Particle.BLOCK_CRACK, slime.getLocation().add(0D, 1.25D, 0D), 100, Bukkit.createBlockData(Material.REDSTONE_BLOCK));
+			player.getWorld().playSound(player.getLocation(), "blade", 1, 1);
 			if (slime.getHealth() <= damage) {
+				Bukkit.broadcastMessage(Utils.color("&7A &c" + titanData.getTitans().get(event.getEntity().getEntityId()).getSize() + " Meter Titan&7 has been slain by &c" + player.getName()));
 				titanData.getTitans().get(slime.getEntityId()).remove();;
 				titanData.getTitans().remove(slime.getEntityId());
-				player.spawnParticle(Particle.CLOUD, slime.getLocation(), 80);
-				player.spawnParticle(Particle.BLOCK_CRACK, slime.getLocation().add(0D, 1.25D, 0D), 250, Bukkit.createBlockData(Material.REDSTONE_BLOCK));
-				player.spawnParticle(Particle.BLOCK_CRACK, slime.getLocation().add(0D, -3D, 0D), 60, Bukkit.createBlockData(Material.REDSTONE_BLOCK));
-				player.spawnParticle(Particle.CLOUD, slime.getLocation().add(0D, -2D, 0D), 80);
-				player.spawnParticle(Particle.CLOUD, slime.getLocation().add(0D, -4D, 0D), 80);
-				player.spawnParticle(Particle.CLOUD, slime.getLocation().add(0D, -6D, 0D), 80);
-				player.playSound(slime.getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 1.5f, 0.4f);
+				player.getWorld().spawnParticle(Particle.CLOUD, slime.getLocation(), 80);
+				player.getWorld().spawnParticle(Particle.BLOCK_CRACK, slime.getLocation().add(0D, 1.25D, 0D), 250, Bukkit.createBlockData(Material.REDSTONE_BLOCK));
+				player.getWorld().spawnParticle(Particle.BLOCK_CRACK, slime.getLocation().add(0D, -3D, 0D), 60, Bukkit.createBlockData(Material.REDSTONE_BLOCK));
+				player.getWorld().spawnParticle(Particle.CLOUD, slime.getLocation().add(0D, -2D, 0D), 80);
+				player.getWorld().spawnParticle(Particle.CLOUD, slime.getLocation().add(0D, -4D, 0D), 80);
+				player.getWorld().spawnParticle(Particle.CLOUD, slime.getLocation().add(0D, -6D, 0D), 80);
+				player.getWorld().playSound(slime.getLocation(), Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, 1.5f, 0.4f);
 			} else {
 				slime.setHealth(slime.getHealth() - damage);
 			}
@@ -79,29 +79,6 @@ public class TitanEvents implements Listener {
 			return;
 		}
 		event.setCancelled(true);
-	}
-	
-	@EventHandler
-	public void onDespawn(EntityRemoveFromWorldEvent event) {
-		if (!event.getEntity().getLocation().getWorld().getName().equalsIgnoreCase("Shiganshina_world")) {
-			return;
-		}
-		
-		if (!(event.getEntity() instanceof Slime)) {
-			return;
-		}
-		
-		if (titanData.getTitans() == null || !titanData.getTitans().containsKey(event.getEntity().getEntityId())) {
-			return;
-		}
-		
-		titanData.getTitans().get(event.getEntity().getEntityId()).remove();
-		titanData.getTitans().remove(event.getEntity().getEntityId());
-	}
-	
-	@EventHandler
-	public void onJoin(PlayerJoinEvent event) {
-		
 	}
 
 }
