@@ -243,7 +243,7 @@ public class ODMLaunch implements Listener {
 					return;
 				}
 				Vector playerVelocity = Bukkit.getPlayer(hook.getPlayer()).getVelocity();
-				Bukkit.getPlayer(hook.getPlayer()).addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 2, 0, false, false));
+				Bukkit.getPlayer(hook.getPlayer()).addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 3, 0, false, false));
 				Bukkit.getPlayer(hook.getPlayer()).setVelocity(playerVelocity);
 			}
 		}, 20 * 1 * 1L).getTaskId());
