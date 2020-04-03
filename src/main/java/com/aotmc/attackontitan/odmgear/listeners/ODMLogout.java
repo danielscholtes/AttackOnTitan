@@ -49,6 +49,9 @@ public class ODMLogout implements Listener {
 		if (data.getLocationHooks() != null && data.getLocationHooks().containsKey(player.getUniqueId())) {
 			data.getLocationHooks().remove(player.getUniqueId());
 		}
+		if (data.getBoosting() != null && data.getBoosting().contains(player.getUniqueId())) {
+			data.getBoosting().remove(player.getUniqueId());
+		}
 	}
 
 
@@ -82,6 +85,9 @@ public class ODMLogout implements Listener {
 		}
 		if (data.getLocationHooks() != null && data.getLocationHooks().containsKey(player.getUniqueId())) {
 			data.getLocationHooks().remove(player.getUniqueId());
+		}
+		if (data.getBoosting() != null && data.getBoosting().contains(player.getUniqueId())) {
+			data.getBoosting().remove(player.getUniqueId());
 		}
 	}
 

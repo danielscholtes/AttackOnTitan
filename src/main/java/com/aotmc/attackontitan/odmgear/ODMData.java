@@ -2,12 +2,17 @@ package com.aotmc.attackontitan.odmgear;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 
 import com.aotmc.attackontitan.AttackOnTitan;
 
@@ -30,6 +35,9 @@ public class ODMData {
 
 	// List of all players who have their first hook attached
 	private List<UUID> attachedHook = new ArrayList<UUID>();
+	
+	// List of all players currently boosting
+	private List<UUID> boosting = new ArrayList<UUID>();
 	
 	private AttackOnTitan plugin;
 	
@@ -58,6 +66,39 @@ public class ODMData {
 				}
 			}
 		}, 3L, 2L).getTaskId();
+	}
+	
+	public void startBoostTask() {
+		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
+			@Override
+			public void run() {
+				if (boosting != null && !boosting.isEmpty()) {
+					Iterator<UUID> iterator = boosting.iterator();
+					UUID nextUUID = null;
+					while (iterator.hasNext()) {
+						nextUUID = iterator.next();
+						if (Bukkit.getPlayer(nextUUID) == null) {
+							boosting.remove(nextUUID);
+						}
+						Bukkit.getPlayer(nextUUID).getWorld().spawnParticle(Particle.CLOUD, Bukkit.getPlayer(nextUUID).getLocation(), 10, 0, 0, 0);
+					}
+				}
+			}
+		}, 3L, 1L);
+	}
+	
+	public void startPreventFlyTask() {
+		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
+			@Override
+			public void run() {
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					if (player.getGameMode() != GameMode.SURVIVAL) {
+						return;
+					}
+					player.setFlying(false);
+				}
+			}
+		}, 3L, 7L);
 	}
 	
 	/**
@@ -95,7 +136,7 @@ public class ODMData {
 	public Map<UUID, Integer> getPlayerTasksLanding() {
 		return playerTasksLanding;
 	}
-
+	
 	/**
 	 * Returns map of all players' tasks for effects
 	 * 
@@ -112,6 +153,15 @@ public class ODMData {
 	 */
 	public List<UUID> getAttachedHook() {
 		return attachedHook;
+	}
+
+	/**
+	 * Returns list of all players who are boosting
+	 * 
+	 * @return		list of all players who are boosting
+	 */
+	public List<UUID> getBoosting() {
+		return boosting;
 	}
 	
 }

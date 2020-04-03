@@ -87,13 +87,13 @@ public class Hook {
 		double pitch = ((p.getLocation().getPitch() + 88) * Math.PI) / 180;
 		if (left) {
 			if (wide) {
-				yaw = ((p.getLocation().getYaw() + 102)  * Math.PI) / 180;
+				yaw = ((p.getLocation().getYaw() + 103)  * Math.PI) / 180;
 			} else {
 				yaw = ((p.getLocation().getYaw() + 94)  * Math.PI) / 180;
 			}
 		} else {
 			if (wide) {
-				yaw = ((p.getLocation().getYaw() + 78)  * Math.PI) / 180;
+				yaw = ((p.getLocation().getYaw() + 77)  * Math.PI) / 180;
 			} else {
 				yaw = ((p.getLocation().getYaw() + 86)  * Math.PI) / 180;
 			}

@@ -1,7 +1,6 @@
 package com.aotmc.attackontitan.odmgear.listeners;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -64,6 +63,9 @@ public class ODMGearActivate implements Listener {
 			}
 			data.getPlayerHooks().remove(player.getUniqueId());
 		}
+		if (data.getLocationHooks() != null && data.getLocationHooks().containsKey(player.getUniqueId())) {
+			data.getLocationHooks().remove(player.getUniqueId());
+		}
 		if (data.getPlayerTasksLanding() != null && data.getPlayerTasksLanding().containsKey(player.getUniqueId())) {
 			Bukkit.getScheduler().cancelTask(data.getPlayerTasksLanding().get(player.getUniqueId()));
 			data.getPlayerTasksLanding().remove(player.getUniqueId());
@@ -72,15 +74,12 @@ public class ODMGearActivate implements Listener {
 			Bukkit.getScheduler().cancelTask(data.getPlayerTasksEffect().get(player.getUniqueId()));
 			data.getPlayerTasksEffect().remove(player.getUniqueId());
 		}
-		if (data.getLocationHooks() != null && data.getLocationHooks().containsKey(player.getUniqueId())) {
-			data.getLocationHooks().remove(player.getUniqueId());
-		}
 		
 		/*
 		 * Activates the ODM Gear
 		 */
 		event.setCancelled(true);
-		RayTraceResult rayTrace = player.getWorld().rayTraceEntities(player.getEyeLocation(), player.getEyeLocation().toVector().normalize(), 40, 10, (e) -> (e.getType() == EntityType.GIANT || e.getType() == EntityType.SLIME));
+		RayTraceResult rayTrace = player.getWorld().rayTraceEntities(player.getEyeLocation(), player.getEyeLocation().toVector().normalize(), 30, 10, (e) -> (e.getType() == EntityType.GIANT || e.getType() == EntityType.SLIME));
 		if (rayTrace != null && rayTrace.getHitEntity() != null) {
 			activateGear(player, false);
 			return;

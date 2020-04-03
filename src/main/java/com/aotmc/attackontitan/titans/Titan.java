@@ -9,12 +9,12 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Zombie;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.aotmc.attackontitan.AttackOnTitan;
-import com.comphenix.protocol.PacketType;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -45,6 +45,11 @@ public class Titan {
 		zombie.setCanPickupItems(false);
 		zombie.setInvulnerable(true);
 		zombie.setTarget(null);
+		zombie.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
+		zombie.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
+		if (zombie.getVehicle() != null) {
+			zombie.getVehicle().remove();
+		}
 		
 		giant = (Giant) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.GIANT);
 		giant.setSilent(true);
@@ -80,7 +85,7 @@ public class Titan {
 	@SuppressWarnings("deprecation")
 	public void createNewGiant() {
 		this.giant.remove();
-		this.giant = (Giant) this.slime.getLocation().getWorld().spawnEntity(this.slime.getLocation().add(0D, -7.1D, 0D), EntityType.GIANT);
+		this.giant = (Giant) this.slime.getLocation().getWorld().spawnEntity(this.slime.getLocation().add(0D, -8D, 0D), EntityType.GIANT);
 		this.giant.setSilent(true);
 		this.giant.setCustomNameVisible(true);
 		this.giant.setCustomName(ChatColor.translateAlternateColorCodes('&', "&6" + size + " Meter Titan"));
@@ -97,7 +102,7 @@ public class Titan {
 	@SuppressWarnings("deprecation")
 	public void createNewSlime() {
 		this.slime.remove();
-		this.slime = (Slime) this.giant.getWorld().spawnEntity(this.giant.getLocation().add(0D, 7.1D, 0D), EntityType.SLIME);
+		this.slime = (Slime) this.giant.getWorld().spawnEntity(this.giant.getLocation().add(0D, 8D, 0D), EntityType.SLIME);
 		this.slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 0, false, false));
 		this.slime.setSize(5);
 		this.slime.setCustomNameVisible(false);
@@ -130,7 +135,7 @@ public class Titan {
 	public void syncEntities() {
 		for (int i = 1; i <= 10; i++) {
 			if (this.zombie.getLocation().add(0D, i, 0D).getBlock() != null && this.zombie.getLocation().add(0D, i, 0D).getBlock().getType() != Material.AIR) {
-				this.zombie.teleport(slime.getLocation().add(0D, -7.1D, 0D));
+				this.zombie.teleport(slime.getLocation().add(0D, -8D, 0D));
 				break;
 			}
 		}
@@ -149,7 +154,7 @@ public class Titan {
 		Location loc = new Location(this.giant.getWorld(), this.giant.getLocation().getX() - newX, this.giant.getLocation().getY(),
 				this.giant.getLocation().getZ() - newZ, this.giant.getLocation().getYaw(), this.giant.getLocation().getPitch());
 		
-		this.slime.teleport(loc.add(0D, 7.1D, 0D));
+		this.slime.teleport(loc.add(0D, 8D, 0D));
 		if (this.grabbedPlayer != null && Bukkit.getPlayer(this.grabbedPlayer) != null) {
 			Bukkit.getPlayer(this.grabbedPlayer).teleport(this.zombie.getLocation().add(0D, 7D, 0D));
 		}

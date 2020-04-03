@@ -1,18 +1,13 @@
 package com.aotmc.attackontitan;
 
 import com.aotmc.attackontitan.util.TabComplete;
-import com.codeitforyou.lib.api.item.ItemUtil;
-
-import java.lang.reflect.InvocationTargetException;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.aotmc.attackontitan.commands.CommandsManager;
 import com.aotmc.attackontitan.commands.gui.listener.InventoryClickListener;
+import com.aotmc.attackontitan.odmgear.Hook;
 import com.aotmc.attackontitan.odmgear.ODMData;
+import com.aotmc.attackontitan.odmgear.listeners.BoostListener;
 import com.aotmc.attackontitan.odmgear.listeners.ODMGearActivate;
 import com.aotmc.attackontitan.odmgear.listeners.ODMLaunch;
 import com.aotmc.attackontitan.odmgear.listeners.ODMLogout;
@@ -30,6 +25,7 @@ public class AttackOnTitan extends JavaPlugin {
 	private ProtocolManager protocolManager;
 	private final CommandsManager manager = new CommandsManager(this);
 	private static TitanData titanData;
+	private ODMData odmData;
 
 	/**
 	 * Runs when server is loaded
@@ -47,9 +43,11 @@ public class AttackOnTitan extends JavaPlugin {
 		// Registers all events
 		titanData = new TitanData(this);
 		CommandsManager manager = new CommandsManager(this);
-		ODMData odmData = new ODMData(this);
+		odmData = new ODMData(this);
 		titanData.startFollowTask();
 		titanData.startPlayerDetectionTask();
+		odmData.startBoostTask();
+		odmData.startPreventFlyTask();
 		
 		getServer().getPluginManager().registerEvents(new TitanZombieFire(), this);
 		getServer().getPluginManager().registerEvents(new SpinningSlashActivate(this), this);
@@ -58,6 +56,7 @@ public class AttackOnTitan extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ODMLogout(odmData), this);
 		getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
 		getServer().getPluginManager().registerEvents(new TitanEvents(titanData), this);
+		getServer().getPluginManager().registerEvents(new BoostListener(odmData), this);
 
 		manager.registerCommand();
 		getCommand("aot").setTabCompleter(new TabComplete());
@@ -70,6 +69,13 @@ public class AttackOnTitan extends JavaPlugin {
 			}
 			
 			titanData.getTitans().clear();
+		}
+		
+		if (odmData.getHooks() != null) {
+			for (Hook hook : odmData.getHooks().values()) {
+				hook.remove();
+			}
+			odmData.getHooks().clear();
 		}
 	}
 

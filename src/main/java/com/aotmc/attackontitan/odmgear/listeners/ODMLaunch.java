@@ -109,10 +109,6 @@ public class ODMLaunch implements Listener {
 						}
 						data.getPlayerHooks().remove(hook.getPlayer());
 					}
-					if (data.getPlayerTasksLanding() != null && data.getPlayerTasksLanding().containsKey(hook.getPlayer())) {
-						Bukkit.getScheduler().cancelTask(data.getPlayerTasksLanding().get(hook.getPlayer()));
-						data.getPlayerTasksLanding().remove(hook.getPlayer());
-					}
 					if (data.getAttachedHook() != null && data.getAttachedHook().contains(hook.getPlayer())) {
 						data.getAttachedHook().remove(hook.getPlayer());
 					}
@@ -145,8 +141,8 @@ public class ODMLaunch implements Listener {
 					 */
 					data.getAttachedHook().remove(hook.getPlayer());
 
-					Vector velocity = event.getHitEntity().getLocation().subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(3);
-					velocity.setY(velocity.getY() - 0.2);
+					Vector velocity = event.getHitEntity().getLocation().subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(2.8);
+					velocity.setY(velocity.getY() - 0.25);
 					
 					launchPlayer(p, hook, velocity);
 					return;
@@ -280,6 +276,30 @@ public class ODMLaunch implements Listener {
 		if (event.getEntity() instanceof Silverfish) {
 			event.setCancelled(true);
 		}
+	}
+	
+	public void startLandingTask() {
+		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
+			@Override
+			public void run() {
+				if (data.getPlayerHooks() != null || data.getPlayerHooks().isEmpty()) {
+					return;
+				}
+				for (UUID uuid : data.getPlayerHooks().keySet()) {
+					if (Bukkit.getPlayer(uuid) == null || Bukkit.getPlayer(uuid).isOnGround()) {
+						for (Hook hook : data.getPlayerHooks().get(uuid)) {
+							hook.remove();
+							data.getHooks().remove(hook.getHookID());
+						}
+						data.getPlayerHooks().remove(uuid);
+						if (data.getPlayerTasksEffect() != null && data.getPlayerTasksEffect().containsKey(uuid)) {
+							Bukkit.getScheduler().cancelTask(data.getPlayerTasksEffect().get(uuid));
+							data.getPlayerTasksEffect().remove(uuid);
+						}
+					}
+				}
+			}
+		}, 3L, 1L);
 	}
 	
 }
