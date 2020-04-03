@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 
 import com.aotmc.attackontitan.AttackOnTitan;
 
@@ -19,10 +20,13 @@ public class ODMData {
 	private Map<UUID, List<Hook>> playerHooks = new HashMap<UUID, List<Hook>>();
 	
 	// Map of all players' distances for first attached hook
-	private Map<UUID, Double> distanceHooks = new HashMap<UUID, Double>();
+	private Map<UUID, Location> locationHooks = new HashMap<UUID, Location>();
 	
 	// Map of all players' tasks for landing
-	private Map<UUID, Integer> playerTasks = new HashMap<UUID, Integer>();
+	private Map<UUID, Integer> playerTasksLanding = new HashMap<UUID, Integer>();
+	
+	// Map of all players' tasks for potion effect
+	private Map<UUID, Integer> playerTasksEffect = new HashMap<UUID, Integer>();
 
 	// List of all players who have their first hook attached
 	private List<UUID> attachedHook = new ArrayList<UUID>();
@@ -75,12 +79,12 @@ public class ODMData {
 	}
 
 	/**
-	 * Returns map of all players' distances for first attached hook
+	 * Returns map of all location' distances for first attached hook
 	 * 
-	 * @return		map of all players' distances for first attached hook
+	 * @return		map of all players' location for first attached hook
 	 */
-	public Map<UUID, Double> getDistanceHooks() {
-		return distanceHooks;
+	public Map<UUID, Location> getLocationHooks() {
+		return locationHooks;
 	}
 
 	/**
@@ -88,8 +92,17 @@ public class ODMData {
 	 * 
 	 * @return		map of all players' tasks for landing
 	 */
-	public Map<UUID, Integer> getPlayerTasks() {
-		return playerTasks;
+	public Map<UUID, Integer> getPlayerTasksLanding() {
+		return playerTasksLanding;
+	}
+
+	/**
+	 * Returns map of all players' tasks for effects
+	 * 
+	 * @return		map of all players' tasks for effects
+	 */
+	public Map<UUID, Integer> getPlayerTasksEffect() {
+		return playerTasksEffect;
 	}
 
 	/**

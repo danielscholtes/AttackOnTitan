@@ -1,5 +1,8 @@
 package com.aotmc.attackontitan.titans;
 
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -8,6 +11,10 @@ import org.bukkit.entity.Slime;
 import org.bukkit.entity.Zombie;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import com.aotmc.attackontitan.AttackOnTitan;
+import com.comphenix.protocol.PacketType;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -18,6 +25,8 @@ public class Titan {
 	private Slime slime;
 	private int size;
 	private TitanType titanType;
+	private int grabTaskID = -1;
+	private UUID grabbedPlayer;
 
 	public Titan(Location spawnLocation, TitanType titanType, int size) {
 		this.size = size;
@@ -36,7 +45,6 @@ public class Titan {
 		zombie.setCanPickupItems(false);
 		zombie.setInvulnerable(true);
 		zombie.setTarget(null);
-		zombie.setPersistent(true);
 		
 		giant = (Giant) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.GIANT);
 		giant.setSilent(true);
@@ -45,14 +53,12 @@ public class Titan {
 		giant.setCanPickupItems(false);
 		giant.setInvulnerable(true);
 		giant.setAI(false);
-		giant.setPersistent(true);
 		
 		slime = (Slime) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 8D, 0D), EntityType.SLIME);
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 0, false, false));
 		slime.setSize(5);
 		slime.setCustomNameVisible(false);
 		slime.setCanPickupItems(false);
-		slime.setPersistent(true);
 		slime.setAI(false);
 		slime.setGravity(false);
 		slime.setMaxHealth(20);
@@ -144,9 +150,26 @@ public class Titan {
 				this.giant.getLocation().getZ() - newZ, this.giant.getLocation().getYaw(), this.giant.getLocation().getPitch());
 		
 		this.slime.teleport(loc.add(0D, 7.1D, 0D));
+		if (this.grabbedPlayer != null && Bukkit.getPlayer(this.grabbedPlayer) != null) {
+			Bukkit.getPlayer(this.grabbedPlayer).teleport(this.zombie.getLocation().add(0D, 7D, 0D));
+		}
+	}
+	
+	public void grabPlayer(UUID uuid) {
+		int count = 0;
+		grabTaskID = new BukkitRunnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				
+			}
+		}.runTaskTimer(AttackOnTitan.getInstance(), 0L, 20L).getTaskId();
 	}
 
 	public void remove() {
+		if (grabTaskID != -1) {
+			Bukkit.getScheduler().cancelTask(grabTaskID);
+		}
 		this.slime.remove();
 		this.giant.remove();
 		this.zombie.remove();

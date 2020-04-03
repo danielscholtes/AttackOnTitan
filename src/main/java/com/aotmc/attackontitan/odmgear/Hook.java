@@ -42,7 +42,7 @@ public class Hook {
 	 * Launches the hook
 	 */
 	@SuppressWarnings("deprecation")
-	public void launchHook() {
+	public void launchHook(boolean wide) {
 		/*
 		 * Checks if player is online
 		 */
@@ -86,15 +86,23 @@ public class Hook {
 		double yaw = ((p.getLocation().getYaw() + 90)  * Math.PI) / 180;
 		double pitch = ((p.getLocation().getPitch() + 88) * Math.PI) / 180;
 		if (left) {
-			yaw = ((p.getLocation().getYaw() + 94)  * Math.PI) / 180;
+			if (wide) {
+				yaw = ((p.getLocation().getYaw() + 102)  * Math.PI) / 180;
+			} else {
+				yaw = ((p.getLocation().getYaw() + 94)  * Math.PI) / 180;
+			}
 		} else {
-			yaw = ((p.getLocation().getYaw() + 86)  * Math.PI) / 180;
+			if (wide) {
+				yaw = ((p.getLocation().getYaw() + 78)  * Math.PI) / 180;
+			} else {
+				yaw = ((p.getLocation().getYaw() + 86)  * Math.PI) / 180;
+			}
 		}
 		double x = Math.sin(pitch) * Math.cos(yaw);
 		double y = Math.sin(pitch) * Math.sin(yaw);
 		double z = Math.cos(pitch);
 		hookVector = new Vector(x, z, y).normalize();
-		projectile.setVelocity(hookVector.multiply(5));
+		projectile.setVelocity(hookVector.multiply(6.25));
 		
 		/*
 		 * Sends a packet to all players to show a leash on the 2 silverfishes so

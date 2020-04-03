@@ -38,12 +38,16 @@ public class ODMLogout implements Listener {
 			}
 			data.getPlayerHooks().remove(player.getUniqueId());
 		}
-		if (data.getPlayerTasks() != null && data.getPlayerTasks().containsKey(player.getUniqueId())) {
-			Bukkit.getScheduler().cancelTask(data.getPlayerTasks().get(player.getUniqueId()));
-			data.getPlayerTasks().remove(player.getUniqueId());
+		if (data.getPlayerTasksLanding() != null && data.getPlayerTasksLanding().containsKey(player.getUniqueId())) {
+			Bukkit.getScheduler().cancelTask(data.getPlayerTasksLanding().get(player.getUniqueId()));
+			data.getPlayerTasksLanding().remove(player.getUniqueId());
 		}
-		if (data.getDistanceHooks() != null && data.getDistanceHooks().containsKey(player.getUniqueId())) {
-			data.getDistanceHooks().remove(player.getUniqueId());
+		if (data.getPlayerTasksEffect() != null && data.getPlayerTasksEffect().containsKey(player.getUniqueId())) {
+			Bukkit.getScheduler().cancelTask(data.getPlayerTasksEffect().get(player.getUniqueId()));
+			data.getPlayerTasksEffect().remove(player.getUniqueId());
+		}
+		if (data.getLocationHooks() != null && data.getLocationHooks().containsKey(player.getUniqueId())) {
+			data.getLocationHooks().remove(player.getUniqueId());
 		}
 	}
 
@@ -68,12 +72,16 @@ public class ODMLogout implements Listener {
 			}
 			data.getPlayerHooks().remove(player.getUniqueId());
 		}
-		if (data.getPlayerTasks() != null && data.getPlayerTasks().containsKey(player.getUniqueId())) {
-			Bukkit.getScheduler().cancelTask(data.getPlayerTasks().get(player.getUniqueId()));
-			data.getPlayerTasks().remove(player.getUniqueId());
+		if (data.getPlayerTasksLanding() != null && data.getPlayerTasksLanding().containsKey(player.getUniqueId())) {
+			Bukkit.getScheduler().cancelTask(data.getPlayerTasksLanding().get(player.getUniqueId()));
+			data.getPlayerTasksLanding().remove(player.getUniqueId());
 		}
-		if (data.getDistanceHooks() != null && data.getDistanceHooks().containsKey(player.getUniqueId())) {
-			data.getDistanceHooks().remove(player.getUniqueId());
+		if (data.getPlayerTasksEffect() != null && data.getPlayerTasksEffect().containsKey(player.getUniqueId())) {
+			Bukkit.getScheduler().cancelTask(data.getPlayerTasksEffect().get(player.getUniqueId()));
+			data.getPlayerTasksEffect().remove(player.getUniqueId());
+		}
+		if (data.getLocationHooks() != null && data.getLocationHooks().containsKey(player.getUniqueId())) {
+			data.getLocationHooks().remove(player.getUniqueId());
 		}
 	}
 
