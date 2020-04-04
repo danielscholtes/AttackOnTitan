@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
@@ -43,6 +44,11 @@ public class TitanEvents implements Listener {
 		
 		if (event instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) event).getDamager() instanceof Player) {
 			Player player = (Player) ((EntityDamageByEntityEvent) event).getDamager();
+			
+			if (titanData.getGrabbedPlayers() != null && titanData.getGrabbedPlayers().containsKey(player.getUniqueId())) {
+				event.setCancelled(true);
+				return;
+			}
 	        
 			if (player.getInventory().getItemInOffHand() == null || !Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getItemInMainHand(), "blade"))) {
 				return;
@@ -79,6 +85,21 @@ public class TitanEvents implements Listener {
 			return;
 		}
 		event.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onDamageChicken(EntityDamageEvent event) {
+		if (!(event.getEntity() instanceof Chicken)) {
+			return;
+		}
+		for (int id : titanData.getGrabbedPlayers().values()) {
+			if (id != event.getEntity().getEntityId()) {
+				continue;
+			}
+
+			event.setCancelled(true);
+			return;
+		}
 	}
 
 }

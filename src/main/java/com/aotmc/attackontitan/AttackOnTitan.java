@@ -9,7 +9,6 @@ import com.aotmc.attackontitan.odmgear.ODMData;
 import com.aotmc.attackontitan.odmgear.listeners.BoostListener;
 import com.aotmc.attackontitan.odmgear.listeners.ODMGearActivate;
 import com.aotmc.attackontitan.odmgear.listeners.ODMLaunch;
-import com.aotmc.attackontitan.odmgear.listeners.ODMLogout;
 import com.aotmc.attackontitan.skills.listeners.SpinningSlashActivate;
 import com.aotmc.attackontitan.titans.Titan;
 import com.aotmc.attackontitan.titans.TitanData;
@@ -52,7 +51,7 @@ public class AttackOnTitan extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new SpinningSlashActivate(this), this);
 		getServer().getPluginManager().registerEvents(new ODMGearActivate(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new ODMLaunch(this, odmData), this);
-		getServer().getPluginManager().registerEvents(new ODMLogout(odmData), this);
+		getServer().getPluginManager().registerEvents(new LogoutEvents(odmData, titanData), this);
 		getServer().getPluginManager().registerEvents(new TitanEvents(titanData), this);
 		getServer().getPluginManager().registerEvents(new BoostListener(odmData), this);
 		getServer().getPluginManager().registerEvents(new ConverterListener(), this);

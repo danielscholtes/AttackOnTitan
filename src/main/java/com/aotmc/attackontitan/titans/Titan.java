@@ -1,10 +1,13 @@
 package com.aotmc.attackontitan.titans;
 
+import java.lang.reflect.Method;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Chicken;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.Slime;
@@ -15,6 +18,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.aotmc.attackontitan.AttackOnTitan;
+import com.aotmc.attackontitan.util.Utils;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -26,11 +30,15 @@ public class Titan {
 	private int size;
 	private TitanType titanType;
 	private int grabTaskID = -1;
+	private boolean isGrabbing = false;
+	private Chicken grabEntity;
+	private TitanData data;
 	private UUID grabbedPlayer;
 
-	public Titan(Location spawnLocation, TitanType titanType, int size) {
+	public Titan(Location spawnLocation, TitanType titanType, int size, TitanData data) {
 		this.size = size;
 		this.titanType = titanType;
+		this.data = data;
 		spawnTitan(spawnLocation);
 	}
 
@@ -59,7 +67,7 @@ public class Titan {
 		giant.setInvulnerable(true);
 		giant.setAI(false);
 		
-		slime = (Slime) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 8D, 0D), EntityType.SLIME);
+		slime = (Slime) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 7.8D, 0D), EntityType.SLIME);
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 0, false, false));
 		slime.setSize(5);
 		slime.setCustomNameVisible(false);
@@ -81,61 +89,18 @@ public class Titan {
 	public Giant getGiant() {
 		return this.giant;
 	}
-	
-	@SuppressWarnings("deprecation")
-	public void createNewGiant() {
-		this.giant.remove();
-		this.giant = (Giant) this.slime.getLocation().getWorld().spawnEntity(this.slime.getLocation().add(0D, -8D, 0D), EntityType.GIANT);
-		this.giant.setSilent(true);
-		this.giant.setCustomNameVisible(true);
-		this.giant.setCustomName(ChatColor.translateAlternateColorCodes('&', "&6" + size + " Meter Titan"));
-		this.giant.setCanPickupItems(false);
-		this.giant.setInvulnerable(true);
-		this.giant.setAI(false);
-		this.giant.setPersistent(true);
-	}
-
 	public Slime getSlime() {
 		return this.slime;
 	}
 	
-	@SuppressWarnings("deprecation")
-	public void createNewSlime() {
-		this.slime.remove();
-		this.slime = (Slime) this.giant.getWorld().spawnEntity(this.giant.getLocation().add(0D, 8D, 0D), EntityType.SLIME);
-		this.slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 0, false, false));
-		this.slime.setSize(5);
-		this.slime.setCustomNameVisible(false);
-		this.slime.setCanPickupItems(false);
-		this.slime.setPersistent(true);
-		this.slime.setAI(false);
-		this.slime.setGravity(false);
-		this.slime.setMaxHealth(20);
-		this.slime.setHealth(slime.getMaxHealth());
-	}
-
 	public Zombie getZombie() {
 		return this.zombie;
-	}
-
-	@SuppressWarnings("deprecation")
-	public void createNewZombie() {
-		this.zombie.remove();
-		this.zombie = (Zombie) this.giant.getWorld().spawnEntity(this.giant.getLocation(), EntityType.ZOMBIE);
-		this.zombie.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 0, false, false));
-		this.zombie.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 99999999, 1, false, false));
-		this.zombie.setSilent(true);
-		this.zombie.setCustomNameVisible(false);
-		this.zombie.setCanPickupItems(false);
-		this.zombie.setInvulnerable(true);
-		this.zombie.setTarget(null);
-		this.zombie.setPersistent(true);
 	}
 
 	public void syncEntities() {
 		for (int i = 1; i <= 10; i++) {
 			if (this.zombie.getLocation().add(0D, i, 0D).getBlock() != null && this.zombie.getLocation().add(0D, i, 0D).getBlock().getType() != Material.AIR) {
-				this.zombie.teleport(slime.getLocation().add(0D, -8D, 0D));
+				this.zombie.teleport(slime.getLocation().add(0D, -7.8D, 0D));
 				break;
 			}
 		}
@@ -154,21 +119,85 @@ public class Titan {
 		Location loc = new Location(this.giant.getWorld(), this.giant.getLocation().getX() - newX, this.giant.getLocation().getY(),
 				this.giant.getLocation().getZ() - newZ, this.giant.getLocation().getYaw(), this.giant.getLocation().getPitch());
 		
-		this.slime.teleport(loc.add(0D, 8D, 0D));
-		if (this.grabbedPlayer != null && Bukkit.getPlayer(this.grabbedPlayer) != null) {
-			Bukkit.getPlayer(this.grabbedPlayer).teleport(this.zombie.getLocation().add(0D, 7D, 0D));
+		this.slime.teleport(loc.add(0D, 7.8D, 0D));
+		if (isGrabbing && grabEntity != null) {
+			double newXGrab;
+			double newZGrab;
+			float nangGrab = getGiant().getLocation().getYaw() - 60;
+
+			if (nangGrab < 0) {
+				nangGrab += 360;
+			}
+
+			newXGrab = Math.cos(Math.toRadians(nangGrab)) * 3.7;
+			newZGrab = Math.sin(Math.toRadians(nangGrab)) * 3.7;
+			Method[] methods = ((Supplier<Method[]>) () -> {
+			    try {
+			        Method getHandle = Class.forName(Bukkit.getServer().getClass().getPackage().getName() + ".entity.CraftEntity").getDeclaredMethod("getHandle");
+			        return new Method[] {
+			                getHandle, getHandle.getReturnType().getDeclaredMethod("setPositionRotation", double.class, double.class, double.class, float.class, float.class)
+			        };
+			    } catch (Exception ex) {
+			        return null;
+			    }
+			}).get();
+			
+			Location locGrab = new Location(getGiant().getWorld(), getGiant().getLocation().getX() - newXGrab, getGiant().getLocation().getY(),
+					getGiant().getLocation().getZ() - newZGrab, getGiant().getLocation().getYaw() - 90, getGiant().getLocation().getPitch());
+			
+			try {
+			    methods[1].invoke(methods[0].invoke(grabEntity), locGrab.getX(), locGrab.getY() + 7.25D, locGrab.getZ(), locGrab.getYaw(), locGrab.getPitch());
+			} catch (Exception ex) {
+				
+			}
 		}
 	}
 	
 	public void grabPlayer(UUID uuid) {
-		int count = 0;
+		isGrabbing = true;
+		grabbedPlayer = uuid;
+		grabEntity = (Chicken) this.getGiant().getWorld().spawnEntity(this.getGiant().getLocation(), EntityType.CHICKEN);
+		grabEntity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 0, false, false));
+		grabEntity.setCanPickupItems(false);
+		grabEntity.setAI(false);
+		grabEntity.setCustomNameVisible(false);
+		grabEntity.setGravity(false);
+		grabEntity.setSilent(true);
+		grabEntity.addPassenger(Bukkit.getPlayer(uuid));
+		data.getGrabbedPlayers().put(uuid, grabEntity.getEntityId());
 		grabTaskID = new BukkitRunnable() {
+			int count = 8;
+			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
+				if (Bukkit.getPlayer(uuid) == null) {
+					if (data.getGrabbedPlayers() != null && data.getGrabbedPlayers().containsKey(uuid)) {
+						data.getGrabbedPlayers().remove(uuid);
+					}
+					isGrabbing = false;
+					this.cancel();
+					return;
+				}
+				if (count == 0) {
+					Bukkit.broadcastMessage(Utils.color("&c" + Bukkit.getPlayer(uuid).getName() + " &7was eaten by a titan!"));
+					Bukkit.getPlayer(uuid).setHealth(0);
+					
+					if (data.getGrabbedPlayers() != null && data.getGrabbedPlayers().containsKey(uuid)) {
+						data.getGrabbedPlayers().remove(uuid);
+					}
+					isGrabbing = false;
+					this.cancel();
+					return;
+				}
 				
+				Utils.message(Bukkit.getPlayer(uuid), "&7You will die in &c" + count + "&7 seconds!");
+				count--;
 			}
 		}.runTaskTimer(AttackOnTitan.getInstance(), 0L, 20L).getTaskId();
+	}
+	
+	public boolean isGrabbing() {
+		return isGrabbing;
 	}
 
 	public void remove() {
@@ -178,6 +207,11 @@ public class Titan {
 		this.slime.remove();
 		this.giant.remove();
 		this.zombie.remove();
+		if (grabEntity != null) {
+			this.grabEntity.remove();	
+		}
+		if (grabbedPlayer != null && data.getGrabbedPlayers() != null && data.getGrabbedPlayers().containsKey(grabbedPlayer)) {
+			data.getGrabbedPlayers().remove(grabbedPlayer);
+		}
 	}
-
 }

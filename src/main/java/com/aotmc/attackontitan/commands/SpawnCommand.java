@@ -29,15 +29,15 @@ public class SpawnCommand {
 		sender.sendMessage("Spawned a " + titanType + " titan!");
 		switch (titanType) {
 			case "SMALL":
-				Titan smallTitan = new Titan(sender.getLocation(), TitanType.SMALL, rand.nextInt((6 - 2) + 1) + 2);
+				Titan smallTitan = new Titan(sender.getLocation(), TitanType.SMALL, rand.nextInt((6 - 2) + 1) + 2, titanData);
 				titanData.getTitans().put(smallTitan.getSlime().getEntityId(), smallTitan);
 				return;
 			case "MEDIUM":
-				Titan mediumTitan = new Titan(sender.getLocation(), TitanType.MEDIUM, rand.nextInt((10 - 7) + 1) + 7);
+				Titan mediumTitan = new Titan(sender.getLocation(), TitanType.MEDIUM, rand.nextInt((10 - 7) + 1) + 7, titanData);
 				titanData.getTitans().put(mediumTitan.getSlime().getEntityId(), mediumTitan);
 				return;
 			case "LARGE":
-				Titan largeTitan = new Titan(sender.getLocation(), TitanType.LARGE, rand.nextInt((15 - 11) + 1) + 11);
+				Titan largeTitan = new Titan(sender.getLocation(), TitanType.LARGE, rand.nextInt((15 - 11) + 1) + 11, titanData);
 				titanData.getTitans().put(largeTitan.getSlime().getEntityId(), largeTitan);
 				return;
 			default:
