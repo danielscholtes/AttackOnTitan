@@ -80,7 +80,7 @@ public class ODMData {
 						if (Bukkit.getPlayer(nextUUID) == null) {
 							boosting.remove(nextUUID);
 						}
-						Bukkit.getPlayer(nextUUID).getWorld().spawnParticle(Particle.CLOUD, Bukkit.getPlayer(nextUUID).getLocation(), 10, 0, 0, 0);
+						Bukkit.getPlayer(nextUUID).getWorld().spawnParticle(Particle.CLOUD, Bukkit.getPlayer(nextUUID).getLocation(), 10, 0, 0, 0, 0.1);
 					}
 				}
 			}

@@ -58,7 +58,7 @@ public class GiveMaterialCommand
 
         final ItemBuilder builder = new ItemBuilder(material)
                 .withName(display_name)
-                .withLore(materials.getItemLore());
+                .withNBTString("material", String.valueOf(materials));
 
         for (int i = 0; i < amount; i++)
         {

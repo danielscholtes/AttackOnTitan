@@ -1,4 +1,4 @@
-package com.aotmc.attackontitan.commands;
+package com.aotmc.attackontitan.commands.gui;
 
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.codeitforyou.lib.api.command.Command;
@@ -10,45 +10,40 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 
-public class UpgradeGuiCommand
+import java.util.logging.Level;
+
+public class UpgradeGUI
 {
 
-    public static Inventory inventory;
+    private static final String   INVENTORY_NAME  = "          &8Blade Upgrades";
+    private static final Material FILLER_MATERIAL = Material.GRAY_STAINED_GLASS_PANE;
 
     @Command(permission = "aot.command.upgrade", aliases = {"upgrade"}, usage = "upgrade")
     public static void execute(final Player sender, final AttackOnTitan plugin, final String[] args)
     {
-
-        inventory = null;
+        Inventory inventory = null;
         try
         {
-            inventory = new Inventory(InventoryType.CHEST, StringUtil.translate("          &8Blade Upgrades"), plugin);
+            inventory = new Inventory(InventoryType.CHEST, StringUtil.translate(INVENTORY_NAME), plugin);
+
             for (int i = 0; i < 27; i++)
             {
-                if (i == 13)
+                if (i != 13)
                 {
-                    inventory.setItem(i, new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE).withNBTString("upgrade-inventory", "upgrade-slot").getItem(), ((player, action) ->
-                    {
-
-
-                    }));
-                }
-                else
-                {
-                    inventory.setItem(i, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).withNBTString("upgrade-inventory", "filler").getItem());
+                    inventory.setItem(i, new ItemBuilder(FILLER_MATERIAL).withName(" ").getItem());
                 }
             }
+
         }
         catch (InvalidInventoryException ex)
         {
-            ex.printStackTrace();
+            plugin.getLogger().log(Level.WARNING, "Failed to create inventory! ", ex);
         }
 
         if (inventory != null)
         {
             inventory.open(sender);
         }
-
     }
 
 }

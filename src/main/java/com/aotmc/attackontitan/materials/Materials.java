@@ -45,27 +45,50 @@ public enum Materials
         }
     }
 
-    public List<String> getDefaultLore()
+    public static List<String> getTitanFragmentLore()
     {
         final List<String> lore = new ArrayList<>();
 
         lore.add("");
-        lore.add(" &8• &7Rarity&8: &f" + rarity);
-        lore.add(" &8• &7Left-Click for information!");
+        lore.add(" &f&nTitan Fragment");
+        lore.add("");
+        lore.add(" &8• &7A titan fragment is the most common");
+        lore.add(" &8• &7of the various titan drops, and");
+        lore.add(" &8• &7can be used to craft common materials");
+        lore.add(" &8• &7which can later be used to craft blades!");
         lore.add("");
 
         return lore;
     }
 
-    public List<String> getItemLore()
+    public static List<String> getTitanCrystalLore()
     {
         final List<String> lore = new ArrayList<>();
 
         lore.add("");
-        lore.add(" &8• &7Rarity&8: &f" + rarity);
-        lore.add(" &8• &7Use &f/aot materials &7for info!");
+        lore.add(" &b&nTitan Crystal");
+        lore.add("");
+        lore.add(" &8• &7The second most common titan drop");
+        lore.add(" &8• &7which can be used for crafting blades");
+        lore.add(" &8• &7or combined into rarer materials!");
         lore.add("");
 
         return lore;
     }
+
+    public static List<String> getLargeTitanCrystalLore()
+    {
+        final List<String> lore = new ArrayList<>();
+
+        lore.add("");
+        lore.add(" &e&nLarge Titan Crystal");
+        lore.add("");
+        lore.add(" &8• &7Amongst the rarest titan drops");
+        lore.add(" &8• &7primarily used for crafting and");
+        lore.add(" &8• &7upgrading higher tiered blades!");
+        lore.add("");
+
+        return lore;
+    }
+
 }
