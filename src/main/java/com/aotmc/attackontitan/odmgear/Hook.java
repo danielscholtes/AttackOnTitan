@@ -66,7 +66,7 @@ public class Hook {
 		 */
 		playerEntity = (Silverfish) Bukkit.getPlayer(player).getWorld().spawnEntity(Bukkit.getPlayer(player).getLocation(), EntityType.SILVERFISH);
 		playerEntity.setGravity(false);
-		playerEntity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0, false, false));
+		playerEntity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0));
 		playerEntity.setSilent(true);
 		playerEntity.setPersistent(false);
 		

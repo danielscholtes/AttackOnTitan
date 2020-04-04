@@ -47,7 +47,7 @@ public class AttackOnTitan extends JavaPlugin {
 		odmData = new ODMData(this);
 		titanData.startFollowTask();
 		titanData.startPlayerDetectionTask();
-		odmData.startBoostTask();
+		odmData.startTask();
 		odmData.startPreventFlyTask();
 		
 		getServer().getPluginManager().registerEvents(new TitanZombieFire(), this);
@@ -58,7 +58,7 @@ public class AttackOnTitan extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new TitanEvents(titanData), this);
 		getServer().getPluginManager().registerEvents(new BoostListener(odmData), this);
 		getServer().getPluginManager().registerEvents(new ConverterListener(), this);
-		getServer().getPluginManager().registerEvents(new ODMGearEquip(), this);
+		getServer().getPluginManager().registerEvents(new ODMGearEquip(odmData), this);
 		getServer().getPluginManager().registerEvents(new ArmorListener(new ArrayList<String>()), this);
 
 		manager.registerCommand();

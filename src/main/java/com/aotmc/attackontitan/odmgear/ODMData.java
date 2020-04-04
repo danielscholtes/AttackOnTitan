@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 
 import com.aotmc.attackontitan.AttackOnTitan;
@@ -37,6 +38,8 @@ public class ODMData {
 	
 	// List of all players currently boosting
 	private List<UUID> boosting = new ArrayList<>();
+	
+	private Map<UUID, ArmorStand> wearingODM = new HashMap<UUID, ArmorStand>();
 	
 	private AttackOnTitan plugin;
 	
@@ -67,7 +70,7 @@ public class ODMData {
 		}, 3L, 2L).getTaskId();
 	}
 	
-	public void startBoostTask() {
+	public void startTask() {
 		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
 			@Override
 			public void run() {
@@ -98,6 +101,10 @@ public class ODMData {
 				}
 			}
 		}, 3L, 7L);
+	}
+	
+	public Map<UUID, ArmorStand> getWearingODM() {
+		return wearingODM;
 	}
 	
 	/**
