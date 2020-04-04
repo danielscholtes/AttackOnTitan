@@ -63,9 +63,14 @@ public class ConverterGUI
                     {
                         final ItemStack input = inventory.get().getItem(11);
                         final String inputNBT = ItemUtil.getNBTString(input, "material");
-                        final ItemStack output = inventory.get().getItem(15).clone();
+                        ItemStack output = inventory.get().getItem(15);
 
-                        if (input != null)
+                        if (output != null)
+                        {
+                            output = output.clone();
+                        }
+
+                        if (input != null && output != null)
                         {
                             final int inputAmount = input.getAmount();
 
@@ -74,12 +79,24 @@ public class ConverterGUI
                                 case "TITAN_FRAGMENT":
                                     if (inputAmount % 6 == 0)
                                     {
-                                        player.getInventory().setItemInMainHand(output);
+                                        player.getInventory().remove(input);
+                                        for (int slot = 0; slot < output.getAmount(); slot++)
+                                        {
+                                            player.getInventory().addItem(new ItemBuilder(output.getType()).withName(output.getItemMeta().getDisplayName()).withNBTString("material", "TITAN_CRYSTAL").getItem());
+                                        }
+                                        player.sendMessage(Utils.color("&2Converter &8» &aYou have successfully converted your materials."));
+                                        player.closeInventory();
                                         break;
                                     }
+
                                     final int finishAmount = (inputAmount - (inputAmount % 6)) / 6;
-                                    player.getInventory().getItemInMainHand().setAmount(finishAmount);
-                                    player.getInventory().addItem(output);
+                                    player.getInventory().getItem(ConverterListener.inputItemSlot).setAmount(finishAmount);
+                                    for (int slot = 0; slot < output.getAmount(); slot++)
+                                    {
+                                        player.getInventory().addItem(new ItemBuilder(output.getType()).withName(output.getItemMeta().getDisplayName()).withNBTString("material", "TITAN_CRYSTAL").getItem());
+                                    }
+                                    player.sendMessage(Utils.color("&2Converter &8» &a You have successfully converted your materials."));
+                                    player.closeInventory();
                                     break;
                                 case "TITAN_CRYSTAL":
                                     if (inputAmount % 14 == 0)
@@ -100,9 +117,11 @@ public class ConverterGUI
                                     {
                                         player.getInventory().addItem(new ItemBuilder(output.getType()).withName(output.getItemMeta().getDisplayName()).withNBTString("material", "LARGE_TITAN_CRYSTAL").getItem());
                                     }
+                                    player.sendMessage(Utils.color("&2Converter &8» &aYou have successfully converted your materials."));
+                                    player.closeInventory();
                                     break;
                                 case "LARGE_TITAN_CRYSTAL":
-                                    player.sendMessage(Utils.color("&2Converter &8» &cYou can not convert this item!"));
+                                    player.sendMessage(Utils.color("&2Converter &8» &cYou can not convert this resource!"));
                                     player.closeInventory();
                                     break;
                             }
