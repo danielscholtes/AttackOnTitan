@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Chicken;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Giant;
@@ -164,6 +165,7 @@ public class Titan {
 		grabEntity.setGravity(false);
 		grabEntity.setSilent(true);
 		grabEntity.addPassenger(Bukkit.getPlayer(uuid));
+		grabEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(0);
 		data.getGrabbedPlayers().put(uuid, grabEntity.getEntityId());
 		grabTaskID = new BukkitRunnable() {
 			int count = 8;

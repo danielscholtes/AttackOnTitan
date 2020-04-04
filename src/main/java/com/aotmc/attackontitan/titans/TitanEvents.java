@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
+import org.spigotmc.event.entity.EntityDismountEvent;
 
 import com.aotmc.attackontitan.util.Utils;
 import com.codeitforyou.lib.api.item.ItemUtil;
@@ -100,6 +101,19 @@ public class TitanEvents implements Listener {
 			event.setCancelled(true);
 			return;
 		}
+	}
+	
+	@EventHandler
+	public void onDismount(EntityDismountEvent event) {
+		if (!(event.getEntity() instanceof Player)) {
+			return;
+		}
+		
+		if (titanData.getGrabbedPlayers() == null || !titanData.getGrabbedPlayers().containsKey(((Player) event.getEntity()).getUniqueId())) {
+			return;
+		}
+		
+		event.setCancelled(true);
 	}
 
 }
