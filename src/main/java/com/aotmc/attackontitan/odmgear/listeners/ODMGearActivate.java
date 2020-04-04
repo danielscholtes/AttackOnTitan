@@ -16,6 +16,7 @@ import org.bukkit.util.RayTraceResult;
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.odmgear.Hook;
 import com.aotmc.attackontitan.odmgear.ODMData;
+import com.codeitforyou.lib.api.item.ItemUtil;
 
 public class ODMGearActivate implements Listener {
 	
@@ -38,7 +39,11 @@ public class ODMGearActivate implements Listener {
 		 * Checks if player is wearing ODM gear
 		 * Gear will have a proper check with NBT soon
 		 */
-		if (player.getInventory().getLeggings() == null || player.getInventory().getLeggings().getType() != Material.CHAINMAIL_LEGGINGS) {
+		if (player.getInventory().getLeggings() == null) {
+			return;
+		}
+        
+		if (!Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getLeggings(), "odm"))) {
 			return;
 		}
 		

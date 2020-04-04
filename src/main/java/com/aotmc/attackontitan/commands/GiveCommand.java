@@ -31,7 +31,7 @@ public class GiveCommand
 
         if (!Arrays.asList("FIRST_GEN_BLADE", "FIRST_GEN_BLADE_MK_II", "FIRST_GEN_BLADE_MK_III", "SECOND_GEN_BLADE"
                 , "SECOND_GEN_BLADE_MK_II", "SECOND_GEN_BLADE_MK_III", "THIRD_GEN_BLADE", "THIRD_GEN_BLADE_MK_II"
-                , "THIRD_GEN_BLADE_MK_III", "PERFECTED_BLADE").contains(blade))
+                , "THIRD_GEN_BLADE_MK_III", "PERFECTED_BLADE", "ODM").contains(blade))
         {
             sender.sendMessage("&cAdmin &8» &7Invalid type!");
             return;
@@ -41,6 +41,22 @@ public class GiveCommand
         {
             sender.sendMessage("&cAdmin &8» &7Targets inventory is full");
             return;
+        }
+        
+        if (blade.toUpperCase().equalsIgnoreCase("ODM")) {
+			final ItemBuilder builder = new ItemBuilder(Material.CHAINMAIL_LEGGINGS).withName("&7ODM Gear")
+					.withNBTString("odm", String.valueOf(true)).withLore("&7odm lore");
+
+			ItemStack item = builder.getItem();
+			ItemMeta meta = item.getItemMeta();
+
+			if (meta != null) {
+				meta.setCustomModelData(1);
+				item.setItemMeta(meta);
+			}
+			
+			target.getInventory().addItem(item);
+			return;
         }
 
         final Blades blades = Blades.valueOf(blade);

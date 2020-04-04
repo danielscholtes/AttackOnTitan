@@ -1,5 +1,7 @@
 package com.aotmc.attackontitan;
 
+import java.util.ArrayList;
+
 import org.bukkit.plugin.java.JavaPlugin;
 import com.aotmc.attackontitan.commands.CommandsManager;
 import com.aotmc.attackontitan.commands.listener.ConverterListener;
@@ -8,6 +10,7 @@ import com.aotmc.attackontitan.odmgear.Hook;
 import com.aotmc.attackontitan.odmgear.ODMData;
 import com.aotmc.attackontitan.odmgear.listeners.BoostListener;
 import com.aotmc.attackontitan.odmgear.listeners.ODMGearActivate;
+import com.aotmc.attackontitan.odmgear.listeners.ODMGearEquip;
 import com.aotmc.attackontitan.odmgear.listeners.ODMLaunch;
 import com.aotmc.attackontitan.skills.listeners.SpinningSlashActivate;
 import com.aotmc.attackontitan.titans.Titan;
@@ -55,6 +58,8 @@ public class AttackOnTitan extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new TitanEvents(titanData), this);
 		getServer().getPluginManager().registerEvents(new BoostListener(odmData), this);
 		getServer().getPluginManager().registerEvents(new ConverterListener(), this);
+		getServer().getPluginManager().registerEvents(new ODMGearEquip(), this);
+		getServer().getPluginManager().registerEvents(new ArmorListener(new ArrayList<String>()), this);
 
 		manager.registerCommand();
 		getCommand("aot").setTabCompleter(new TabComplete());
