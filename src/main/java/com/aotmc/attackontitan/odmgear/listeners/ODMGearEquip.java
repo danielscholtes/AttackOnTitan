@@ -1,5 +1,6 @@
 package com.aotmc.attackontitan.odmgear.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,6 +21,7 @@ public class ODMGearEquip implements Listener {
 		if (!Boolean.valueOf(ItemUtil.getNBTString(event.getNewArmorPiece(), "odm"))) {
 			return;
 		}
+		Bukkit.broadcastMessage("eeeee");
 		
 	}
 

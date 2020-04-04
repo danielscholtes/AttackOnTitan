@@ -1,6 +1,7 @@
 package com.aotmc.attackontitan.commands.gui;
 
 import com.aotmc.attackontitan.AttackOnTitan;
+import com.aotmc.attackontitan.commands.listener.ConverterListener;
 import com.aotmc.attackontitan.util.Utils;
 import com.codeitforyou.lib.api.command.Command;
 import com.codeitforyou.lib.api.exception.InvalidInventoryException;
@@ -47,7 +48,7 @@ public class ConverterGUI
                     inventory.setItem(i, new ItemBuilder(SEPARATOR_MATERIAL).withName(" ").getItem());
                 }
 
-                if (i == 0 || i == 9 || i == 17)
+                if (i == 0 || i == 9 || i == 18)
                 {
                     inventory.setItem(i, new ItemBuilder(CLOSE_MATERIAL).withName("&cClose").getItem(), ((player, action) ->
                     {
@@ -61,27 +62,49 @@ public class ConverterGUI
                     inventory.setItem(i, new ItemBuilder(CONVERT_MATERIAL).withName("&aConvert").getItem(), ((player, action) ->
                     {
                         final ItemStack input = inventory.get().getItem(11);
+                        final String inputNBT = ItemUtil.getNBTString(input, "material");
+                        final ItemStack output = inventory.get().getItem(15).clone();
 
                         if (input != null)
                         {
-                            final String inputNBT = ItemUtil.getNBTString(input, "material");
+                            final int inputAmount = input.getAmount();
 
-                            if (inputNBT != null)
+                            switch (inputNBT)
                             {
-                                switch (inputNBT)
-                                {
-                                    case "TITAN_FRAGMENT":
-                                        player.sendMessage("Titan Fragment");
+                                case "TITAN_FRAGMENT":
+                                    if (inputAmount % 6 == 0)
+                                    {
+                                        player.getInventory().setItemInMainHand(output);
                                         break;
-                                    case "TITAN_CRYSTAL":
-                                        player.sendMessage("Titan Crystal");
+                                    }
+                                    final int finishAmount = (inputAmount - (inputAmount % 6)) / 6;
+                                    player.getInventory().getItemInMainHand().setAmount(finishAmount);
+                                    player.getInventory().addItem(output);
+                                    break;
+                                case "TITAN_CRYSTAL":
+                                    if (inputAmount % 14 == 0)
+                                    {
+                                        player.getInventory().remove(input);
+                                        for (int slot = 0; slot < output.getAmount(); slot++)
+                                        {
+                                            player.getInventory().addItem(new ItemBuilder(output.getType()).withName(output.getItemMeta().getDisplayName()).withNBTString("material", "LARGE_TITAN_CRYSTAL").getItem());
+                                        }
+                                        player.sendMessage(Utils.color("&2Converter &8» &aYou have successfully converted your materials."));
+                                        player.closeInventory();
                                         break;
-                                    case "LARGE_TITAN_CRYSTAL":
-                                        player.sendMessage("Large Titan Crystal");
-                                        break;
-                                }
-                                player.sendMessage(Utils.color("&2Converter &8» &aYou have successfully converted your materials."));
-                                player.closeInventory();
+                                    }
+
+                                    final int finishAmount2 = (inputAmount - (inputAmount % 14)) / 14;
+                                    player.getInventory().getItem(ConverterListener.inputItemSlot).setAmount(finishAmount2);
+                                    for (int slot = 0; slot < output.getAmount(); slot++)
+                                    {
+                                        player.getInventory().addItem(new ItemBuilder(output.getType()).withName(output.getItemMeta().getDisplayName()).withNBTString("material", "LARGE_TITAN_CRYSTAL").getItem());
+                                    }
+                                    break;
+                                case "LARGE_TITAN_CRYSTAL":
+                                    player.sendMessage(Utils.color("&2Converter &8» &cYou can not convert this item!"));
+                                    player.closeInventory();
+                                    break;
                             }
                         }
                     }));
