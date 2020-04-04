@@ -23,7 +23,7 @@ public class GiveCommand
 
         if (target == null)
         {
-            sender.sendMessage("Invalid target");
+            sender.sendMessage("&cAdmin &8» &7Invalid target!");
             return;
         }
 
@@ -33,13 +33,13 @@ public class GiveCommand
                 , "SECOND_GEN_BLADE_MK_II", "SECOND_GEN_BLADE_MK_III", "THIRD_GEN_BLADE", "THIRD_GEN_BLADE_MK_II"
                 , "THIRD_GEN_BLADE_MK_III", "PERFECTED_BLADE").contains(blade))
         {
-            sender.sendMessage("Invalid type");
+            sender.sendMessage("&cAdmin &8» &7Invalid type!");
             return;
         }
 
         if (target.getInventory().firstEmpty() == -1)
         {
-            sender.sendMessage("Targets inv is full");
+            sender.sendMessage("&cAdmin &8» &7Targets inventory is full");
             return;
         }
 

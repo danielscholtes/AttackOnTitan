@@ -18,7 +18,7 @@ public class GiveMaterialCommand
 
         if (target == null || !target.isOnline())
         {
-            sender.sendMessage("Invalid target");
+            sender.sendMessage("&cAdmin &8» &7Invalid target!");
             return;
         }
 
@@ -46,13 +46,13 @@ public class GiveMaterialCommand
 
                 break;
             default:
-                sender.sendMessage("Invalid material!");
+                sender.sendMessage("&cAdmin &8» &7Invalid material!");
                 return;
         }
 
         if (target.getInventory().firstEmpty() == -1)
         {
-            sender.sendMessage("Target has full inv");
+            sender.sendMessage("&cAdmin &8» &7Target has a full inventory!");
             return;
         }
 

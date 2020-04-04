@@ -51,12 +51,12 @@ public class TitanEvents implements Listener {
 				return;
 			}
 	        
-			if (player.getInventory().getItemInOffHand() == null || !Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getItemInMainHand(), "blade"))) {
+			if (!Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getItemInMainHand(), "blade"))) {
 				return;
 			}
 			
 			double damage = Double.parseDouble(ItemUtil.getNBTString(player.getInventory().getItemInMainHand(), "damage"));
-			if (player.getInventory().getItemInOffHand() != null && Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getItemInOffHand(), "blade"))) {
+			if (Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getItemInOffHand(), "blade"))) {
 				damage += Double.parseDouble(ItemUtil.getNBTString(player.getInventory().getItemInOffHand(), "damage"));
 			}
 			
@@ -64,8 +64,8 @@ public class TitanEvents implements Listener {
 			player.getWorld().spawnParticle(Particle.BLOCK_CRACK, slime.getLocation().add(0D, 1.25D, 0D), 100, Bukkit.createBlockData(Material.REDSTONE_BLOCK));
 			player.getWorld().playSound(player.getLocation(), "blade", 1, 1);
 			if (slime.getHealth() <= damage) {
-				Bukkit.broadcastMessage(Utils.color("&7A &c" + titanData.getTitans().get(event.getEntity().getEntityId()).getSize() + " Meter Titan&7 has been slain by &c" + player.getName()));
-				titanData.getTitans().get(slime.getEntityId()).remove();;
+				Bukkit.broadcastMessage(Utils.color("&7A &2" + titanData.getTitans().get(event.getEntity().getEntityId()).getSize() + "-Meter &7Titan has been slain by &2" + player.getName()));
+				titanData.getTitans().get(slime.getEntityId()).remove();
 				titanData.getTitans().remove(slime.getEntityId());
 				player.getWorld().spawnParticle(Particle.CLOUD, slime.getLocation(), 80);
 				player.getWorld().spawnParticle(Particle.BLOCK_CRACK, slime.getLocation().add(0D, 1.25D, 0D), 250, Bukkit.createBlockData(Material.REDSTONE_BLOCK));
@@ -109,7 +109,7 @@ public class TitanEvents implements Listener {
 			return;
 		}
 		
-		if (titanData.getGrabbedPlayers() == null || !titanData.getGrabbedPlayers().containsKey(((Player) event.getEntity()).getUniqueId())) {
+		if (titanData.getGrabbedPlayers() == null || !titanData.getGrabbedPlayers().containsKey((event.getEntity()).getUniqueId())) {
 			return;
 		}
 		

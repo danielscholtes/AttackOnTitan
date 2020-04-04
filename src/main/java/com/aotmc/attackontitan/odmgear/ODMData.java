@@ -11,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import com.aotmc.attackontitan.AttackOnTitan;
@@ -19,25 +18,25 @@ import com.aotmc.attackontitan.AttackOnTitan;
 public class ODMData {
 
 	// Map of all active hooks
-	private Map<UUID, Hook> hooks = new HashMap<UUID, Hook>();
+	private Map<UUID, Hook> hooks = new HashMap<>();
 	
 	// Map of all players' hooks
-	private Map<UUID, List<Hook>> playerHooks = new HashMap<UUID, List<Hook>>();
+	private Map<UUID, List<Hook>> playerHooks = new HashMap<>();
 	
 	// Map of all players' distances for first attached hook
-	private Map<UUID, Location> locationHooks = new HashMap<UUID, Location>();
+	private Map<UUID, Location> locationHooks = new HashMap<>();
 	
 	// Map of all players' tasks for landing
-	private Map<UUID, Integer> playerTasksLanding = new HashMap<UUID, Integer>();
+	private Map<UUID, Integer> playerTasksLanding = new HashMap<>();
 	
 	// Map of all players' tasks for potion effect
-	private Map<UUID, Integer> playerTasksEffect = new HashMap<UUID, Integer>();
+	private Map<UUID, Integer> playerTasksEffect = new HashMap<>();
 
 	// List of all players who have their first hook attached
-	private List<UUID> attachedHook = new ArrayList<UUID>();
+	private List<UUID> attachedHook = new ArrayList<>();
 	
 	// List of all players currently boosting
-	private List<UUID> boosting = new ArrayList<UUID>();
+	private List<UUID> boosting = new ArrayList<>();
 	
 	private AttackOnTitan plugin;
 	
@@ -74,7 +73,7 @@ public class ODMData {
 			public void run() {
 				if (boosting != null && !boosting.isEmpty()) {
 					Iterator<UUID> iterator = boosting.iterator();
-					UUID nextUUID = null;
+					UUID nextUUID;
 					while (iterator.hasNext()) {
 						nextUUID = iterator.next();
 						if (Bukkit.getPlayer(nextUUID) == null) {

@@ -21,8 +21,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.util.Utils;
 
-import net.md_5.bungee.api.ChatColor;
-
 public class Titan {
 	
 	private Giant giant;
@@ -47,8 +45,8 @@ public class Titan {
 	@SuppressWarnings("deprecation")
 	public void spawnTitan(Location spawnLocation) {
 		zombie = (Zombie) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.ZOMBIE);
-		zombie.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 0, false, false));
-		zombie.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 99999999, 1, false, false));
+		zombie.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
+		zombie.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 1, false, false));
 		zombie.setSilent(true);
 		zombie.setCustomNameVisible(false);
 		zombie.setCanPickupItems(false);
@@ -63,13 +61,13 @@ public class Titan {
 		giant = (Giant) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.GIANT);
 		giant.setSilent(true);
 		giant.setCustomNameVisible(true);
-		giant.setCustomName(ChatColor.translateAlternateColorCodes('&', "&6" + size + " Meter Titan"));
+		giant.setCustomName(Utils.color("&6" + size + " Meter Titan"));
 		giant.setCanPickupItems(false);
 		giant.setInvulnerable(true);
 		giant.setAI(false);
 		
 		slime = (Slime) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 7.8D, 0D), EntityType.SLIME);
-		slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 99999999, 0, false, false));
+		slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
 		slime.setSize(5);
 		slime.setCustomNameVisible(false);
 		slime.setCanPickupItems(false);
@@ -100,7 +98,7 @@ public class Titan {
 
 	public void syncEntities() {
 		for (int i = 1; i <= 10; i++) {
-			if (this.zombie.getLocation().add(0D, i, 0D).getBlock() != null && this.zombie.getLocation().add(0D, i, 0D).getBlock().getType() != Material.AIR) {
+			if (this.zombie.getLocation().add(0D, i, 0D).getBlock().getType() != Material.AIR) {
 				this.zombie.teleport(slime.getLocation().add(0D, -7.8D, 0D));
 				break;
 			}
@@ -181,7 +179,7 @@ public class Titan {
 					return;
 				}
 				if (count == 0) {
-					Bukkit.broadcastMessage(Utils.color("&c" + Bukkit.getPlayer(uuid).getName() + " &7was eaten by a titan!"));
+					Bukkit.broadcastMessage(Utils.color("&2" + Bukkit.getPlayer(uuid).getName() + " &7has been devoured by a Titan!"));
 					Bukkit.getPlayer(uuid).setHealth(0);
 					
 					if (data.getGrabbedPlayers() != null && data.getGrabbedPlayers().containsKey(uuid)) {
@@ -192,7 +190,7 @@ public class Titan {
 					return;
 				}
 				
-				Utils.message(Bukkit.getPlayer(uuid), "&7You will die in &c" + count + "&7 seconds!");
+				Utils.message(Bukkit.getPlayer(uuid), "&7You will be devoured in &2" + count + "&7 seconds!");
 				count--;
 			}
 		}.runTaskTimer(AttackOnTitan.getInstance(), 0L, 20L).getTaskId();

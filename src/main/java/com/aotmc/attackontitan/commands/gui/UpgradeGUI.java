@@ -1,6 +1,7 @@
 package com.aotmc.attackontitan.commands.gui;
 
 import com.aotmc.attackontitan.AttackOnTitan;
+import com.aotmc.attackontitan.util.Utils;
 import com.codeitforyou.lib.api.command.Command;
 import com.codeitforyou.lib.api.exception.InvalidInventoryException;
 import com.codeitforyou.lib.api.general.StringUtil;
@@ -42,6 +43,7 @@ public class UpgradeGUI
 
         if (inventory != null)
         {
+            sender.sendMessage(Utils.color("&2Upgrades &8» &7You have started upgrading your blades."));
             inventory.open(sender);
         }
     }

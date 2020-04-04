@@ -115,7 +115,7 @@ public class ODMGearActivate implements Listener {
 		 */
 		Hook hookLeft = new Hook(player.getUniqueId(), true, plugin);
 		Hook hookRight = new Hook(player.getUniqueId(), false, plugin);
-		List<Hook> list = new ArrayList<Hook>();
+		List<Hook> list = new ArrayList<>();
 		list.add(hookLeft);
 		list.add(hookRight);
 		data.getPlayerHooks().put(player.getUniqueId(), list);

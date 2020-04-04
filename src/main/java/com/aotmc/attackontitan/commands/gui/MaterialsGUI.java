@@ -2,6 +2,7 @@ package com.aotmc.attackontitan.commands.gui;
 
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.materials.Materials;
+import com.aotmc.attackontitan.util.Utils;
 import com.codeitforyou.lib.api.command.Command;
 import com.codeitforyou.lib.api.exception.InvalidInventoryException;
 import com.codeitforyou.lib.api.general.StringUtil;
@@ -76,6 +77,7 @@ public class MaterialsGUI
 
         if (inventory != null)
         {
+            sender.sendMessage(Utils.color("&2Materials &8» &7You have opened the materials guide."));
             inventory.open(sender);
         }
     }

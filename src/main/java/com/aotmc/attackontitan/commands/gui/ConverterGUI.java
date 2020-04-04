@@ -1,6 +1,7 @@
 package com.aotmc.attackontitan.commands.gui;
 
 import com.aotmc.attackontitan.AttackOnTitan;
+import com.aotmc.attackontitan.util.Utils;
 import com.codeitforyou.lib.api.command.Command;
 import com.codeitforyou.lib.api.exception.InvalidInventoryException;
 import com.codeitforyou.lib.api.general.StringUtil;
@@ -51,7 +52,7 @@ public class ConverterGUI
                     inventory.setItem(i, new ItemBuilder(CLOSE_MATERIAL).withName("&cClose").getItem(), ((player, action) ->
                     {
                         player.closeInventory();
-                        player.sendMessage(StringUtil.translate("&c&lConverter &8» &7You have closed the converter!"));
+                        player.sendMessage(StringUtil.translate("&2Converter &8» &cYou have closed the resource converter."));
                     }));
                 }
 
@@ -79,6 +80,7 @@ public class ConverterGUI
                                         player.sendMessage("Large Titan Crystal");
                                         break;
                                 }
+                                player.sendMessage(Utils.color("&2Converter &8» &aYou have successfully converted your materials."));
                                 player.closeInventory();
                             }
                         }
@@ -86,6 +88,7 @@ public class ConverterGUI
                 }
             }
 
+            sender.sendMessage(Utils.color("&2Converter &8» &7You have opened the resource converter."));
             inventory.open(sender);
         }
         catch (InvalidInventoryException ex)

@@ -3,6 +3,7 @@ package com.aotmc.attackontitan.commands;
 import java.util.Arrays;
 import java.util.Random;
 
+import com.aotmc.attackontitan.util.Utils;
 import org.bukkit.entity.Player;
 
 import com.aotmc.attackontitan.AttackOnTitan;
@@ -26,7 +27,7 @@ public class SpawnCommand {
 			return;
 		}
 
-		sender.sendMessage("Spawned a " + titanType + " titan!");
+		sender.sendMessage(Utils.color("&cAdmin &8» &7You have spawned a &2" + titanType + " &7Titan!"));
 		switch (titanType) {
 			case "SMALL":
 				Titan smallTitan = new Titan(sender.getLocation(), TitanType.SMALL, rand.nextInt((6 - 2) + 1) + 2, titanData);

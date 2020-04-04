@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class TabComplete implements TabCompleter
             players.add(player.getName());
         }
 
-        if (args[0].equals("give"))
+        if (args[0].equalsIgnoreCase("give"))
         {
             if (args.length == 2)
             {
@@ -64,7 +65,7 @@ public class TabComplete implements TabCompleter
                 return blades;
             }
         }
-        else if (args[0].equals("givematerial"))
+        else if (args[0].equalsIgnoreCase("givematerial"))
         {
             if (args.length == 2)
             {
@@ -81,6 +82,10 @@ public class TabComplete implements TabCompleter
 
                 return materials;
             }
+        }
+        else if (args[0].equalsIgnoreCase("spawn"))
+        {
+            return Arrays.asList("SMALL", "MEDIUM", "LARGE");
         }
         return Collections.emptyList();
     }

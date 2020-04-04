@@ -1,5 +1,6 @@
 package com.aotmc.attackontitan.skills.listeners;
 
+import com.aotmc.attackontitan.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -17,7 +18,6 @@ import com.codeitforyou.lib.api.item.ItemUtil;
 import net.minecraft.server.v1_15_R1.DataWatcher;
 import net.minecraft.server.v1_15_R1.DataWatcherRegistry;
 import net.minecraft.server.v1_15_R1.EntityPlayer;
-
 
 public class SpinningSlashActivate implements Listener {
 
@@ -65,12 +65,12 @@ public class SpinningSlashActivate implements Listener {
 		}
         
 		Player player = event.getPlayer();
-		player.sendMessage("spinning slash");
+		player.sendMessage(Utils.color("&7You have activated the &2Spinning Slash &7skill."));
 		
 		/*
 		 * Makes player spin and applies speed for an awesome look
 		 */
-		EntityPlayer entityPlayer = (EntityPlayer) ((CraftPlayer) player).getHandle();
+		EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
 		DataWatcher dataWatcher = entityPlayer.getDataWatcher();
 		dataWatcher.set(DataWatcherRegistry.a.a(7), (byte) 0x04);
 		player.setVelocity(player.getEyeLocation().getDirection().multiply(2.5));

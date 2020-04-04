@@ -17,15 +17,15 @@ public class TitanData {
 	
 	private AttackOnTitan plugin;
 	private Random rand = new Random();
-	private List<Titan> toRemove = new ArrayList<Titan>();
+	private List<Titan> toRemove = new ArrayList<>();
 	
 	public TitanData(AttackOnTitan plugin) {
 		this.plugin = plugin;
 	}
 	
-	private Map<Integer, Titan> titans = new HashMap<Integer, Titan>();
+	private Map<Integer, Titan> titans = new HashMap<>();
 	
-	private Map<UUID, Integer> grabbedPlayers = new HashMap<UUID, Integer>();
+	private Map<UUID, Integer> grabbedPlayers = new HashMap<>();
 	
 	public Map<Integer, Titan> getTitans() {
 		return titans;
@@ -79,7 +79,7 @@ public class TitanData {
 								}
 								if (Math.random() < 0.60) {
 									titan.getZombie().setAI(true);
-									titan.grabPlayer(((Player) entity).getUniqueId());
+									titan.grabPlayer((entity).getUniqueId());
 								}
 								continue titanloop;
 							}	

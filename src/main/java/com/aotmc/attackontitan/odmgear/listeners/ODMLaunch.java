@@ -48,7 +48,7 @@ public class ODMLaunch implements Listener {
 		if (!(event.getDamager() instanceof Snowball) || event.getEntity() instanceof Slime) {
 			return;
 		}
-		if (!((Snowball) event.getDamager()).hasMetadata("HookID")) {
+		if (!(event.getDamager()).hasMetadata("HookID")) {
 			return;
 		}
 		
@@ -242,7 +242,7 @@ public class ODMLaunch implements Listener {
 				Bukkit.getPlayer(hook.getPlayer()).addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 3, 0, false, false));
 				Bukkit.getPlayer(hook.getPlayer()).setVelocity(playerVelocity);
 			}
-		}, 20 * 1 * 1L).getTaskId());
+		}, 20L).getTaskId());
 		/*
 		 * Runs a timer till the player lands, when he does land removes the hook
 		 * and removes player and hook from all neccessary lists and maps
