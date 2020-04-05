@@ -16,7 +16,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
-import com.aotmc.attackontitan.util.Utils;
+import com.aotmc.attackontitan.general.util.Utils;
 import com.codeitforyou.lib.api.item.ItemUtil;
 
 public class TitanEvents implements Listener {

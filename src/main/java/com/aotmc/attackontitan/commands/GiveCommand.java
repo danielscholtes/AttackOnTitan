@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.blades.Blades;
+import com.aotmc.attackontitan.general.util.Utils;
 import com.codeitforyou.lib.api.command.Command;
 import com.codeitforyou.lib.api.item.ItemBuilder;
 
@@ -44,18 +45,7 @@ public class GiveCommand
         }
         
         if (blade.toUpperCase().equalsIgnoreCase("ODM")) {
-			final ItemBuilder builder = new ItemBuilder(Material.CHAINMAIL_LEGGINGS).withName("&7ODM Gear")
-					.withNBTString("odm", String.valueOf(true)).withLore("&7odm lore");
-
-			ItemStack item = builder.getItem();
-			ItemMeta meta = item.getItemMeta();
-
-			if (meta != null) {
-				meta.setCustomModelData(1);
-				item.setItemMeta(meta);
-			}
-			
-			target.getInventory().addItem(item);
+			target.getInventory().addItem(Utils.createODMLeggings());
 			return;
         }
 

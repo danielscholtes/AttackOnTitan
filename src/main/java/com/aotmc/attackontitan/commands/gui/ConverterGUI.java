@@ -1,20 +1,21 @@
 package com.aotmc.attackontitan.commands.gui;
 
+import java.util.logging.Level;
+
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemStack;
+
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.commands.listener.ConverterListener;
-import com.aotmc.attackontitan.util.Utils;
+import com.aotmc.attackontitan.general.util.Utils;
 import com.codeitforyou.lib.api.command.Command;
 import com.codeitforyou.lib.api.exception.InvalidInventoryException;
 import com.codeitforyou.lib.api.general.StringUtil;
 import com.codeitforyou.lib.api.inventory.Inventory;
 import com.codeitforyou.lib.api.item.ItemBuilder;
 import com.codeitforyou.lib.api.item.ItemUtil;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.logging.Level;
 
 public class ConverterGUI
 {

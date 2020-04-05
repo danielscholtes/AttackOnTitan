@@ -1,11 +1,5 @@
 package com.aotmc.attackontitan.commands.listener;
 
-import com.aotmc.attackontitan.commands.gui.ConverterGUI;
-import com.aotmc.attackontitan.materials.Materials;
-import com.aotmc.attackontitan.util.Utils;
-import com.codeitforyou.lib.api.inventory.Inventory;
-import com.codeitforyou.lib.api.item.ItemBuilder;
-import com.codeitforyou.lib.api.item.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.event.EventHandler;
@@ -14,6 +8,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import com.aotmc.attackontitan.commands.gui.ConverterGUI;
+import com.aotmc.attackontitan.general.util.Utils;
+import com.aotmc.attackontitan.materials.Materials;
+import com.codeitforyou.lib.api.inventory.Inventory;
+import com.codeitforyou.lib.api.item.ItemBuilder;
+import com.codeitforyou.lib.api.item.ItemUtil;
 
 public class ConverterListener implements Listener
 {

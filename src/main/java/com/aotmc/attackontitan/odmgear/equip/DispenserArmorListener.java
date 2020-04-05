@@ -1,5 +1,5 @@
   
-package com.aotmc.attackontitan;
+package com.aotmc.attackontitan.odmgear.equip;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,7 +16,7 @@ public class DispenserArmorListener implements Listener{
 	
 	@EventHandler
 	public void dispenseArmorEvent(BlockDispenseArmorEvent event){
-		ArmorType type = ArmorType.matchType(event.getItem());
+		ArmorType type = ArmorType.matchType(event.getItem(), false);
 		if(type != null){
 			if(event.getTargetEntity() instanceof Player){
 				Player p = (Player) event.getTargetEntity();

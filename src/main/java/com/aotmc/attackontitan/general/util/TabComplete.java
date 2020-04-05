@@ -1,4 +1,4 @@
-package com.aotmc.attackontitan.util;
+package com.aotmc.attackontitan.general.util;
 
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.blades.Blades;

@@ -1,4 +1,4 @@
-package com.aotmc.attackontitan;
+package com.aotmc.attackontitan.general;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -58,6 +58,10 @@ public class LogoutEvents implements Listener {
 		if (titanData.getGrabbedPlayers() != null && titanData.getGrabbedPlayers().containsKey(player.getUniqueId())) {
 			titanData.getGrabbedPlayers().remove(player.getUniqueId());
 		}
+		if (odmData.getWearingODM() != null && odmData.getWearingODM().containsKey(player.getUniqueId())) {
+			odmData.getWearingODM().get(player.getUniqueId()).remove();
+			odmData.getWearingODM().remove(player.getUniqueId());
+		}
 	}
 
 
@@ -94,6 +98,13 @@ public class LogoutEvents implements Listener {
 		}
 		if (odmData.getBoosting() != null && odmData.getBoosting().contains(player.getUniqueId())) {
 			odmData.getBoosting().remove(player.getUniqueId());
+		}
+		if (titanData.getGrabbedPlayers() != null && titanData.getGrabbedPlayers().containsKey(player.getUniqueId())) {
+			titanData.getGrabbedPlayers().remove(player.getUniqueId());
+		}
+		if (odmData.getWearingODM() != null && odmData.getWearingODM().containsKey(player.getUniqueId())) {
+			odmData.getWearingODM().get(player.getUniqueId()).remove();
+			odmData.getWearingODM().remove(player.getUniqueId());
 		}
 	}
 

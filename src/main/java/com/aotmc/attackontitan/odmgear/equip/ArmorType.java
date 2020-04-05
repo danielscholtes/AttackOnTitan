@@ -1,6 +1,9 @@
-package com.aotmc.attackontitan;
+package com.aotmc.attackontitan.odmgear.equip;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+
+import com.codeitforyou.lib.api.item.ItemUtil;
 
 /**
  * @author Arnah
@@ -21,9 +24,12 @@ public enum ArmorType{
 	 * @param itemStack The ItemStack to parse the type of.
 	 * @return The parsed ArmorType, or null if not found.
 	 */
-	public static ArmorType matchType(final ItemStack itemStack){
+	public static ArmorType matchType(final ItemStack itemStack, boolean old){
 		if(ArmorListener.isAirOrNull(itemStack)) return null;
 		String type = itemStack.getType().name();
+		if (Boolean.valueOf(ItemUtil.getNBTString(itemStack, "odm")) && itemStack.getType() == Material.DIAMOND_HOE && old) {
+			return LEGGINGS;
+		}
 		if(type.endsWith("_HELMET") || type.endsWith("_SKULL") || type.endsWith("PLAYER_HEAD")) return HELMET;
 		else if(type.endsWith("_CHESTPLATE") || type.endsWith("ELYTRA")) return CHESTPLATE;
 		else if(type.endsWith("_LEGGINGS")) return LEGGINGS;

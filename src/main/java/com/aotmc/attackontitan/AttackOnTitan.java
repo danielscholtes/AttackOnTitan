@@ -2,12 +2,20 @@ package com.aotmc.attackontitan;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import com.aotmc.attackontitan.commands.CommandsManager;
 import com.aotmc.attackontitan.commands.listener.ConverterListener;
-import com.aotmc.attackontitan.util.TabComplete;
+import com.aotmc.attackontitan.general.JoinEvents;
+import com.aotmc.attackontitan.general.LogoutEvents;
+import com.aotmc.attackontitan.general.util.TabComplete;
+import com.aotmc.attackontitan.general.util.Utils;
 import com.aotmc.attackontitan.odmgear.Hook;
 import com.aotmc.attackontitan.odmgear.ODMData;
+import com.aotmc.attackontitan.odmgear.equip.ArmorListener;
 import com.aotmc.attackontitan.odmgear.listeners.BoostListener;
 import com.aotmc.attackontitan.odmgear.listeners.ODMGearActivate;
 import com.aotmc.attackontitan.odmgear.listeners.ODMGearEquip;
@@ -17,6 +25,7 @@ import com.aotmc.attackontitan.titans.Titan;
 import com.aotmc.attackontitan.titans.TitanData;
 import com.aotmc.attackontitan.titans.TitanEvents;
 import com.aotmc.attackontitan.titans.TitanZombieFire;
+import com.codeitforyou.lib.api.item.ItemUtil;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
@@ -47,8 +56,9 @@ public class AttackOnTitan extends JavaPlugin {
 		odmData = new ODMData(this);
 		titanData.startFollowTask();
 		titanData.startPlayerDetectionTask();
-		odmData.startTask();
+		odmData.startBoostTask();
 		odmData.startPreventFlyTask();
+		odmData.startAlignODMTask();
 		
 		getServer().getPluginManager().registerEvents(new TitanZombieFire(), this);
 		getServer().getPluginManager().registerEvents(new SpinningSlashActivate(this), this);
@@ -60,9 +70,24 @@ public class AttackOnTitan extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ConverterListener(), this);
 		getServer().getPluginManager().registerEvents(new ODMGearEquip(odmData), this);
 		getServer().getPluginManager().registerEvents(new ArmorListener(new ArrayList<String>()), this);
-
+		getServer().getPluginManager().registerEvents(new JoinEvents(odmData), this);
+		
 		manager.registerCommand();
 		getCommand("aot").setTabCompleter(new TabComplete());
+		
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			if (odmData.getWearingODM() != null && odmData.getWearingODM().containsKey(player.getUniqueId())) {
+				continue;
+			}
+
+			if (player.getEquipment().getLeggings() == null || !Boolean.valueOf(ItemUtil.getNBTString(player.getEquipment().getLeggings(), "odm"))) {
+				return;
+			}
+			
+			ArmorStand armorStand = Utils.createODMArmorStand(player.getLocation());
+			player.addPassenger(armorStand);
+			odmData.getWearingODM().put(player.getUniqueId(), armorStand);
+		}
 	}
 	
 	public void onDisable() {
@@ -79,6 +104,13 @@ public class AttackOnTitan extends JavaPlugin {
 				hook.remove();
 			}
 			odmData.getHooks().clear();
+		}
+		
+		if (odmData.getWearingODM() != null) {
+			for (ArmorStand armorStand : odmData.getWearingODM().values()) {
+				armorStand.remove();
+			}
+			odmData.getWearingODM().clear();
 		}
 	}
 
