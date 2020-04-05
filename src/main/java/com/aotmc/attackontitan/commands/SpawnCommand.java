@@ -3,10 +3,10 @@ package com.aotmc.attackontitan.commands;
 import java.util.Arrays;
 import java.util.Random;
 
-import com.aotmc.attackontitan.util.Utils;
 import org.bukkit.entity.Player;
 
 import com.aotmc.attackontitan.AttackOnTitan;
+import com.aotmc.attackontitan.general.util.Utils;
 import com.aotmc.attackontitan.titans.Titan;
 import com.aotmc.attackontitan.titans.TitanData;
 import com.aotmc.attackontitan.titans.TitanType;

@@ -1,16 +1,15 @@
 package com.aotmc.attackontitan.odmgear.listeners;
 
-import org.bukkit.Material;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import com.aotmc.attackontitan.ArmorEquipEvent;
+import com.aotmc.attackontitan.AttackOnTitan;
+import com.aotmc.attackontitan.general.util.Utils;
 import com.aotmc.attackontitan.odmgear.ODMData;
+import com.aotmc.attackontitan.odmgear.equip.ArmorEquipEvent;
 import com.codeitforyou.lib.api.item.ItemUtil;
 
 public class ODMGearEquip implements Listener {
@@ -21,33 +20,48 @@ public class ODMGearEquip implements Listener {
 		this.data = data;
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onEquip(ArmorEquipEvent event) {
 		if (event.getOldArmorPiece() != null && Boolean.valueOf(ItemUtil.getNBTString(event.getOldArmorPiece(), "odm"))) {
+			event.setUpdateOld(true);
+			event.setOldArmorPiece(Utils.createODMLeggings());
 			if (event.getNewArmorPiece() == null || !Boolean.valueOf(ItemUtil.getNBTString(event.getNewArmorPiece(), "odm"))) {
+				if (event.getPlayer().getPassengers().get(0) != null && event.getPlayer().getPassengers().get(0) instanceof ArmorStand) {
+					event.getPlayer().getPassengers().get(0).remove();
+				}
 				if (data.getWearingODM() != null && data.getWearingODM().containsKey(event.getPlayer().getUniqueId())) {
-					data.getWearingODM().get(event.getPlayer().getUniqueId()).remove();
 					data.getWearingODM().remove(event.getPlayer().getUniqueId());
 				}
 				return;
 			}
+			Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), new Runnable() {
+				@Override
+				public void run() {	
+					event.getPlayer().getEquipment().setLeggings(Utils.createODMHoe());
+				}
+			}, 2L);
 			return;
 		}
 		if (event.getNewArmorPiece() == null) {
 			return;
 		}
         
-		Player player = event.getPlayer();
-		
 		if (!Boolean.valueOf(ItemUtil.getNBTString(event.getNewArmorPiece(), "odm"))) {
 			return;
 		}
-		ItemStack item = new ItemStack(Material.DIAMOND_HOE, 1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setCustomModelData(1);
-		item.setItemMeta(meta);
-		player.getInventory().setHelmet(item);
+		
+		Player player = event.getPlayer();
+		
+		ArmorStand armorStand = Utils.createODMArmorStand(player.getLocation());
+		player.addPassenger(armorStand);
+		data.getWearingODM().put(player.getUniqueId(), armorStand);
+		
+		Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), new Runnable() {
+			@Override
+			public void run() {	
+				player.getEquipment().setLeggings(Utils.createODMHoe());
+			}
+		}, 2L);
 	}
 
 }

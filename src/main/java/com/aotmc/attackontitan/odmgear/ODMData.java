@@ -70,7 +70,7 @@ public class ODMData {
 		}, 3L, 2L).getTaskId();
 	}
 	
-	public void startTask() {
+	public void startBoostTask() {
 		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
 			@Override
 			public void run() {
@@ -87,6 +87,23 @@ public class ODMData {
 				}
 			}
 		}, 3L, 1L);
+	}
+	
+	public void startAlignODMTask() {
+		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
+			@Override
+			public void run() {
+				for (UUID uuid : wearingODM.keySet()) {
+					if (Bukkit.getPlayer(uuid) == null) {
+						wearingODM.get(uuid).remove();
+						wearingODM.remove(uuid);
+						continue;
+					}
+					
+					wearingODM.get(uuid).setRotation(Bukkit.getPlayer(uuid).getLocation().getYaw(), wearingODM.get(uuid).getLocation().getPitch());
+				}
+			}
+		}, 3L, 5L);
 	}
 	
 	public void startPreventFlyTask() {

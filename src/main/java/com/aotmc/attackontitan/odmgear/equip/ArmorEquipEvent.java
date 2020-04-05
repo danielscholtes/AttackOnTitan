@@ -1,4 +1,4 @@
-package com.aotmc.attackontitan;
+package com.aotmc.attackontitan.odmgear.equip;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -17,6 +17,8 @@ public final class ArmorEquipEvent extends PlayerEvent implements Cancellable{
 	private final EquipMethod equipType;
 	private final ArmorType type;
 	private ItemStack oldArmorPiece, newArmorPiece;
+	private boolean updateNew = false;
+	private boolean updateOld = false;
 
 	/**
 	 * @param player The player who put on / removed the armor.
@@ -83,6 +85,22 @@ public final class ArmorEquipEvent extends PlayerEvent implements Cancellable{
 
 	public final void setNewArmorPiece(final ItemStack newArmorPiece){
 		this.newArmorPiece = newArmorPiece;
+	}
+	
+	public final boolean getUpdateNew() {
+		return updateNew;
+	}
+	
+	public final boolean getUpdateOld() {
+		return updateOld;
+	}
+	
+	public final void setUpdateNew(boolean updateNew) {
+		this.updateNew = updateNew;
+	}
+	
+	public final void setUpdateOld(boolean updateOld) {
+		this.updateOld = updateOld;
 	}
 
 	/**

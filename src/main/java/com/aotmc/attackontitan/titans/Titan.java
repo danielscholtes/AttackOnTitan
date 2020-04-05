@@ -19,7 +19,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.aotmc.attackontitan.AttackOnTitan;
-import com.aotmc.attackontitan.util.Utils;
+import com.aotmc.attackontitan.general.util.Utils;
 
 public class Titan {
 	
