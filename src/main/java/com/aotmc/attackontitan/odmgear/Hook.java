@@ -64,7 +64,7 @@ public class Hook {
 		/*
 		 * Creates the silverfish that will be following the player
 		 */
-		playerEntity = (Silverfish) Bukkit.getPlayer(player).getWorld().spawnEntity(Bukkit.getPlayer(player).getLocation(), EntityType.SILVERFISH);
+		playerEntity = (Silverfish) Bukkit.getPlayer(player).getWorld().spawnEntity(Bukkit.getPlayer(player).getLocation().add(0D, 0.5D, 0D), EntityType.SILVERFISH);
 		playerEntity.setGravity(false);
 		playerEntity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0));
 		playerEntity.setSilent(true);

@@ -83,7 +83,7 @@ public class ODMGearActivate implements Listener {
 		 * Activates the ODM Gear
 		 */
 		event.setCancelled(true);
-		RayTraceResult rayTrace = player.getWorld().rayTraceEntities(player.getEyeLocation(), player.getEyeLocation().toVector().normalize(), 30, 10, (e) -> (e.getType() == EntityType.GIANT || e.getType() == EntityType.SLIME));
+		RayTraceResult rayTrace = player.getWorld().rayTraceEntities(player.getEyeLocation(), player.getEyeLocation().toVector().normalize(), 30, 11, (e) -> (e.getType() == EntityType.GIANT || e.getType() == EntityType.SLIME));
 		if (rayTrace != null && rayTrace.getHitEntity() != null) {
 			activateGear(player, false);
 			return;

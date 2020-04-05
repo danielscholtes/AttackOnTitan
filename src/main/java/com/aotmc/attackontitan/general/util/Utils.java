@@ -34,6 +34,7 @@ public class Utils {
 		armorStand.setCanPickupItems(false);
 		armorStand.getEquipment().setHelmet(item);
 		armorStand.setCustomNameVisible(false);
+		armorStand.setMarker(true);
 		armorStand.setPersistent(false);
 		return armorStand;
 	}

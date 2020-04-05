@@ -68,7 +68,7 @@ public class Titan {
 		
 		slime = (Slime) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 7.8D, 0D), EntityType.SLIME);
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
-		slime.setSize(5);
+		slime.setSize(6);
 		slime.setCustomNameVisible(false);
 		slime.setCanPickupItems(false);
 		slime.setAI(false);
@@ -104,32 +104,29 @@ public class Titan {
 			}
 		}
 		this.giant.teleport(this.zombie);
-		double newX;
-		double newZ;
+
 		float nang = this.giant.getLocation().getYaw() + 90;
 
 		if (nang < 0) {
 			nang += 360;
 		}
 
-		newX = Math.cos(Math.toRadians(nang));
-		newZ = Math.sin(Math.toRadians(nang));
+		double newX = Math.cos(Math.toRadians(nang));
+		double newZ = Math.sin(Math.toRadians(nang));
 
 		Location loc = new Location(this.giant.getWorld(), this.giant.getLocation().getX() - newX, this.giant.getLocation().getY(),
 				this.giant.getLocation().getZ() - newZ, this.giant.getLocation().getYaw(), this.giant.getLocation().getPitch());
 		
 		this.slime.teleport(loc.add(0D, 7.8D, 0D));
 		if (isGrabbing && grabEntity != null) {
-			double newXGrab;
-			double newZGrab;
 			float nangGrab = getGiant().getLocation().getYaw() - 60;
 
 			if (nangGrab < 0) {
 				nangGrab += 360;
 			}
 
-			newXGrab = Math.cos(Math.toRadians(nangGrab)) * 3.7;
-			newZGrab = Math.sin(Math.toRadians(nangGrab)) * 3.7;
+			double newXGrab = Math.cos(Math.toRadians(nangGrab)) * 3.7;
+			double newZGrab = Math.sin(Math.toRadians(nangGrab)) * 3.7;
 			Method[] methods = ((Supplier<Method[]>) () -> {
 			    try {
 			        Method getHandle = Class.forName(Bukkit.getServer().getClass().getPackage().getName() + ".entity.CraftEntity").getDeclaredMethod("getHandle");
@@ -208,7 +205,10 @@ public class Titan {
 		this.giant.remove();
 		this.zombie.remove();
 		if (grabEntity != null) {
-			this.grabEntity.remove();	
+			if (grabbedPlayer != null){
+				this.grabEntity.removePassenger(Bukkit.getPlayer(grabbedPlayer));
+			}
+			this.grabEntity.remove();
 		}
 		if (grabbedPlayer != null && data.getGrabbedPlayers() != null && data.getGrabbedPlayers().containsKey(grabbedPlayer)) {
 			data.getGrabbedPlayers().remove(grabbedPlayer);

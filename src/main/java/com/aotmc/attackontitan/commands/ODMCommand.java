@@ -1,10 +1,11 @@
 package com.aotmc.attackontitan.commands;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.general.util.Utils;
 import com.codeitforyou.lib.api.command.Command;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 public class ODMCommand
 {

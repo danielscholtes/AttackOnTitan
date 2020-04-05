@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Silverfish;
 import org.bukkit.entity.Slime;
@@ -88,7 +89,7 @@ public class ODMLaunch implements Listener {
 			/*
 			 * Cancels hook and resets ODM gear if hook hits itself
 			 */
-			if (event.getHitEntity() instanceof Player || event.getHitEntity() instanceof Silverfish) {
+			if (event.getHitEntity() instanceof Player || event.getHitEntity() instanceof Silverfish || event.getHitEntity() instanceof ArmorStand) {
 				for (MetadataValue mdv2 : snowball.getMetadata("HookID")) {
 					if (data.getHooks().get(UUID.fromString(mdv2.asString())) == null) {
 						return;
@@ -143,7 +144,7 @@ public class ODMLaunch implements Listener {
 					data.getAttachedHook().remove(hook.getPlayer());
 
 					Vector velocity = event.getHitEntity().getLocation().subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(2.8);
-					velocity.setY(velocity.getY() - 0.25);
+					velocity.setY(velocity.getY() - 0.4);
 					
 					launchPlayer(p, hook, velocity);
 					return;
@@ -201,7 +202,6 @@ public class ODMLaunch implements Listener {
 				data.getLocationHooks().remove(hook.getPlayer());
 			}
 			
-
 			Vector velocity = velocityLocation.subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(5);
 			
 			launchPlayer(p, hook, velocity);

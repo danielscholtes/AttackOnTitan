@@ -4,6 +4,6 @@ public enum TitanType {
 
 	SMALL(),
 	MEDIUM(),
-	LARGE()
+	LARGE();
 	
 }
