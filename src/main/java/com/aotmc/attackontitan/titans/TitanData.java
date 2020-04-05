@@ -78,7 +78,7 @@ public class TitanData {
 									continue entityloop;
 								}
 								if (Math.random() < 0.60) {
-									//titan.getZombie().setAI(true);
+									titan.getZombie().setAI(true);
 									//titan.grabPlayer((entity).getUniqueId());
 								}
 								continue titanloop;
@@ -88,7 +88,7 @@ public class TitanData {
 						if (chance) {
 							titan.getZombie().setAI(false);
 						} else {
-							titan.getZombie().setAI(false);
+							titan.getZombie().setAI(true);
 						}
 						titan.getZombie().setTarget(null);
 					}
