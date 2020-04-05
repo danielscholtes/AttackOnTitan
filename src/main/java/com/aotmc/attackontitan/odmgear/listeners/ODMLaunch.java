@@ -1,5 +1,6 @@
 package com.aotmc.attackontitan.odmgear.listeners;
 
+import java.util.Iterator;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -285,7 +286,10 @@ public class ODMLaunch implements Listener {
 				if (data.getPlayerHooks() != null || data.getPlayerHooks().isEmpty()) {
 					return;
 				}
-				for (UUID uuid : data.getPlayerHooks().keySet()) {
+				Iterator<UUID> iterator = data.getPlayerHooks().keySet().iterator();
+				
+				while (iterator.hasNext()) {
+					UUID uuid = iterator.next();
 					if (Bukkit.getPlayer(uuid) == null || Bukkit.getPlayer(uuid).isOnGround()) {
 						for (Hook hook : data.getPlayerHooks().get(uuid)) {
 							hook.remove();

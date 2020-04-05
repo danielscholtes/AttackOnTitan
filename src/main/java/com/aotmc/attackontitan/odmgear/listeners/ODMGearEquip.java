@@ -1,10 +1,12 @@
 package com.aotmc.attackontitan.odmgear.listeners;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.general.util.Utils;
@@ -26,10 +28,8 @@ public class ODMGearEquip implements Listener {
 			event.setUpdateOld(true);
 			event.setOldArmorPiece(Utils.createODMLeggings());
 			if (event.getNewArmorPiece() == null || !Boolean.valueOf(ItemUtil.getNBTString(event.getNewArmorPiece(), "odm"))) {
-				if (event.getPlayer().getPassengers().get(0) != null && event.getPlayer().getPassengers().get(0) instanceof ArmorStand) {
-					event.getPlayer().getPassengers().get(0).remove();
-				}
 				if (data.getWearingODM() != null && data.getWearingODM().containsKey(event.getPlayer().getUniqueId())) {
+					data.getWearingODM().get(event.getPlayer().getUniqueId()).remove();
 					data.getWearingODM().remove(event.getPlayer().getUniqueId());
 				}
 				return;
@@ -55,10 +55,11 @@ public class ODMGearEquip implements Listener {
 		ArmorStand armorStand = Utils.createODMArmorStand(player.getLocation());
 		player.addPassenger(armorStand);
 		data.getWearingODM().put(player.getUniqueId(), armorStand);
-		
+		event.setNewArmorPiece(new ItemStack(Material.AIR));
+		event.setUpdateNew(true);
 		Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), new Runnable() {
 			@Override
-			public void run() {	
+			public void run() {
 				player.getEquipment().setLeggings(Utils.createODMHoe());
 			}
 		}, 2L);

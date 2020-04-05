@@ -94,12 +94,6 @@ public class ODMData {
 			@Override
 			public void run() {
 				for (UUID uuid : wearingODM.keySet()) {
-					if (Bukkit.getPlayer(uuid) == null) {
-						wearingODM.get(uuid).remove();
-						wearingODM.remove(uuid);
-						continue;
-					}
-					
 					wearingODM.get(uuid).setRotation(Bukkit.getPlayer(uuid).getLocation().getYaw(), wearingODM.get(uuid).getLocation().getPitch());
 				}
 			}

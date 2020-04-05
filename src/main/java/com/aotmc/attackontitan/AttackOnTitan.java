@@ -1,6 +1,8 @@
 package com.aotmc.attackontitan;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.ArmorStand;
@@ -9,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.aotmc.attackontitan.commands.CommandsManager;
 import com.aotmc.attackontitan.commands.listener.ConverterListener;
+import com.aotmc.attackontitan.general.ArmorStandEvents;
 import com.aotmc.attackontitan.general.JoinEvents;
 import com.aotmc.attackontitan.general.LogoutEvents;
 import com.aotmc.attackontitan.general.util.TabComplete;
@@ -71,23 +74,29 @@ public class AttackOnTitan extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ODMGearEquip(odmData), this);
 		getServer().getPluginManager().registerEvents(new ArmorListener(new ArrayList<String>()), this);
 		getServer().getPluginManager().registerEvents(new JoinEvents(odmData), this);
+		getServer().getPluginManager().registerEvents(new ArmorStandEvents(odmData), this);
 		
 		manager.registerCommand();
 		getCommand("aot").setTabCompleter(new TabComplete());
 		
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			if (odmData.getWearingODM() != null && odmData.getWearingODM().containsKey(player.getUniqueId())) {
-				continue;
-			}
+		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+			@Override
+			public void run() {
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					if (odmData.getWearingODM() != null && odmData.getWearingODM().containsKey(player.getUniqueId())) {
+						continue;
+					}
 
-			if (player.getEquipment().getLeggings() == null || !Boolean.valueOf(ItemUtil.getNBTString(player.getEquipment().getLeggings(), "odm"))) {
-				return;
+					if (player.getEquipment().getLeggings() == null || !Boolean.valueOf(ItemUtil.getNBTString(player.getEquipment().getLeggings(), "odm"))) {
+						return;
+					}
+					
+					ArmorStand armorStand = Utils.createODMArmorStand(player.getLocation());
+					player.addPassenger(armorStand);
+					odmData.getWearingODM().put(player.getUniqueId(), armorStand);
+				}
 			}
-			
-			ArmorStand armorStand = Utils.createODMArmorStand(player.getLocation());
-			player.addPassenger(armorStand);
-			odmData.getWearingODM().put(player.getUniqueId(), armorStand);
-		}
+		}, 5L);
 	}
 	
 	public void onDisable() {
@@ -107,7 +116,12 @@ public class AttackOnTitan extends JavaPlugin {
 		}
 		
 		if (odmData.getWearingODM() != null) {
-			for (ArmorStand armorStand : odmData.getWearingODM().values()) {
+			Iterator<UUID> iterator = odmData.getWearingODM().keySet().iterator();
+			
+			while (iterator.hasNext()) {
+				UUID uuid = iterator.next();
+				ArmorStand armorStand = odmData.getWearingODM().get(uuid);
+				odmData.getWearingODM().remove(uuid);
 				armorStand.remove();
 			}
 			odmData.getWearingODM().clear();

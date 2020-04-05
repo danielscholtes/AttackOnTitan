@@ -21,6 +21,7 @@ public class Utils {
 		player.sendMessage(color(message));
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static ArmorStand createODMArmorStand(Location location) {
 		ItemStack item = new ItemStack(Material.DIAMOND_HOE, 1);
 		ItemMeta meta = item.getItemMeta();
@@ -33,6 +34,7 @@ public class Utils {
 		armorStand.setCanPickupItems(false);
 		armorStand.getEquipment().setHelmet(item);
 		armorStand.setCustomNameVisible(false);
+		armorStand.setPersistent(false);
 		return armorStand;
 	}
 	
