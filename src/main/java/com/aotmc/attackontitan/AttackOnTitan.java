@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
 
+import com.aotmc.attackontitan.general.ArmorStandEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.aotmc.attackontitan.commands.CommandsManager;
+import com.aotmc.attackontitan.commands.manager.CommandsManager;
 import com.aotmc.attackontitan.commands.listener.ConverterListener;
-import com.aotmc.attackontitan.general.ArmorStandEvents;
 import com.aotmc.attackontitan.general.JoinEvents;
 import com.aotmc.attackontitan.general.LogoutEvents;
 import com.aotmc.attackontitan.general.util.TabComplete;
@@ -72,7 +72,7 @@ public class AttackOnTitan extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new BoostListener(odmData), this);
 		getServer().getPluginManager().registerEvents(new ConverterListener(), this);
 		getServer().getPluginManager().registerEvents(new ODMGearEquip(odmData), this);
-		getServer().getPluginManager().registerEvents(new ArmorListener(new ArrayList<String>()), this);
+		getServer().getPluginManager().registerEvents(new ArmorListener(new ArrayList<>()), this);
 		getServer().getPluginManager().registerEvents(new JoinEvents(odmData), this);
 		getServer().getPluginManager().registerEvents(new ArmorStandEvents(odmData), this);
 		
