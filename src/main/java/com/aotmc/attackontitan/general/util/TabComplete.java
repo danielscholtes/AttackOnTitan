@@ -1,7 +1,7 @@
 package com.aotmc.attackontitan.general.util;
 
 import com.aotmc.attackontitan.AttackOnTitan;
-import com.aotmc.attackontitan.blades.Blades;
+import com.aotmc.attackontitan.blades.BladeType;
 import com.aotmc.attackontitan.materials.Materials;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -22,7 +22,7 @@ public class TabComplete implements TabCompleter
     @Override
     public List<String> onTabComplete(CommandSender s, Command cmd, String alias, String[] args)
     {
-        if (args.length > 4)
+        if (args.length > 5)
         {
             return Collections.emptyList();
         }
@@ -47,25 +47,7 @@ public class TabComplete implements TabCompleter
             players.add(player.getName());
         }
 
-        if (args[0].equalsIgnoreCase("give"))
-        {
-            if (args.length == 2)
-            {
-                return players;
-            }
-            else if (args.length == 3)
-            {
-                final List<String> blades = new ArrayList<>();
-
-                for (Blades blade : Blades.values())
-                {
-                    blades.add(blade.toString());
-                }
-
-                return blades;
-            }
-        }
-        else if (args[0].equalsIgnoreCase("givematerial"))
+        if (args[0].equalsIgnoreCase("givematerial"))
         {
             if (args.length == 2)
             {
@@ -86,6 +68,39 @@ public class TabComplete implements TabCompleter
         else if (args[0].equalsIgnoreCase("spawn"))
         {
             return Arrays.asList("SMALL", "MEDIUM", "LARGE");
+        }
+        else if (args[0].equalsIgnoreCase("blade"))
+        {
+            if (args.length == 2)
+            {
+                return Arrays.asList("upgrade", "give");
+            }
+            else if (args.length == 3)
+            {
+                return players;
+            }
+            else if (args.length == 4)
+            {
+                final List<String> blades = new ArrayList<>();
+
+                for (BladeType bladeType : BladeType.values())
+                {
+                    blades.add(bladeType.toString());
+                }
+
+                return blades;
+            }
+        }
+        else if (args[0].equalsIgnoreCase("odm"))
+        {
+            if (args.length == 2)
+            {
+                return Collections.singletonList("give");
+            }
+            else if (args.length == 3)
+            {
+                return players;
+            }
         }
         return Collections.emptyList();
     }

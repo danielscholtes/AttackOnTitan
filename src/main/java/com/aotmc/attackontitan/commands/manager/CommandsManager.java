@@ -1,6 +1,10 @@
-package com.aotmc.attackontitan.commands;
+package com.aotmc.attackontitan.commands.manager;
 
 import com.aotmc.attackontitan.AttackOnTitan;
+import com.aotmc.attackontitan.commands.BladeCommand;
+import com.aotmc.attackontitan.commands.GiveMaterialCommand;
+import com.aotmc.attackontitan.commands.ODMCommand;
+import com.aotmc.attackontitan.commands.SpawnCommand;
 import com.aotmc.attackontitan.commands.gui.ConverterGUI;
 import com.aotmc.attackontitan.commands.gui.MaterialsGUI;
 import com.aotmc.attackontitan.commands.gui.UpgradeGUI;
@@ -16,8 +20,8 @@ public class CommandsManager
     public CommandsManager(final AttackOnTitan plugin)
     {
         this.manager = new com.codeitforyou.lib.api.command.CommandManager(Arrays.asList(
-                GiveCommand.class, UpgradeGUI.class, SpawnCommand.class,
-                MaterialsGUI.class, ConverterGUI.class,
+                UpgradeGUI.class, SpawnCommand.class, BladeCommand.class,
+                MaterialsGUI.class, ConverterGUI.class, ODMCommand.class,
                 GiveMaterialCommand.class
         ), "aot", plugin);
     }
