@@ -58,7 +58,7 @@ public class SpinningSlashActivate implements Listener {
 			return;
 		}
 
-        final String nbtValue = ItemUtil.getNBTString(event.getItem(), "blade");
+        final String nbtValue = ItemUtil.getNBTString(event.getItem(), "blade-type");
         
 		if (!Boolean.valueOf(nbtValue)) {
 			return;

@@ -60,13 +60,10 @@ public class BladeCommand
                     return;
                 }
 
-                final BladeType new_blade_type = BladeType.find(blade_hierarchy + 1).orElse(null);
+                final BladeType new_blade_type = BladeType.find(blade_hierarchy + 1).orElse(BladeType.valueOf(ItemUtil.getNBTString(sender.getInventory().getItemInMainHand(), "blade-type").toUpperCase()));
 
-                if (new_blade_type != null)
-                {
-                    sender.getInventory().setItemInMainHand(createNewBlade(new_blade_type));
-                    sender.sendMessage(Utils.color("&2Blade &8» &aYou have successfully upgraded your blade!"));
-                }
+                sender.getInventory().setItemInMainHand(createNewBlade(new_blade_type));
+                sender.sendMessage(Utils.color("&2Blade &8» &aYou have successfully upgraded your blade!"));
         }
 
     }
@@ -80,8 +77,7 @@ public class BladeCommand
                 .withNBTString("blade-damage", String.valueOf(bladeType.getDamage()))
                 .withNBTString("blade-durability", String.valueOf(bladeType.getDurability()))
                 .withLore(bladeType.getLore())
-                .withFlag(ItemFlag.HIDE_ATTRIBUTES).getItem()
-                ;
+                .withFlag(ItemFlag.HIDE_ATTRIBUTES).getItem();
 
         ItemMeta meta = item.getItemMeta();
 
