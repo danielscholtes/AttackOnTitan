@@ -144,7 +144,7 @@ public class ODMLaunch implements Listener {
 					data.getAttachedHook().remove(hook.getPlayer());
 
 					Vector velocity = event.getHitEntity().getLocation().subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(2.8);
-					velocity.setY(velocity.getY() - 0.4);
+					velocity.setY(velocity.getY() - 0.35);
 					
 					launchPlayer(p, hook, velocity);
 					return;
@@ -295,7 +295,7 @@ public class ODMLaunch implements Listener {
 							hook.remove();
 							data.getHooks().remove(hook.getHookID());
 						}
-						data.getPlayerHooks().remove(uuid);
+						iterator.remove();
 						if (data.getPlayerTasksEffect() != null && data.getPlayerTasksEffect().containsKey(uuid)) {
 							Bukkit.getScheduler().cancelTask(data.getPlayerTasksEffect().get(uuid));
 							data.getPlayerTasksEffect().remove(uuid);

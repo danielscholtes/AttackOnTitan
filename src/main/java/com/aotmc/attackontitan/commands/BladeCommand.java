@@ -48,8 +48,7 @@ public class BladeCommand
                 }
 
                 final BladeType bladeType = BladeType.valueOf(blade.toUpperCase());
-                final ItemBuilder builder = createNewBlade(bladeType);
-                target.getInventory().addItem(builder.getItem());
+                target.getInventory().addItem(createNewBlade(bladeType));
                 break;
             case "upgrade":
                 final ItemStack playerItem = sender.getInventory().getItemInMainHand();
@@ -65,36 +64,35 @@ public class BladeCommand
 
                 if (new_blade_type != null)
                 {
-                    final ItemBuilder newBuilder = createNewBlade(new_blade_type);
-                    sender.getInventory().setItemInMainHand(newBuilder.getItem());
+                    sender.getInventory().setItemInMainHand(createNewBlade(new_blade_type));
                     sender.sendMessage(Utils.color("&2Blade &8» &aYou have successfully upgraded your blade!"));
                 }
         }
 
     }
 
-    private static ItemBuilder createNewBlade(final BladeType bladeType)
+    private static ItemStack createNewBlade(final BladeType bladeType)
     {
-        final ItemBuilder builder = new ItemBuilder(Material.WOODEN_SWORD)
+        ItemStack item = new ItemBuilder(Material.WOODEN_SWORD)
                 .withName(bladeType.getDisplayName())
                 .withNBTString("blade-type", bladeType.toString().toLowerCase())
                 .withNBTString("blade-hierarchy", String.valueOf(bladeType.getHierarchy()))
                 .withNBTString("blade-damage", String.valueOf(bladeType.getDamage()))
                 .withNBTString("blade-durability", String.valueOf(bladeType.getDurability()))
                 .withLore(bladeType.getLore())
-                .withFlag(ItemFlag.HIDE_ATTRIBUTES)
+                .withFlag(ItemFlag.HIDE_ATTRIBUTES).getItem()
                 ;
 
-        final ItemMeta builderMeta = builder.getItem().getItemMeta();
+        ItemMeta meta = item.getItemMeta();
 
-        if (builderMeta != null)
+        if (meta != null)
         {
-            builderMeta.setCustomModelData(1);
+            meta.setCustomModelData(1);
 
-            builder.getItem().setItemMeta(builderMeta);
+            item.setItemMeta(meta);
         }
 
-        return builder;
+        return item;
     }
 
 }

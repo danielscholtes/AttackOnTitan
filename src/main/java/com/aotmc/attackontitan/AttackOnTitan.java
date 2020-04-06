@@ -87,13 +87,13 @@ public class AttackOnTitan extends JavaPlugin {
 						continue;
 					}
 
-					if (player.getEquipment().getLeggings() == null || !Boolean.valueOf(ItemUtil.getNBTString(player.getEquipment().getLeggings(), "odm"))) {
-						return;
+					if (player.getInventory().getLeggings()== null || !Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getLeggings(), "odm"))) {
+						continue;
 					}
 					
 					ArmorStand armorStand = Utils.createODMArmorStand(player.getLocation());
-					player.addPassenger(armorStand);
 					odmData.getWearingODM().put(player.getUniqueId(), armorStand);
+					player.addPassenger(armorStand);
 				}
 			}
 		}, 5L);
@@ -121,7 +121,7 @@ public class AttackOnTitan extends JavaPlugin {
 			while (iterator.hasNext()) {
 				UUID uuid = iterator.next();
 				ArmorStand armorStand = odmData.getWearingODM().get(uuid);
-				odmData.getWearingODM().remove(uuid);
+				iterator.remove();
 				armorStand.remove();
 			}
 			odmData.getWearingODM().clear();
