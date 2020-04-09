@@ -2,9 +2,11 @@ package com.aotmc.attackontitan;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,6 +36,7 @@ import com.comphenix.protocol.ProtocolManager;
 
 public class AttackOnTitan extends JavaPlugin {
 
+	private Random random = new Random();
 	private static AttackOnTitan instance;
 	private ProtocolManager protocolManager;
 	private final CommandsManager manager = new CommandsManager(this);
@@ -83,17 +86,22 @@ public class AttackOnTitan extends JavaPlugin {
 			@Override
 			public void run() {
 				for (Player player : Bukkit.getOnlinePlayers()) {
+					if (player.getGameMode() == GameMode.SURVIVAL) {
+						player.setAllowFlight(false);
+					}
+					
 					if (odmData.getWearingODM() != null && odmData.getWearingODM().containsKey(player.getUniqueId())) {
 						continue;
 					}
 
-					if (player.getInventory().getLeggings()== null || !Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getLeggings(), "odm"))) {
+					if (player.getInventory().getLeggings() == null || !Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getLeggings(), "odm"))) {
 						continue;
 					}
 					
 					ArmorStand armorStand = Utils.createODMArmorStand(player.getLocation());
 					odmData.getWearingODM().put(player.getUniqueId(), armorStand);
 					player.addPassenger(armorStand);
+					player.setAllowFlight(true);
 				}
 			}
 		}, 5L);
@@ -120,6 +128,12 @@ public class AttackOnTitan extends JavaPlugin {
 			
 			while (iterator.hasNext()) {
 				UUID uuid = iterator.next();
+				if (Bukkit.getPlayer(uuid) != null) {
+					if (Bukkit.getPlayer(uuid).getGameMode() == GameMode.SURVIVAL) {
+						Bukkit.getPlayer(uuid).setAllowFlight(false);
+						Bukkit.getPlayer(uuid).setFlying(false);
+					}
+				}
 				ArmorStand armorStand = odmData.getWearingODM().get(uuid);
 				iterator.remove();
 				armorStand.remove();
@@ -153,6 +167,10 @@ public class AttackOnTitan extends JavaPlugin {
 	public CommandsManager getManager()
 	{
 		return manager;
+	}
+	
+	public Random getRandom() {
+		return random;
 	}
 
 }

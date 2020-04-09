@@ -1,6 +1,7 @@
 package com.aotmc.attackontitan.odmgear.listeners;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -32,6 +33,10 @@ public class ODMGearEquip implements Listener {
 					data.getWearingODM().get(event.getPlayer().getUniqueId()).remove();
 					data.getWearingODM().remove(event.getPlayer().getUniqueId());
 				}
+				if (event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
+					event.getPlayer().setAllowFlight(false);
+					event.getPlayer().setFlying(false);
+				}
 				return;
 			}
 			Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), new Runnable() {
@@ -51,6 +56,7 @@ public class ODMGearEquip implements Listener {
 		}
 		
 		Player player = event.getPlayer();
+		player.setAllowFlight(true);
 		
 		ArmorStand armorStand = Utils.createODMArmorStand(player.getLocation());
 		player.addPassenger(armorStand);

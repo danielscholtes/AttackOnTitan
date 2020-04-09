@@ -106,7 +106,7 @@ public class ODMData {
 			public void run() {
 				for (Player player : Bukkit.getOnlinePlayers()) {
 					if (player.getGameMode() != GameMode.SURVIVAL) {
-						return;
+						continue;
 					}
 					player.setFlying(false);
 				}

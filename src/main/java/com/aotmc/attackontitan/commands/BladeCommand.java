@@ -72,6 +72,7 @@ public class BladeCommand
     {
         ItemStack item = new ItemBuilder(Material.WOODEN_SWORD)
                 .withName(bladeType.getDisplayName())
+                .withNBTString("blade", "true")
                 .withNBTString("blade-type", bladeType.toString().toLowerCase())
                 .withNBTString("blade-hierarchy", String.valueOf(bladeType.getHierarchy()))
                 .withNBTString("blade-damage", String.valueOf(bladeType.getDamage()))

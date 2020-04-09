@@ -12,6 +12,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.odmgear.ODMData;
+import com.codeitforyou.lib.api.item.ItemUtil;
 
 public class BoostListener implements Listener {
 	
@@ -28,6 +29,10 @@ public class BoostListener implements Listener {
 		}
 		
 		if (event.getPlayer().isOnGround()) {
+			return;
+		}
+		
+		if (event.getPlayer().getInventory().getLeggings()== null || !Boolean.valueOf(ItemUtil.getNBTString(event.getPlayer().getInventory().getLeggings(), "odm"))) {
 			return;
 		}
 		
@@ -52,11 +57,15 @@ public class BoostListener implements Listener {
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
+		if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) {
+			return;
+		}
+		if (event.getPlayer().getInventory().getLeggings() == null || !Boolean.valueOf(ItemUtil.getNBTString(event.getPlayer().getInventory().getLeggings(), "odm"))) {
+			event.getPlayer().setAllowFlight(false);
+			event.getPlayer().setFlying(false);
+			return;
+		}
 		event.getPlayer().setAllowFlight(true);
 	}
 	
-	public void startEffectTask() {
-		
-	}
-
 }

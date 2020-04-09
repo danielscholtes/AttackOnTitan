@@ -1,7 +1,6 @@
 package com.aotmc.attackontitan.commands;
 
 import java.util.Arrays;
-import java.util.Random;
 
 import org.bukkit.entity.Player;
 
@@ -15,7 +14,6 @@ import com.codeitforyou.lib.api.command.Command;
 public class SpawnCommand {
 	
 	private static TitanData titanData = AttackOnTitan.getTitanData();
-	private static Random rand = new Random();
 	
 	@Command(permission = "aot.command.spawn", aliases = { "spawn" }, usage = "<titan>", requiredArgs = 1)
 	public static void execute(final Player sender, final AttackOnTitan plugin, final String[] args) {
@@ -30,15 +28,15 @@ public class SpawnCommand {
 		sender.sendMessage(Utils.color("&cAdmin &8» &7You have spawned a &2" + titanType + " &7Titan!"));
 		switch (titanType) {
 			case "SMALL":
-				Titan smallTitan = new Titan(sender.getLocation(), TitanType.SMALL, rand.nextInt((6 - 2) + 1) + 2, titanData);
+				Titan smallTitan = new Titan(sender.getLocation(), TitanType.SMALL, AttackOnTitan.getInstance().getRandom().nextInt((6 - 2) + 1) + 2, titanData);
 				titanData.getTitans().put(smallTitan.getSlime().getEntityId(), smallTitan);
 				return;
 			case "MEDIUM":
-				Titan mediumTitan = new Titan(sender.getLocation(), TitanType.MEDIUM, rand.nextInt((10 - 7) + 1) + 7, titanData);
+				Titan mediumTitan = new Titan(sender.getLocation(), TitanType.MEDIUM, AttackOnTitan.getInstance().getRandom().nextInt((10 - 7) + 1) + 7, titanData);
 				titanData.getTitans().put(mediumTitan.getSlime().getEntityId(), mediumTitan);
 				return;
 			case "LARGE":
-				Titan largeTitan = new Titan(sender.getLocation(), TitanType.LARGE, rand.nextInt((15 - 11) + 1) + 11, titanData);
+				Titan largeTitan = new Titan(sender.getLocation(), TitanType.LARGE, AttackOnTitan.getInstance().getRandom().nextInt((15 - 11) + 1) + 11, titanData);
 				titanData.getTitans().put(largeTitan.getSlime().getEntityId(), largeTitan);
 				return;
 			default:

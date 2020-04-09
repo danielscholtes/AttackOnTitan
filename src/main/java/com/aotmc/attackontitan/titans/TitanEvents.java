@@ -50,14 +50,14 @@ public class TitanEvents implements Listener {
 				event.setCancelled(true);
 				return;
 			}
-	        
+
 			if (!Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getItemInMainHand(), "blade"))) {
 				return;
 			}
 			
-			double damage = Double.parseDouble(ItemUtil.getNBTString(player.getInventory().getItemInMainHand(), "damage"));
+			double damage = Double.parseDouble(ItemUtil.getNBTString(player.getInventory().getItemInMainHand(), "blade-damage"));
 			if (Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getItemInOffHand(), "blade"))) {
-				damage += Double.parseDouble(ItemUtil.getNBTString(player.getInventory().getItemInOffHand(), "damage"));
+				damage += Double.parseDouble(ItemUtil.getNBTString(player.getInventory().getItemInOffHand(), "blade-damage"));
 			}
 			
 			Slime slime = (Slime) event.getEntity();

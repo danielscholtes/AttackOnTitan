@@ -144,7 +144,7 @@ public class ODMLaunch implements Listener {
 					data.getAttachedHook().remove(hook.getPlayer());
 
 					Vector velocity = event.getHitEntity().getLocation().subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(2.8);
-					velocity.setY(velocity.getY() - 0.35);
+					velocity.setY(velocity.getY() - 0.4);
 					
 					launchPlayer(p, hook, velocity);
 					return;
