@@ -57,6 +57,7 @@ public class Titan {
 		if (zombie.getVehicle() != null) {
 			zombie.getVehicle().remove();
 		}
+		zombie.setPersistent(false);
 		
 		giant = (Giant) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.GIANT);
 		giant.setSilent(true);
@@ -65,6 +66,7 @@ public class Titan {
 		giant.setCanPickupItems(false);
 		giant.setInvulnerable(true);
 		giant.setAI(false);
+		giant.setPersistent(false);
 		
 		slime = (Slime) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 7.8D, 0D), EntityType.SLIME);
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
@@ -75,6 +77,7 @@ public class Titan {
 		slime.setGravity(false);
 		slime.setMaxHealth(20);
 		slime.setHealth(slime.getMaxHealth());
+		slime.setPersistent(false);
 	}
 	 
 	public int getSize() {

@@ -102,7 +102,7 @@ public class Hook {
 		double y = Math.sin(pitch) * Math.sin(yaw);
 		double z = Math.cos(pitch);
 		hookVector = new Vector(x, z, y).normalize();
-		projectile.setVelocity(hookVector.multiply(6.25));
+		projectile.setVelocity(hookVector.multiply(5));
 		
 		/*
 		 * Sends a packet to all players to show a leash on the 2 silverfishes so

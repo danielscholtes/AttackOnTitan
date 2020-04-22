@@ -7,8 +7,13 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Giant;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
+import org.bukkit.entity.Zombie;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.aotmc.attackontitan.commands.listener.ConverterListener;
@@ -81,6 +86,26 @@ public class AttackOnTitan extends JavaPlugin {
 		
 		manager.registerCommand();
 		getCommand("aot").setTabCompleter(new TabComplete());
+		
+		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+			@Override
+			public void run() {
+				for (World world : Bukkit.getWorlds()) {
+					for (Entity entity : world.getEntities()) {
+						if (!(entity instanceof Slime) && !(entity instanceof Zombie) && !(entity instanceof Giant)) {
+							continue;
+						}
+						if (titanData.getTitans() != null && titanData.getTitans().containsKey(entity.getEntityId())) {
+							titanData.getTitans().get(entity.getEntityId()).remove();
+							titanData.getTitans().remove(entity.getEntityId());
+							continue;
+						}
+						
+						entity.remove();
+					}
+				}
+			}
+		}, 10L);
 		
 		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 			@Override
