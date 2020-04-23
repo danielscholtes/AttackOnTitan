@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 import com.aotmc.attackontitan.AttackOnTitan;
@@ -30,7 +31,7 @@ public class MusicPlayer {
 			return;
 		}
 		
-		player.playSound(player.getLocation(), music.getName(), 300, 1);
+		player.playSound(player.getLocation(), music.getName(), SoundCategory.MUSIC, 300, 1);
 		listeningToMusic.put(player.getUniqueId(), music);
 		int taskID = Bukkit.getScheduler().runTaskLaterAsynchronously(AttackOnTitan.getInstance(), new Runnable() {
 			@Override
