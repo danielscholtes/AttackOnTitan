@@ -202,7 +202,7 @@ public class ODMLaunch implements Listener {
 				data.getLocationHooks().remove(hook.getPlayer());
 			}
 			
-			Vector velocity = velocityLocation.subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(5);
+			Vector velocity = velocityLocation.subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(3.8);
 			
 			launchPlayer(p, hook, velocity);
 			
@@ -240,10 +240,10 @@ public class ODMLaunch implements Listener {
 					return;
 				}
 				Vector playerVelocity = Bukkit.getPlayer(hook.getPlayer()).getVelocity();
-				Bukkit.getPlayer(hook.getPlayer()).addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 3, 0, false, false));
+				Bukkit.getPlayer(hook.getPlayer()).addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 3, 0, false, false, false));
 				Bukkit.getPlayer(hook.getPlayer()).setVelocity(playerVelocity);
 			}
-		}, 20L).getTaskId());
+		}, 18L).getTaskId());
 		/*
 		 * Runs a timer till the player lands, when he does land removes the hook
 		 * and removes player and hook from all neccessary lists and maps

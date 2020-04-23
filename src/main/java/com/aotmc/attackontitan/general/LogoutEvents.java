@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.aotmc.attackontitan.music.MusicPlayer;
 import com.aotmc.attackontitan.odmgear.Hook;
 import com.aotmc.attackontitan.odmgear.ODMData;
 import com.aotmc.attackontitan.titans.TitanData;
@@ -16,10 +17,12 @@ public class LogoutEvents implements Listener {
 	
 	private ODMData odmData;
 	private TitanData titanData;
+	private MusicPlayer musicPlayer;
 	
-	public LogoutEvents(ODMData odmData, TitanData titanData) {
+	public LogoutEvents(ODMData odmData, TitanData titanData, MusicPlayer musicPlayer) {
 		this.odmData = odmData;
 		this.titanData = titanData;
+		this.musicPlayer = musicPlayer;
 	}
 
 	/**
@@ -62,6 +65,13 @@ public class LogoutEvents implements Listener {
 		if (odmData.getWearingODM() != null && odmData.getWearingODM().containsKey(player.getUniqueId())) {
 			odmData.getWearingODM().get(player.getUniqueId()).remove();
 			odmData.getWearingODM().remove(player.getUniqueId());
+		}
+		if (musicPlayer.getListeningToMusic() != null && musicPlayer.getListeningToMusic().containsKey(player.getUniqueId())) {
+			musicPlayer.getListeningToMusic().remove(player.getUniqueId());
+		}
+		if (musicPlayer.getPlayerMusicTask() != null && musicPlayer.getPlayerMusicTask().containsKey(player.getUniqueId())) {
+			Bukkit.getScheduler().cancelTask(musicPlayer.getPlayerMusicTask().get(player.getUniqueId()));
+			musicPlayer.getPlayerMusicTask().remove(player.getUniqueId());
 		}
 	}
 

@@ -39,9 +39,9 @@ public class BoostListener implements Listener {
 		event.setCancelled(true);
 		event.getPlayer().setFlying(false);
 		event.getPlayer().setAllowFlight(false);
-		event.getPlayer().setVelocity(event.getPlayer().getVelocity().add(event.getPlayer().getLocation().getDirection().normalize().multiply(5)));
+		event.getPlayer().setVelocity(event.getPlayer().getVelocity().add(event.getPlayer().getLocation().getDirection().normalize().multiply(2.25)));
 		data.getBoosting().add(event.getPlayer().getUniqueId());
-		event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 11, 8, false, false, false));
+		event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 8, 8, false, false, false));
 		event.getPlayer().getWorld().playSound(event.getPlayer().getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 2f, 1f);
 		Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), new Runnable() {
 			@Override
@@ -52,7 +52,7 @@ public class BoostListener implements Listener {
 				event.getPlayer().setAllowFlight(true);
 				data.getBoosting().remove(event.getPlayer().getUniqueId());
 			}
-		}, 10L);
+		}, 7L);
 	}
 	
 	@EventHandler

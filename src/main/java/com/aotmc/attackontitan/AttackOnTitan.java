@@ -23,6 +23,8 @@ import com.aotmc.attackontitan.general.JoinEvents;
 import com.aotmc.attackontitan.general.LogoutEvents;
 import com.aotmc.attackontitan.general.util.TabComplete;
 import com.aotmc.attackontitan.general.util.Utils;
+import com.aotmc.attackontitan.music.Music;
+import com.aotmc.attackontitan.music.MusicPlayer;
 import com.aotmc.attackontitan.odmgear.Hook;
 import com.aotmc.attackontitan.odmgear.ODMData;
 import com.aotmc.attackontitan.odmgear.equip.ArmorListener;
@@ -47,6 +49,7 @@ public class AttackOnTitan extends JavaPlugin {
 	private final CommandsManager manager = new CommandsManager(this);
 	private static TitanData titanData;
 	private ODMData odmData;
+	private MusicPlayer musicPlayer;
 
 	/**
 	 * Runs when server is loaded
@@ -65,17 +68,14 @@ public class AttackOnTitan extends JavaPlugin {
 		titanData = new TitanData(this);
 		CommandsManager manager = new CommandsManager(this);
 		odmData = new ODMData(this);
-		titanData.startFollowTask();
-		titanData.startPlayerDetectionTask();
-		odmData.startBoostTask();
-		odmData.startPreventFlyTask();
-		odmData.startAlignODMTask();
+		
+		musicPlayer = new MusicPlayer();
 		
 		getServer().getPluginManager().registerEvents(new TitanZombieFire(), this);
 		getServer().getPluginManager().registerEvents(new SpinningSlashActivate(this), this);
 		getServer().getPluginManager().registerEvents(new ODMGearActivate(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new ODMLaunch(this, odmData), this);
-		getServer().getPluginManager().registerEvents(new LogoutEvents(odmData, titanData), this);
+		getServer().getPluginManager().registerEvents(new LogoutEvents(odmData, titanData, musicPlayer), this);
 		getServer().getPluginManager().registerEvents(new TitanEvents(titanData), this);
 		getServer().getPluginManager().registerEvents(new BoostListener(odmData), this);
 		getServer().getPluginManager().registerEvents(new ConverterListener(), this);
@@ -83,6 +83,14 @@ public class AttackOnTitan extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ArmorListener(new ArrayList<>()), this);
 		getServer().getPluginManager().registerEvents(new JoinEvents(odmData), this);
 		getServer().getPluginManager().registerEvents(new ArmorStandEvents(odmData), this);
+		
+		// Start all tasks
+		titanData.startFollowTask();
+		titanData.startPlayerDetectionTask();
+		odmData.startBoostTask();
+		odmData.startPreventFlyTask();
+		odmData.startAlignODMTask();
+		musicPlayer.startMusicPlayer();
 		
 		manager.registerCommand();
 		getCommand("aot").setTabCompleter(new TabComplete());
@@ -164,6 +172,20 @@ public class AttackOnTitan extends JavaPlugin {
 				armorStand.remove();
 			}
 			odmData.getWearingODM().clear();
+		}
+		
+		for (UUID uuid : musicPlayer.getListeningToMusic().keySet()) {
+			if (musicPlayer.getPlayerMusicTask().containsKey(uuid)) {
+				Bukkit.getScheduler().cancelTask(musicPlayer.getPlayerMusicTask().get(uuid));
+			}
+			
+			if (Bukkit.getPlayer(uuid) == null) {
+				continue;
+			}
+			
+			for (Music music : Music.values()) {
+				Bukkit.getPlayer(uuid).stopSound(music.getName());
+			}
 		}
 	}
 

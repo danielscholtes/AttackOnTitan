@@ -78,6 +78,13 @@ public class Titan {
 		slime.setMaxHealth(20);
 		slime.setHealth(slime.getMaxHealth());
 		slime.setPersistent(false);
+		Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), new Runnable() {
+			@Override
+			public void run() {
+				slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
+				slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
+			}
+		}, 3L);
 	}
 	 
 	public int getSize() {
