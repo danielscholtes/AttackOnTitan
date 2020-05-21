@@ -6,9 +6,9 @@ import com.aotmc.attackontitan.AttackOnTitan;
 
 public enum Music {
 
-	THE_DISCIPLINE(444, "thediscipline"), 
-	HOW_DO_YOU_LIKE_LIVING_INSIDE(352, "howdoyoulikelivinginside"),
-	INSIDE_THE_WALL_NIGHT(441, "insidethewallnight");
+	THE_DISCIPLINE(444, "music_disc.far"), 
+	HOW_DO_YOU_LIKE_LIVING_INSIDE(352, "music_disc.13"),
+	INSIDE_THE_WALL_NIGHT(441, "music_disc.chirp");
 
 	private final int duration;
 	private final String name;

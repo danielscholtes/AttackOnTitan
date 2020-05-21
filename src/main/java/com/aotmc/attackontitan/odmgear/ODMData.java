@@ -1,11 +1,11 @@
 package com.aotmc.attackontitan.odmgear;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -19,19 +19,19 @@ import com.aotmc.attackontitan.AttackOnTitan;
 public class ODMData {
 
 	// Map of all active hooks
-	private Map<UUID, Hook> hooks = new HashMap<>();
+	private Map<UUID, Hook> hooks = new WeakHashMap<UUID, Hook>();
 	
 	// Map of all players' hooks
-	private Map<UUID, List<Hook>> playerHooks = new HashMap<>();
+	private Map<UUID, List<Hook>> playerHooks = new WeakHashMap<UUID, List<Hook>>();
 	
 	// Map of all players' distances for first attached hook
-	private Map<UUID, Location> locationHooks = new HashMap<>();
+	private Map<UUID, Location> locationHooks = new WeakHashMap<UUID, Location>();
 	
 	// Map of all players' tasks for landing
-	private Map<UUID, Integer> playerTasksLanding = new HashMap<>();
+	private Map<UUID, Integer> playerTasksLanding = new WeakHashMap<UUID, Integer>();
 	
 	// Map of all players' tasks for potion effect
-	private Map<UUID, Integer> playerTasksEffect = new HashMap<>();
+	private Map<UUID, Integer> playerTasksEffect = new WeakHashMap<UUID, Integer>();
 
 	// List of all players who have their first hook attached
 	private List<UUID> attachedHook = new ArrayList<>();
@@ -39,7 +39,7 @@ public class ODMData {
 	// List of all players currently boosting
 	private List<UUID> boosting = new ArrayList<>();
 	
-	private Map<UUID, ArmorStand> wearingODM = new HashMap<UUID, ArmorStand>();
+	private Map<UUID, ArmorStand> wearingODM = new WeakHashMap<UUID, ArmorStand>();
 	
 	private AttackOnTitan plugin;
 	

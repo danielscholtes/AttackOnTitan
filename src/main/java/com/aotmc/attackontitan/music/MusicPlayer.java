@@ -1,8 +1,8 @@
 package com.aotmc.attackontitan.music;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
@@ -12,15 +12,15 @@ import com.aotmc.attackontitan.AttackOnTitan;
 
 public class MusicPlayer {
 	
-	private Map<UUID, Music> listeningToMusic = new HashMap<UUID, Music>();
-	private Map<UUID, Integer> playerMusicTask = new HashMap<UUID, Integer>();
+	private Map<UUID, Music> listeningToMusic = new WeakHashMap<UUID, Music>();
+	private Map<UUID, Integer> playerMusicTask = new WeakHashMap<UUID, Integer>();
 	
 	public void startMusicPlayer() {
 		Bukkit.getScheduler().runTaskTimer(AttackOnTitan.getInstance(), new Runnable() {
 			@Override
 			public void run() {
 				for (Player player : Bukkit.getOnlinePlayers()) {
-					playMusicForPlayer(player, Music.getRandomMusic(), false);
+					playMusicForPlayer(player, Music.getRandomMusic(),  false);
 				}
 			}
 		}, 10L, 20 * 10L);
@@ -31,7 +31,7 @@ public class MusicPlayer {
 			return;
 		}
 		
-		player.playSound(player.getLocation(), music.getName(), SoundCategory.MUSIC, 300, 1);
+		player.playSound(player.getLocation(), music.getName(), SoundCategory.RECORDS, 300, 1);
 		listeningToMusic.put(player.getUniqueId(), music);
 		int taskID = Bukkit.getScheduler().runTaskLaterAsynchronously(AttackOnTitan.getInstance(), new Runnable() {
 			@Override

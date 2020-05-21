@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -21,6 +22,7 @@ import com.aotmc.attackontitan.commands.manager.CommandsManager;
 import com.aotmc.attackontitan.general.ArmorStandEvents;
 import com.aotmc.attackontitan.general.JoinEvents;
 import com.aotmc.attackontitan.general.LogoutEvents;
+import com.aotmc.attackontitan.general.WorldChangeListener;
 import com.aotmc.attackontitan.general.util.TabComplete;
 import com.aotmc.attackontitan.general.util.Utils;
 import com.aotmc.attackontitan.music.Music;
@@ -83,6 +85,7 @@ public class AttackOnTitan extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ArmorListener(new ArrayList<>()), this);
 		getServer().getPluginManager().registerEvents(new JoinEvents(odmData), this);
 		getServer().getPluginManager().registerEvents(new ArmorStandEvents(odmData), this);
+		getServer().getPluginManager().registerEvents(new WorldChangeListener(musicPlayer), this);
 		
 		// Start all tasks
 		titanData.startFollowTask();
@@ -184,7 +187,7 @@ public class AttackOnTitan extends JavaPlugin {
 			}
 			
 			for (Music music : Music.values()) {
-				Bukkit.getPlayer(uuid).stopSound(music.getName());
+				Bukkit.getPlayer(uuid).stopSound(music.getName(), SoundCategory.RECORDS);
 			}
 		}
 	}

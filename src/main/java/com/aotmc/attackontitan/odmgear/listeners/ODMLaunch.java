@@ -1,6 +1,5 @@
 package com.aotmc.attackontitan.odmgear.listeners;
 
-import java.util.Iterator;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -277,33 +276,6 @@ public class ODMLaunch implements Listener {
 		if (event.getEntity() instanceof Silverfish) {
 			event.setCancelled(true);
 		}
-	}
-	
-	public void startLandingTask() {
-		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
-			@Override
-			public void run() {
-				if (data.getPlayerHooks() != null || data.getPlayerHooks().isEmpty()) {
-					return;
-				}
-				Iterator<UUID> iterator = data.getPlayerHooks().keySet().iterator();
-				
-				while (iterator.hasNext()) {
-					UUID uuid = iterator.next();
-					if (Bukkit.getPlayer(uuid) == null || Bukkit.getPlayer(uuid).isOnGround()) {
-						for (Hook hook : data.getPlayerHooks().get(uuid)) {
-							hook.remove();
-							data.getHooks().remove(hook.getHookID());
-						}
-						iterator.remove();
-						if (data.getPlayerTasksEffect() != null && data.getPlayerTasksEffect().containsKey(uuid)) {
-							Bukkit.getScheduler().cancelTask(data.getPlayerTasksEffect().get(uuid));
-							data.getPlayerTasksEffect().remove(uuid);
-						}
-					}
-				}
-			}
-		}, 3L, 1L);
 	}
 	
 }

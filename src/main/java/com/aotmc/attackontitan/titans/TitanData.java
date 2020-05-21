@@ -1,11 +1,11 @@
 package com.aotmc.attackontitan.titans;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.WeakHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -23,9 +23,9 @@ public class TitanData {
 		this.plugin = plugin;
 	}
 	
-	private Map<Integer, Titan> titans = new HashMap<>();
+	private Map<Integer, Titan> titans = new WeakHashMap<Integer, Titan>();
 	
-	private Map<UUID, Integer> grabbedPlayers = new HashMap<>();
+	private Map<UUID, Integer> grabbedPlayers = new WeakHashMap<UUID, Integer>();
 	
 	public Map<Integer, Titan> getTitans() {
 		return titans;

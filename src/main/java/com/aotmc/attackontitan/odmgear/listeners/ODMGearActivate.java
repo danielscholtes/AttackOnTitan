@@ -58,12 +58,6 @@ public class ODMGearActivate implements Listener {
 			for (Hook playerHook : data.getPlayerHooks().get(player.getUniqueId())) {
 				playerHook.remove();
 				data.getHooks().remove(playerHook.getHookID());
-				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-					@Override
-					public void run() {
-						playerHook.remove();
-					}
-				}, 3L);
 			}
 			data.getPlayerHooks().remove(player.getUniqueId());
 		}
