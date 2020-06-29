@@ -1,27 +1,122 @@
 package com.aotmc.attackontitan.odmgear;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
+
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Player;
+
+import com.aotmc.attackontitan.AttackOnTitan;
 
 public class ODMData {
 
 	// Map of all active hooks
-	private Map<UUID, Hook> hooks = new HashMap<UUID, Hook>();
+	private Map<UUID, Hook> hooks = new WeakHashMap<UUID, Hook>();
 	
 	// Map of all players' hooks
-	private Map<UUID, List<Hook>> playerHooks = new HashMap<UUID, List<Hook>>();
+	private Map<UUID, List<Hook>> playerHooks = new WeakHashMap<UUID, List<Hook>>();
 	
 	// Map of all players' distances for first attached hook
-	private Map<UUID, Double> distanceHooks = new HashMap<UUID, Double>();
+	private Map<UUID, Location> locationHooks = new WeakHashMap<UUID, Location>();
 	
 	// Map of all players' tasks for landing
-	private Map<UUID, Integer> playerTasks = new HashMap<UUID, Integer>();
+	private Map<UUID, Integer> playerTasksLanding = new WeakHashMap<UUID, Integer>();
+	
+	// Map of all players' tasks for potion effect
+	private Map<UUID, Integer> playerTasksEffect = new WeakHashMap<UUID, Integer>();
 
 	// List of all players who have their first hook attached
-	private List<UUID> attachedHook = new ArrayList<UUID>();
+	private List<UUID> attachedHook = new ArrayList<>();
+	
+	// List of all players currently boosting
+	private List<UUID> boosting = new ArrayList<>();
+	
+	private Map<UUID, ArmorStand> wearingODM = new WeakHashMap<UUID, ArmorStand>();
+	
+	private AttackOnTitan plugin;
+	
+	public ODMData(AttackOnTitan plugin) {
+		this.plugin = plugin;
+		startFollowTask();
+	}
+	
+	/**
+	 * Creates a task which will make a silverfish follow the player
+	 */
+	private void startFollowTask() {
+		/*
+		 * Every 2 ticks makes the silverfish teleport to player
+		 */
+		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
+			@Override
+			public void run() {
+				if (hooks != null) {
+					for (Hook hook : hooks.values()) {
+						if (Bukkit.getPlayer(hook.getPlayer()) == null || hook.getPlayerEntity() == null) {
+							continue;
+						}
+						hook.getPlayerEntity().teleport(Bukkit.getPlayer(hook.getPlayer()).getLocation().add(0, -0.5D, 0D));
+					}
+				}
+			}
+		}, 3L, 2L).getTaskId();
+	}
+	
+	public void startBoostTask() {
+		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
+			@Override
+			public void run() {
+				if (boosting != null && !boosting.isEmpty()) {
+					Iterator<UUID> iterator = boosting.iterator();
+					UUID nextUUID;
+					while (iterator.hasNext()) {
+						nextUUID = iterator.next();
+						if (Bukkit.getPlayer(nextUUID) == null) {
+							boosting.remove(nextUUID);
+						}
+						Bukkit.getPlayer(nextUUID).getWorld().spawnParticle(Particle.CLOUD, Bukkit.getPlayer(nextUUID).getLocation(), 10, 0, 0, 0, 0.1);
+					}
+				}
+			}
+		}, 3L, 1L);
+	}
+	
+	public void startAlignODMTask() {
+		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
+			@Override
+			public void run() {
+				for (UUID uuid : wearingODM.keySet()) {
+					wearingODM.get(uuid).setRotation(Bukkit.getPlayer(uuid).getLocation().getYaw(), wearingODM.get(uuid).getLocation().getPitch());
+				}
+			}
+		}, 3L, 5L);
+	}
+	
+	public void startPreventFlyTask() {
+		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
+			@Override
+			public void run() {
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					if (player.getGameMode() != GameMode.SURVIVAL) {
+						continue;
+					}
+					player.setFlying(false);
+				}
+			}
+		}, 3L, 7L);
+	}
+	
+	public Map<UUID, ArmorStand> getWearingODM() {
+		return wearingODM;
+	}
 	
 	/**
 	 * Returns map of all active hooks
@@ -42,12 +137,12 @@ public class ODMData {
 	}
 
 	/**
-	 * Returns map of all players' distances for first attached hook
+	 * Returns map of all location' distances for first attached hook
 	 * 
-	 * @return		map of all players' distances for first attached hook
+	 * @return		map of all players' location for first attached hook
 	 */
-	public Map<UUID, Double> getDistanceHooks() {
-		return distanceHooks;
+	public Map<UUID, Location> getLocationHooks() {
+		return locationHooks;
 	}
 
 	/**
@@ -55,8 +150,17 @@ public class ODMData {
 	 * 
 	 * @return		map of all players' tasks for landing
 	 */
-	public Map<UUID, Integer> getPlayerTasks() {
-		return playerTasks;
+	public Map<UUID, Integer> getPlayerTasksLanding() {
+		return playerTasksLanding;
+	}
+	
+	/**
+	 * Returns map of all players' tasks for effects
+	 * 
+	 * @return		map of all players' tasks for effects
+	 */
+	public Map<UUID, Integer> getPlayerTasksEffect() {
+		return playerTasksEffect;
 	}
 
 	/**
@@ -66,6 +170,15 @@ public class ODMData {
 	 */
 	public List<UUID> getAttachedHook() {
 		return attachedHook;
+	}
+
+	/**
+	 * Returns list of all players who are boosting
+	 * 
+	 * @return		list of all players who are boosting
+	 */
+	public List<UUID> getBoosting() {
+		return boosting;
 	}
 	
 }

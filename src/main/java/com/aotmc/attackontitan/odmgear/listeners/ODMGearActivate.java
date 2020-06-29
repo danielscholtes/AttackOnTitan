@@ -3,17 +3,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Silverfish;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.util.RayTraceResult;
 
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.odmgear.Hook;
 import com.aotmc.attackontitan.odmgear.ODMData;
+import com.codeitforyou.lib.api.item.ItemUtil;
 
 public class ODMGearActivate implements Listener {
 	
@@ -36,7 +38,11 @@ public class ODMGearActivate implements Listener {
 		 * Checks if player is wearing ODM gear
 		 * Gear will have a proper check with NBT soon
 		 */
-		if (player.getInventory().getLeggings() == null || player.getInventory().getLeggings().getType() != Material.CHAINMAIL_LEGGINGS) {
+		if (player.getInventory().getLeggings() == null) {
+			return;
+		}
+        
+		if (!Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getLeggings(), "odm"))) {
 			return;
 		}
 		
@@ -52,29 +58,31 @@ public class ODMGearActivate implements Listener {
 			for (Hook playerHook : data.getPlayerHooks().get(player.getUniqueId())) {
 				playerHook.remove();
 				data.getHooks().remove(playerHook.getHookID());
-				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-					@Override
-					public void run() {
-						playerHook.remove();
-					}
-				}, 3L);
 			}
 			data.getPlayerHooks().remove(player.getUniqueId());
 		}
-		if (data.getPlayerTasks() != null && data.getPlayerTasks().containsKey(player.getUniqueId())) {
-			Bukkit.getScheduler().cancelTask(data.getPlayerTasks().get(player.getUniqueId()));
-			data.getPlayerTasks().remove(player.getUniqueId());
+		if (data.getLocationHooks() != null && data.getLocationHooks().containsKey(player.getUniqueId())) {
+			data.getLocationHooks().remove(player.getUniqueId());
 		}
-		if (data.getDistanceHooks() != null && data.getDistanceHooks().containsKey(player.getUniqueId())) {
-			data.getDistanceHooks().remove(player.getUniqueId());
+		if (data.getPlayerTasksLanding() != null && data.getPlayerTasksLanding().containsKey(player.getUniqueId())) {
+			Bukkit.getScheduler().cancelTask(data.getPlayerTasksLanding().get(player.getUniqueId()));
+			data.getPlayerTasksLanding().remove(player.getUniqueId());
+		}
+		if (data.getPlayerTasksEffect() != null && data.getPlayerTasksEffect().containsKey(player.getUniqueId())) {
+			Bukkit.getScheduler().cancelTask(data.getPlayerTasksEffect().get(player.getUniqueId()));
+			data.getPlayerTasksEffect().remove(player.getUniqueId());
 		}
 		
 		/*
 		 * Activates the ODM Gear
 		 */
-		player.sendMessage("Using ODM");
 		event.setCancelled(true);
-		activateGear(player);
+		RayTraceResult rayTrace = player.getWorld().rayTraceEntities(player.getEyeLocation(), player.getEyeLocation().toVector().normalize(), 30, 11, (e) -> (e.getType() == EntityType.GIANT || e.getType() == EntityType.SLIME));
+		if (rayTrace != null && rayTrace.getHitEntity() != null) {
+			activateGear(player, false);
+			return;
+		}
+		activateGear(player, true);
 		
 	}
 
@@ -99,23 +107,24 @@ public class ODMGearActivate implements Listener {
 	 * 
 	 * @param		player to activate gear for
 	 */
-	private void activateGear(Player player) {
+	private void activateGear(Player player, boolean wide) {
 		/*
 		 * Creates hooks and launches them
 		 */
 		Hook hookLeft = new Hook(player.getUniqueId(), true, plugin);
 		Hook hookRight = new Hook(player.getUniqueId(), false, plugin);
-		List<Hook> list = new ArrayList<Hook>();
+		List<Hook> list = new ArrayList<>();
 		list.add(hookLeft);
 		list.add(hookRight);
 		data.getPlayerHooks().put(player.getUniqueId(), list);
 		data.getHooks().put(hookRight.getHookID(), hookRight);
 		data.getHooks().put(hookLeft.getHookID(), hookLeft);
-		hookRight.launchHook();
+		player.playSound(player.getLocation(), "odmgear", 0.5F, 1F);
+		hookRight.launchHook(wide);
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			@Override
 			public void run() {
-				hookLeft.launchHook();
+				hookLeft.launchHook(wide);
 			}
 		}, 2L);
 	}
