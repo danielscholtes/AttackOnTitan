@@ -85,6 +85,7 @@ public class Titan {
 				slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
 			}
 		}, 3L);
+		data.getTitans().put(slime.getEntityId(), this);
 	}
 	 
 	public int getSize() {

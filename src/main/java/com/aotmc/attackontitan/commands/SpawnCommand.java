@@ -28,16 +28,13 @@ public class SpawnCommand {
 		sender.sendMessage(Utils.color("&cAdmin &8» &7You have spawned a &2" + titanType + " &7Titan!"));
 		switch (titanType) {
 			case "SMALL":
-				Titan smallTitan = new Titan(sender.getLocation(), TitanType.SMALL, AttackOnTitan.getInstance().getRandom().nextInt((6 - 2) + 1) + 2, titanData);
-				titanData.getTitans().put(smallTitan.getSlime().getEntityId(), smallTitan);
+				new Titan(sender.getLocation(), TitanType.SMALL, AttackOnTitan.getInstance().getRandom().nextInt((6 - 2) + 1) + 2, titanData);
 				return;
 			case "MEDIUM":
-				Titan mediumTitan = new Titan(sender.getLocation(), TitanType.MEDIUM, AttackOnTitan.getInstance().getRandom().nextInt((10 - 7) + 1) + 7, titanData);
-				titanData.getTitans().put(mediumTitan.getSlime().getEntityId(), mediumTitan);
+				new Titan(sender.getLocation(), TitanType.MEDIUM, AttackOnTitan.getInstance().getRandom().nextInt((10 - 7) + 1) + 7, titanData);
 				return;
 			case "LARGE":
-				Titan largeTitan = new Titan(sender.getLocation(), TitanType.LARGE, AttackOnTitan.getInstance().getRandom().nextInt((15 - 11) + 1) + 11, titanData);
-				titanData.getTitans().put(largeTitan.getSlime().getEntityId(), largeTitan);
+				new Titan(sender.getLocation(), TitanType.LARGE, AttackOnTitan.getInstance().getRandom().nextInt((15 - 11) + 1) + 11, titanData);
 				return;
 			default:
 				return;

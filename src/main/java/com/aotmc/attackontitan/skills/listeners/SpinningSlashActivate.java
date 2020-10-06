@@ -19,6 +19,7 @@ import net.minecraft.server.v1_15_R1.DataWatcher;
 import net.minecraft.server.v1_15_R1.DataWatcherRegistry;
 import net.minecraft.server.v1_15_R1.EntityPlayer;
 
+
 public class SpinningSlashActivate implements Listener {
 
 	private AttackOnTitan plugin;

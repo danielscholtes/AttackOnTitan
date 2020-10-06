@@ -35,43 +35,49 @@ public class LogoutEvents implements Listener {
 		/*
 		 * Removes player from all neccessary lists and maps
 		 */
-		if (odmData.getAttachedHook() != null && odmData.getAttachedHook().contains(player.getUniqueId())) {
+		if (odmData.getAttachedHook().contains(player.getUniqueId())) {
 			odmData.getAttachedHook().remove(player.getUniqueId());
 		}
-		if (odmData.getPlayerHooks() != null && odmData.getPlayerHooks().containsKey(player.getUniqueId())) {
+		if (odmData.getPlayerHooks().containsKey(player.getUniqueId())) {
 			for (Hook playerHook : odmData.getPlayerHooks().get(player.getUniqueId())) {
 				playerHook.remove();
 				odmData.getHooks().remove(playerHook.getHookID());
 			}
 			odmData.getPlayerHooks().remove(player.getUniqueId());
 		}
-		if (odmData.getPlayerTasksLanding() != null && odmData.getPlayerTasksLanding().containsKey(player.getUniqueId())) {
+		if (odmData.getPlayerTasksLanding().containsKey(player.getUniqueId())) {
 			Bukkit.getScheduler().cancelTask(odmData.getPlayerTasksLanding().get(player.getUniqueId()));
 			odmData.getPlayerTasksLanding().remove(player.getUniqueId());
 		}
-		if (odmData.getPlayerTasksEffect() != null && odmData.getPlayerTasksEffect().containsKey(player.getUniqueId())) {
+		if (odmData.getPlayerTasksEffect().containsKey(player.getUniqueId())) {
 			Bukkit.getScheduler().cancelTask(odmData.getPlayerTasksEffect().get(player.getUniqueId()));
 			odmData.getPlayerTasksEffect().remove(player.getUniqueId());
 		}
-		if (odmData.getLocationHooks() != null && odmData.getLocationHooks().containsKey(player.getUniqueId())) {
+		if (odmData.getLocationHooks().containsKey(player.getUniqueId())) {
 			odmData.getLocationHooks().remove(player.getUniqueId());
 		}
-		if (odmData.getBoosting() != null && odmData.getBoosting().contains(player.getUniqueId())) {
+		if (odmData.getBoosting().contains(player.getUniqueId())) {
 			odmData.getBoosting().remove(player.getUniqueId());
 		}
-		if (titanData.getGrabbedPlayers() != null && titanData.getGrabbedPlayers().containsKey(player.getUniqueId())) {
+		if (titanData.getGrabbedPlayers().containsKey(player.getUniqueId())) {
 			titanData.getGrabbedPlayers().remove(player.getUniqueId());
 		}
-		if (odmData.getWearingODM() != null && odmData.getWearingODM().containsKey(player.getUniqueId())) {
+		if (odmData.getWearingODM().containsKey(player.getUniqueId())) {
 			odmData.getWearingODM().get(player.getUniqueId()).remove();
 			odmData.getWearingODM().remove(player.getUniqueId());
 		}
-		if (musicPlayer.getListeningToMusic() != null && musicPlayer.getListeningToMusic().containsKey(player.getUniqueId())) {
+		if (musicPlayer.getListeningToMusic().containsKey(player.getUniqueId())) {
 			musicPlayer.getListeningToMusic().remove(player.getUniqueId());
 		}
-		if (musicPlayer.getPlayerMusicTask() != null && musicPlayer.getPlayerMusicTask().containsKey(player.getUniqueId())) {
+		if (musicPlayer.getPlayerMusicTask().containsKey(player.getUniqueId())) {
 			Bukkit.getScheduler().cancelTask(musicPlayer.getPlayerMusicTask().get(player.getUniqueId()));
 			musicPlayer.getPlayerMusicTask().remove(player.getUniqueId());
+		}
+		if (odmData.getLastODMActivate().containsKey(player.getUniqueId())) {
+			odmData.getLastODMActivate().remove(player.getUniqueId());
+		}
+		if (odmData.getNarrowODM().contains(player.getUniqueId())) {
+			odmData.getNarrowODM().remove(player.getUniqueId());
 		}
 	}
 

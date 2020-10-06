@@ -1,9 +1,10 @@
 package com.aotmc.attackontitan.odmgear;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
@@ -17,29 +18,33 @@ import org.bukkit.entity.Player;
 import com.aotmc.attackontitan.AttackOnTitan;
 
 public class ODMData {
-
+	
 	// Map of all active hooks
 	private Map<UUID, Hook> hooks = new WeakHashMap<UUID, Hook>();
 	
 	// Map of all players' hooks
-	private Map<UUID, List<Hook>> playerHooks = new WeakHashMap<UUID, List<Hook>>();
+	private Map<UUID, Set<Hook>> playerHooks = new HashMap<UUID, Set<Hook>>();
 	
 	// Map of all players' distances for first attached hook
-	private Map<UUID, Location> locationHooks = new WeakHashMap<UUID, Location>();
+	private Map<UUID, Location> locationHooks = new HashMap<UUID, Location>();
 	
 	// Map of all players' tasks for landing
-	private Map<UUID, Integer> playerTasksLanding = new WeakHashMap<UUID, Integer>();
+	private Map<UUID, Integer> playerTasksLanding = new HashMap<UUID, Integer>();
 	
 	// Map of all players' tasks for potion effect
-	private Map<UUID, Integer> playerTasksEffect = new WeakHashMap<UUID, Integer>();
+	private Map<UUID, Integer> playerTasksEffect = new HashMap<UUID, Integer>();
 
 	// List of all players who have their first hook attached
-	private List<UUID> attachedHook = new ArrayList<>();
+	private Set<UUID> attachedHook = new HashSet<UUID>();
 	
 	// List of all players currently boosting
-	private List<UUID> boosting = new ArrayList<>();
+	private Set<UUID> boosting = new HashSet<UUID>();
 	
-	private Map<UUID, ArmorStand> wearingODM = new WeakHashMap<UUID, ArmorStand>();
+	private Map<UUID, ArmorStand> wearingODM = new HashMap<UUID, ArmorStand>();
+	
+	private Map<UUID, Long> lastODMActivate = new HashMap<UUID, Long>();
+	
+	private Set<UUID> narrowODM = new HashSet<UUID>();
 	
 	private AttackOnTitan plugin;
 	
@@ -132,7 +137,7 @@ public class ODMData {
 	 * 
 	 * @return		map of all players' hooks
 	 */
-	public Map<UUID, List<Hook>> getPlayerHooks() {
+	public Map<UUID, Set<Hook>> getPlayerHooks() {
 		return playerHooks;
 	}
 
@@ -168,7 +173,7 @@ public class ODMData {
 	 * 
 	 * @return		list of all players who have their first hook attached
 	 */
-	public List<UUID> getAttachedHook() {
+	public Set<UUID> getAttachedHook() {
 		return attachedHook;
 	}
 
@@ -177,8 +182,16 @@ public class ODMData {
 	 * 
 	 * @return		list of all players who are boosting
 	 */
-	public List<UUID> getBoosting() {
+	public Set<UUID> getBoosting() {
 		return boosting;
+	}
+	
+	public Map<UUID, Long> getLastODMActivate() {
+		return lastODMActivate;
+	}
+	
+	public Set<UUID> getNarrowODM() {
+		return narrowODM;
 	}
 	
 }
