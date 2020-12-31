@@ -71,19 +71,19 @@ public class TitanData {
 							toRemove.add(titan);
 							continue titanloop;
 						}
-						if (!titan.isGrabbing()) {
+						/*if (!titan.isGrabbing()) {
 							entityloop:
 							for (Entity entity : titan.getSlime().getNearbyEntities(5, 7, 5)) {
 								if (!(entity instanceof Player)) {
 									continue entityloop;
 								}
-								if (Math.random() < 0.60) {
+								if (Math.random() < 0.4 && !grabbedPlayers.containsKey(entity.getUniqueId())) {
 									titan.getZombie().setAI(true);
-									//titan.grabPlayer((entity).getUniqueId());
+									titan.grabPlayer((entity).getUniqueId());
 								}
 								continue titanloop;
 							}	
-						}
+						}*/
 						boolean chance = rand.nextBoolean();
 						if (chance) {
 							titan.getZombie().setAI(false);

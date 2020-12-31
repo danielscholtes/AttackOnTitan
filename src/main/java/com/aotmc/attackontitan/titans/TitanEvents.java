@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -103,13 +104,13 @@ public class TitanEvents implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDismount(EntityDismountEvent event) {
 		if (!(event.getEntity() instanceof Player)) {
 			return;
 		}
 		
-		if (titanData.getGrabbedPlayers() == null || !titanData.getGrabbedPlayers().containsKey((event.getEntity()).getUniqueId())) {
+		if (titanData.getGrabbedPlayers() == null || !titanData.getGrabbedPlayers().containsKey(((Player) (event.getEntity())).getUniqueId())) {
 			return;
 		}
 		

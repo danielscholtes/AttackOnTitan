@@ -174,7 +174,7 @@ public class Titan {
 		grabEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(0);
 		data.getGrabbedPlayers().put(uuid, grabEntity.getEntityId());
 		grabTaskID = new BukkitRunnable() {
-			int count = 8;
+			int count = 15;
 			
 			@Override
 			public void run() {
