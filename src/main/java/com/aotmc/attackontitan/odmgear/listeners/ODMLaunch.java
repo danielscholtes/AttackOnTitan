@@ -1,21 +1,21 @@
 package com.aotmc.attackontitan.odmgear.listeners;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Silverfish;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -70,13 +70,13 @@ public class ODMLaunch implements Listener {
 		if (!(event.getEntity() instanceof Snowball)) {
 			return;
 		}
-		
+
 		Snowball snowball = (Snowball) event.getEntity();
-		
+
 		if (!snowball.hasMetadata("HookID")) {
 			return;
 		}
-		
+
 		Location location = null;
 		/*
 		 * Sets the location to the location of block/entity that the hook was attached to
@@ -84,89 +84,88 @@ public class ODMLaunch implements Listener {
 		if (event.getHitBlock() != null) {
 			location = event.getHitBlock().getLocation();
 		}
-		if (event.getHitEntity() != null) {
-			/*
-			 * Cancels hook and resets ODM gear if hook hits itself
-			 */
-			if (event.getHitEntity() instanceof Player || event.getHitEntity() instanceof Silverfish || event.getHitEntity() instanceof ArmorStand) {
-				for (MetadataValue mdv2 : snowball.getMetadata("HookID")) {
-					if (data.getHooks().get(UUID.fromString(mdv2.asString())) == null) {
-						return;
-					}
-					Hook hook = data.getHooks().get(UUID.fromString(mdv2.asString()));
-					
+
+		/*
+		 * Gets hook ID
+		 */
+		for (MetadataValue mdv2 : snowball.getMetadata("HookID")) {
+			if (data.getHooks().get(UUID.fromString(mdv2.asString())) == null) {
+				return;
+			}
+			Hook hook = data.getHooks().get(UUID.fromString(mdv2.asString()));
+			if (event.getHitEntity() != null) {
+				/*
+				 * Prevents hook from stopping if it hits itself
+				 */
+				if (event.getHitEntity() instanceof Player || event.getHitEntity() instanceof Silverfish || event.getHitEntity() instanceof ArmorStand) {
+					UUID hookID = UUID.fromString(mdv2.asString());
+					Snowball projectile = (Snowball) event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.SNOWBALL);
+					projectile.setBounce(false);
+					projectile.setShooter(event.getEntity().getShooter());
+					projectile.setPersistent(false);
+					projectile.setMetadata("HookID", new FixedMetadataValue(plugin, mdv2.asString()));
+					projectile.setVelocity(event.getEntity().getVelocity());
+
 					/*
-					 * Removes hook from all neccessary maps and lists
+					 * Sends packet for releashing
 					 */
-					if (data.getPlayerHooks() != null && data.getPlayerHooks().containsKey(hook.getPlayer())) {
-						for (Hook playerHook : data.getPlayerHooks().get(hook.getPlayer())) {
-							data.getHooks().remove(playerHook.getHookID());
-							Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-								@Override
-								public void run() {
-									playerHook.remove();
-								}
-							}, 3L);
+					PacketContainer packetUnleash = new PacketContainer(PacketType.Play.Server.ATTACH_ENTITY);
+					packetUnleash.getIntegers().write(0, hook.getPlayerEntity().getEntityId());
+					packetUnleash.getIntegers().write(1, -1);
+					PacketContainer packetLeash = new PacketContainer(PacketType.Play.Server.ATTACH_ENTITY);
+					packetLeash.getIntegers().write(0,  hook.getPlayerEntity().getEntityId());
+					packetLeash.getIntegers().write(1, projectile.getEntityId());
+
+					for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+						try {
+							plugin.getProtocolManager().sendServerPacket(onlinePlayer, packetUnleash);
+							plugin.getProtocolManager().sendServerPacket(onlinePlayer, packetLeash);
+						} catch (InvocationTargetException e) {
+							e.printStackTrace();
 						}
-						data.getPlayerHooks().remove(hook.getPlayer());
 					}
 					return;
 				}
-				return;
-			}
-			if (event.getHitEntity() instanceof Slime) {
-				for (MetadataValue mdv2 : snowball.getMetadata("HookID")) {
-					if (data.getHooks().get(UUID.fromString(mdv2.asString())) == null) {
-						return;
-					}
-					Hook hook = data.getHooks().get(UUID.fromString(mdv2.asString()));
-					
+				/*
+				 * Checks if it hit a titan and launches
+				 */
+				if (event.getHitEntity() instanceof Slime) {
 					if (Bukkit.getPlayer(hook.getPlayer()) == null) {
 						return;
 					}
-					
+
 					if (hook.getHookVector() == null) {
 						continue;
 					}
-					
+
 					Player p = Bukkit.getPlayer(hook.getPlayer());
-					
+
 					/*
 					 * Plays sound and particles because it's nice and removes player from attached hooks
 					 */
 
 					Vector velocity = event.getHitEntity().getLocation().subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(2.8);
 					velocity.setY(velocity.getY() - 0.4);
-					
+
 					launchPlayer(p, hook, velocity);
 					return;
 				}
+				location = event.getHitEntity().getLocation();
 			}
-			location = event.getHitEntity().getLocation();
-		}
 
-		/*
-		 * Gets the hook object attached to the projectile
-		 */
-		for (MetadataValue mdv : snowball.getMetadata("HookID")) {
-			if (data.getHooks().get(UUID.fromString(mdv.asString())) == null) {
-				return;
-			}
-			
-			Hook hook = data.getHooks().get(UUID.fromString(mdv.asString()));
-			
+
 			/*
 			 * Checks if player is online
 			 */
 			if (Bukkit.getPlayer(hook.getPlayer()) == null) {
 				return;
 			}
-			
+
 			Player p = Bukkit.getPlayer(hook.getPlayer());
-			
+
 			/*
 			 * Checks if this is the first attached hook and if so returns and
-			 * saves the distance between location and hook and stores 
+			 * saves the distance between location and hook and stores
 			 * the player for attached hooks
 			 */
 			if (hook.isLeft() && data.getLocationHookLeft().get(p.getUniqueId()) == null) {
@@ -180,7 +179,7 @@ public class ODMLaunch implements Listener {
 			if (data.getLocationHookRight().get(p.getUniqueId()) == null || data.getLocationHookLeft().get(p.getUniqueId()) == null) {
 				return;
 			}
-			
+
 			/*
 			 * Gets the middle distance between the two distances
 			 */
@@ -194,6 +193,9 @@ public class ODMLaunch implements Listener {
 				velocityLocation2 = data.getLocationHookLeft().get(p.getUniqueId());
 			}
 
+			/*
+			 * Gets the middle location between two hooks
+			 */
 			double midX = (velocityLocation2.getX() + velocityLocation.getX())/2;
 			double midY = (velocityLocation2.getY() + velocityLocation.getY())/2;
 			double midZ = (velocityLocation2.getZ() + velocityLocation.getZ())/2;
@@ -201,6 +203,9 @@ public class ODMLaunch implements Listener {
 
 			Vector velocity = velocityLocation.clone().subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(3.8);
 
+			/*
+			 * Adjusts velocity for distance
+			 */
 			double distance = velocityLocation.distance(p.getLocation());
 			if (distance < 10) {
 				launchPlayer(p, hook, velocity.multiply((distance/10)));
@@ -209,7 +214,6 @@ public class ODMLaunch implements Listener {
 			launchPlayer(p, hook, velocity.multiply((1 + (distance/400))));
 			return;
 		}
-		
 	}
 	
 	private void launchPlayer(Player player, Hook hook, Vector velocity) {

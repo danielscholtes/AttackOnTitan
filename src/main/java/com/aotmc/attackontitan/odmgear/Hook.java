@@ -26,7 +26,6 @@ public class Hook {
 	private boolean left;
 	private AttackOnTitan plugin;
 	private Vector playerVector;
-	private Silverfish projectileEntity;
 	private Silverfish playerEntity;
 	private Vector hookVector;
 	
@@ -53,18 +52,9 @@ public class Hook {
 		Player p = Bukkit.getPlayer(player);
 		
 		/*
-		 * Creates the silverfish that will be riding the hook
-		 */
-		projectileEntity = (Silverfish) Bukkit.getPlayer(player).getWorld().spawnEntity(Bukkit.getPlayer(player).getLocation(), EntityType.SILVERFISH);
-		projectileEntity.setGravity(false);
-		projectileEntity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0));
-		projectileEntity.setSilent(true);
-		projectileEntity.setPersistent(false);
-		
-		/*
 		 * Creates the silverfish that will be following the player
 		 */
-		playerEntity = (Silverfish) Bukkit.getPlayer(player).getWorld().spawnEntity(Bukkit.getPlayer(player).getLocation().add(0D, 0.5D, 0D), EntityType.SILVERFISH);
+		playerEntity = (Silverfish) p.getWorld().spawnEntity(p.getLocation().add(0D, 0.5D, 0D), EntityType.SILVERFISH);
 		playerEntity.setGravity(false);
 		playerEntity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0));
 		playerEntity.setSilent(true);
@@ -77,7 +67,6 @@ public class Hook {
 		projectile.setBounce(false);
 		projectile.setShooter(p);
 		projectile.setMetadata("HookID", new FixedMetadataValue(plugin, hookID.toString()));
-		projectile.addPassenger(projectileEntity);
 		projectile.setPersistent(false);
 		
 		/*
@@ -107,7 +96,7 @@ public class Hook {
 		} else {
 			hookVector = p.getEyeLocation().getDirection().normalize();
 		}
-		projectile.setVelocity(hookVector.multiply(5));
+		projectile.setVelocity(hookVector.multiply(6.5));
 		
 		/*
 		 * Sends a packet to all players to show a leash on the 2 silverfishes so
@@ -116,7 +105,7 @@ public class Hook {
 		 */
 		PacketContainer packetLeash = new PacketContainer(PacketType.Play.Server.ATTACH_ENTITY);
 		packetLeash.getIntegers().write(0, playerEntity.getEntityId());
-		packetLeash.getIntegers().write(1, projectileEntity.getEntityId());
+		packetLeash.getIntegers().write(1, projectile.getEntityId());
 		
 		for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 			try {
@@ -147,12 +136,6 @@ public class Hook {
 				}
 			}
 			playerEntity.remove();
-		}
-		if (projectileEntity != null) {
-			projectileEntity.remove();
-		}
-		if (projectile != null) {
-			projectile.remove();
 		}
 	}
 
