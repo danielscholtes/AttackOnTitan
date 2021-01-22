@@ -26,7 +26,10 @@ public class ODMData {
 	private Map<UUID, Set<Hook>> playerHooks = new HashMap<UUID, Set<Hook>>();
 	
 	// Map of all players' distances for first attached hook
-	private Map<UUID, Location> locationHooks = new HashMap<UUID, Location>();
+	private Map<UUID, Location> locationRightHook = new HashMap<UUID, Location>();
+
+	// Map of all players' distances for first attached hook
+	private Map<UUID, Location> locationLeftHook = new HashMap<UUID, Location>();
 	
 	// Map of all players' tasks for landing
 	private Map<UUID, Integer> playerTasksLanding = new HashMap<UUID, Integer>();
@@ -34,17 +37,12 @@ public class ODMData {
 	// Map of all players' tasks for potion effect
 	private Map<UUID, Integer> playerTasksEffect = new HashMap<UUID, Integer>();
 
-	// List of all players who have their first hook attached
-	private Set<UUID> attachedHook = new HashSet<UUID>();
-	
 	// List of all players currently boosting
 	private Set<UUID> boosting = new HashSet<UUID>();
 	
 	private Map<UUID, ArmorStand> wearingODM = new HashMap<UUID, ArmorStand>();
 	
 	private Map<UUID, Long> lastODMActivate = new HashMap<UUID, Long>();
-	
-	private Set<UUID> narrowODM = new HashSet<UUID>();
 	
 	private AttackOnTitan plugin;
 	
@@ -141,13 +139,12 @@ public class ODMData {
 		return playerHooks;
 	}
 
-	/**
-	 * Returns map of all location' distances for first attached hook
-	 * 
-	 * @return		map of all players' location for first attached hook
-	 */
-	public Map<UUID, Location> getLocationHooks() {
-		return locationHooks;
+	public Map<UUID, Location> getLocationHookRight() {
+		return locationRightHook;
+	}
+
+	public Map<UUID, Location> getLocationHookLeft() {
+		return locationLeftHook;
 	}
 
 	/**
@@ -169,15 +166,6 @@ public class ODMData {
 	}
 
 	/**
-	 * Returns list of all players who have their first hook attached
-	 * 
-	 * @return		list of all players who have their first hook attached
-	 */
-	public Set<UUID> getAttachedHook() {
-		return attachedHook;
-	}
-
-	/**
 	 * Returns list of all players who are boosting
 	 * 
 	 * @return		list of all players who are boosting
@@ -189,9 +177,6 @@ public class ODMData {
 	public Map<UUID, Long> getLastODMActivate() {
 		return lastODMActivate;
 	}
-	
-	public Set<UUID> getNarrowODM() {
-		return narrowODM;
-	}
+
 	
 }

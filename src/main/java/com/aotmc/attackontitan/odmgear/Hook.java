@@ -42,7 +42,7 @@ public class Hook {
 	 * Launches the hook
 	 */
 	@SuppressWarnings("deprecation")
-	public void launchHook(boolean wide) {
+	public void launchHook(boolean fromPlayer, boolean wide) {
 		/*
 		 * Checks if player is online
 		 */
@@ -83,25 +83,30 @@ public class Hook {
 		/*
 		 * Calculates vector and shoots the hook
 		 */
-		double yaw = ((p.getLocation().getYaw() + 90)  * Math.PI) / 180;
-		double pitch = ((p.getLocation().getPitch() + 88) * Math.PI) / 180;
-		if (left) {
-			if (wide) {
-				yaw = ((p.getLocation().getYaw() + 115)  * Math.PI) / 180;
+		if (!fromPlayer) {
+			double yaw;
+			double pitch = ((p.getLocation().getPitch() + 88) * Math.PI) / 180;
+			if (left) {
+				if (wide) {
+					yaw = ((p.getLocation().getYaw() + 115) * Math.PI) / 180;
+				} else {
+					yaw = ((p.getLocation().getYaw() + 94) * Math.PI) / 180;
+				}
 			} else {
-				yaw = ((p.getLocation().getYaw() + 94)  * Math.PI) / 180;
+				if (wide) {
+					yaw = ((p.getLocation().getYaw() + 65) * Math.PI) / 180;
+				} else {
+					yaw = ((p.getLocation().getYaw() + 86) * Math.PI) / 180;
+				}
 			}
+
+			double x = Math.sin(pitch) * Math.cos(yaw);
+			double y = Math.sin(pitch) * Math.sin(yaw);
+			double z = Math.cos(pitch);
+			hookVector = new Vector(x, z, y).normalize();
 		} else {
-			if (wide) {
-				yaw = ((p.getLocation().getYaw() + 65)  * Math.PI) / 180;
-			} else {
-				yaw = ((p.getLocation().getYaw() + 86)  * Math.PI) / 180;
-			}
+			hookVector = p.getEyeLocation().getDirection().normalize();
 		}
-		double x = Math.sin(pitch) * Math.cos(yaw);
-		double y = Math.sin(pitch) * Math.sin(yaw);
-		double z = Math.cos(pitch);
-		hookVector = new Vector(x, z, y).normalize();
 		projectile.setVelocity(hookVector.multiply(5));
 		
 		/*

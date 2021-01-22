@@ -35,15 +35,18 @@ public class LogoutEvents implements Listener {
 		/*
 		 * Removes player from all neccessary lists and maps
 		 */
-		if (odmData.getAttachedHook().contains(player.getUniqueId())) {
-			odmData.getAttachedHook().remove(player.getUniqueId());
-		}
 		if (odmData.getPlayerHooks().containsKey(player.getUniqueId())) {
 			for (Hook playerHook : odmData.getPlayerHooks().get(player.getUniqueId())) {
 				playerHook.remove();
 				odmData.getHooks().remove(playerHook.getHookID());
 			}
 			odmData.getPlayerHooks().remove(player.getUniqueId());
+		}
+		if (odmData.getLocationHookLeft().containsKey(player.getUniqueId())) {
+			odmData.getLocationHookLeft().remove(player.getUniqueId());
+		}
+		if (odmData.getLocationHookRight().containsKey(player.getUniqueId())) {
+			odmData.getLocationHookRight().remove(player.getUniqueId());
 		}
 		if (odmData.getPlayerTasksLanding().containsKey(player.getUniqueId())) {
 			Bukkit.getScheduler().cancelTask(odmData.getPlayerTasksLanding().get(player.getUniqueId()));
@@ -52,9 +55,6 @@ public class LogoutEvents implements Listener {
 		if (odmData.getPlayerTasksEffect().containsKey(player.getUniqueId())) {
 			Bukkit.getScheduler().cancelTask(odmData.getPlayerTasksEffect().get(player.getUniqueId()));
 			odmData.getPlayerTasksEffect().remove(player.getUniqueId());
-		}
-		if (odmData.getLocationHooks().containsKey(player.getUniqueId())) {
-			odmData.getLocationHooks().remove(player.getUniqueId());
 		}
 		if (odmData.getBoosting().contains(player.getUniqueId())) {
 			odmData.getBoosting().remove(player.getUniqueId());
@@ -76,9 +76,6 @@ public class LogoutEvents implements Listener {
 		if (odmData.getLastODMActivate().containsKey(player.getUniqueId())) {
 			odmData.getLastODMActivate().remove(player.getUniqueId());
 		}
-		if (odmData.getNarrowODM().contains(player.getUniqueId())) {
-			odmData.getNarrowODM().remove(player.getUniqueId());
-		}
 	}
 
 
@@ -92,15 +89,18 @@ public class LogoutEvents implements Listener {
 		/*
 		 * Removes player from all neccessary lists and maps
 		 */
-		if (odmData.getAttachedHook() != null && odmData.getAttachedHook().contains(player.getUniqueId())) {
-			odmData.getAttachedHook().remove(player.getUniqueId());
-		}
 		if (odmData.getPlayerHooks() != null && odmData.getPlayerHooks().containsKey(player.getUniqueId())) {
 			for (Hook playerHook : odmData.getPlayerHooks().get(player.getUniqueId())) {
 				playerHook.remove();
 				odmData.getHooks().remove(playerHook.getHookID());
 			}
 			odmData.getPlayerHooks().remove(player.getUniqueId());
+		}
+		if (odmData.getLocationHookLeft().containsKey(player.getUniqueId())) {
+			odmData.getLocationHookLeft().remove(player.getUniqueId());
+		}
+		if (odmData.getLocationHookRight().containsKey(player.getUniqueId())) {
+			odmData.getLocationHookRight().remove(player.getUniqueId());
 		}
 		if (odmData.getPlayerTasksLanding() != null && odmData.getPlayerTasksLanding().containsKey(player.getUniqueId())) {
 			Bukkit.getScheduler().cancelTask(odmData.getPlayerTasksLanding().get(player.getUniqueId()));
@@ -109,9 +109,6 @@ public class LogoutEvents implements Listener {
 		if (odmData.getPlayerTasksEffect() != null && odmData.getPlayerTasksEffect().containsKey(player.getUniqueId())) {
 			Bukkit.getScheduler().cancelTask(odmData.getPlayerTasksEffect().get(player.getUniqueId()));
 			odmData.getPlayerTasksEffect().remove(player.getUniqueId());
-		}
-		if (odmData.getLocationHooks() != null && odmData.getLocationHooks().containsKey(player.getUniqueId())) {
-			odmData.getLocationHooks().remove(player.getUniqueId());
 		}
 		if (odmData.getBoosting() != null && odmData.getBoosting().contains(player.getUniqueId())) {
 			odmData.getBoosting().remove(player.getUniqueId());

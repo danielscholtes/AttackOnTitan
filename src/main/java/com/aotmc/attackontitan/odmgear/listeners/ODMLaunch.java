@@ -110,12 +110,6 @@ public class ODMLaunch implements Listener {
 						}
 						data.getPlayerHooks().remove(hook.getPlayer());
 					}
-					if (data.getAttachedHook() != null && data.getAttachedHook().contains(hook.getPlayer())) {
-						data.getAttachedHook().remove(hook.getPlayer());
-					}
-					if (data.getLocationHooks() != null && data.getLocationHooks().containsKey(hook.getPlayer())) {
-						data.getLocationHooks().remove(hook.getPlayer());
-					}
 					return;
 				}
 				return;
@@ -140,7 +134,6 @@ public class ODMLaunch implements Listener {
 					/*
 					 * Plays sound and particles because it's nice and removes player from attached hooks
 					 */
-					data.getAttachedHook().remove(hook.getPlayer());
 
 					Vector velocity = event.getHitEntity().getLocation().subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(2.8);
 					velocity.setY(velocity.getY() - 0.4);
@@ -176,13 +169,15 @@ public class ODMLaunch implements Listener {
 			 * saves the distance between location and hook and stores 
 			 * the player for attached hooks
 			 */
-			if (data.getAttachedHook() == null || !data.getAttachedHook().contains(hook.getPlayer())) {
-				data.getAttachedHook().add(hook.getPlayer());
-				double distance = p.getLocation().distance(location);
-				if (distance > 70) {
-					distance = 70;
-				}
-				data.getLocationHooks().put(hook.getPlayer(), event.getEntity().getLocation());
+			if (hook.isLeft() && data.getLocationHookLeft().get(p.getUniqueId()) == null) {
+				data.getLocationHookLeft().put(p.getUniqueId(), location);
+			}
+
+			if (!hook.isLeft() && data.getLocationHookRight().get(p.getUniqueId()) == null) {
+				data.getLocationHookRight().put(p.getUniqueId(), location);
+			}
+
+			if (data.getLocationHookRight().get(p.getUniqueId()) == null || data.getLocationHookLeft().get(p.getUniqueId()) == null) {
 				return;
 			}
 			
@@ -191,15 +186,18 @@ public class ODMLaunch implements Listener {
 			 */
 
 			Location velocityLocation = location;
+			Location velocityLocation2;
 
-			if (data.getLocationHooks() != null && data.getLocationHooks().containsKey(hook.getPlayer())) {
-				Location velocityLocation2 = data.getLocationHooks().get(hook.getPlayer());
-				double midX = (velocityLocation2.getX() + velocityLocation.getX())/2;
-				double midY = (velocityLocation2.getY() + velocityLocation.getY())/2;
-				double midZ = (velocityLocation2.getZ() + velocityLocation.getZ())/2;
-				velocityLocation = new Location(velocityLocation.getWorld(), midX, midY, midZ);
-				data.getLocationHooks().remove(hook.getPlayer());
+			if (hook.isLeft()) {
+				velocityLocation2 = data.getLocationHookRight().get(p.getUniqueId());
+			} else {
+				velocityLocation2 = data.getLocationHookLeft().get(p.getUniqueId());
 			}
+
+			double midX = (velocityLocation2.getX() + velocityLocation.getX())/2;
+			double midY = (velocityLocation2.getY() + velocityLocation.getY())/2;
+			double midZ = (velocityLocation2.getZ() + velocityLocation.getZ())/2;
+			velocityLocation = new Location(velocityLocation.getWorld(), midX, midY, midZ);
 
 			Vector velocity = velocityLocation.clone().subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(3.8);
 
@@ -234,7 +232,6 @@ public class ODMLaunch implements Listener {
 		 */
 		player.getWorld().playSound(player.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 0.5f, 1f);
 		player.getWorld().spawnParticle(Particle.CLOUD, player.getLocation(), 20);
-		data.getAttachedHook().remove(hook.getPlayer());
 		
 		data.getPlayerTasksEffect().put(hook.getPlayer(), Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 			@Override
@@ -261,6 +258,12 @@ public class ODMLaunch implements Listener {
 							data.getHooks().remove(playerHook.getHookID());
 						}
 						data.getPlayerHooks().remove(hook.getPlayer());
+					}
+					if (data.getLocationHookLeft().containsKey(player.getUniqueId())) {
+						data.getLocationHookLeft().remove(player.getUniqueId());
+					}
+					if (data.getLocationHookRight().containsKey(player.getUniqueId())) {
+						data.getLocationHookRight().remove(player.getUniqueId());
 					}
 					if (data.getPlayerTasksLanding() != null && data.getPlayerTasksLanding().containsKey(hook.getPlayer())) {
 						data.getPlayerTasksLanding().remove(hook.getPlayer());

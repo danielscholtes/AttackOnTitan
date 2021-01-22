@@ -38,9 +38,6 @@ public class ODMGearEquip implements Listener {
 				if (data.getLastODMActivate().containsKey(player.getUniqueId())) {
 					data.getLastODMActivate().remove(player.getUniqueId());
 					return;
-				}	
-				if (data.getAttachedHook().contains(player.getUniqueId())) {
-					data.getAttachedHook().remove(player.getUniqueId());
 				}
 				if (data.getPlayerHooks().containsKey(player.getUniqueId())) {
 					for (Hook playerHook : data.getPlayerHooks().get(player.getUniqueId())) {
@@ -49,8 +46,11 @@ public class ODMGearEquip implements Listener {
 					}
 					data.getPlayerHooks().remove(player.getUniqueId());
 				}
-				if (data.getLocationHooks().containsKey(player.getUniqueId())) {
-					data.getLocationHooks().remove(player.getUniqueId());
+				if (data.getLocationHookLeft().containsKey(player.getUniqueId())) {
+					data.getLocationHookLeft().remove(player.getUniqueId());
+				}
+				if (data.getLocationHookRight().containsKey(player.getUniqueId())) {
+					data.getLocationHookRight().remove(player.getUniqueId());
 				}
 				if (data.getPlayerTasksLanding().containsKey(player.getUniqueId())) {
 					Bukkit.getScheduler().cancelTask(data.getPlayerTasksLanding().get(player.getUniqueId()));

@@ -74,7 +74,6 @@ public class AttackOnTitan extends JavaPlugin {
 		musicPlayer = new MusicPlayer();
 		
 		getServer().getPluginManager().registerEvents(new TitanZombieFire(), this);
-		getServer().getPluginManager().registerEvents(new SpinningSlashActivate(this), this);
 		getServer().getPluginManager().registerEvents(new ODMGearActivate(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new ODMLaunch(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new LogoutEvents(odmData, titanData, musicPlayer), this);
