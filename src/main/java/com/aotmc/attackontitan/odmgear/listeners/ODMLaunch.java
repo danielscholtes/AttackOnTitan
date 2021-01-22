@@ -189,9 +189,9 @@ public class ODMLaunch implements Listener {
 			/*
 			 * Gets the middle distance between the two distances
 			 */
-			
+
 			Location velocityLocation = location;
-			
+
 			if (data.getLocationHooks() != null && data.getLocationHooks().containsKey(hook.getPlayer())) {
 				Location velocityLocation2 = data.getLocationHooks().get(hook.getPlayer());
 				double midX = (velocityLocation2.getX() + velocityLocation.getX())/2;
@@ -200,11 +200,16 @@ public class ODMLaunch implements Listener {
 				velocityLocation = new Location(velocityLocation.getWorld(), midX, midY, midZ);
 				data.getLocationHooks().remove(hook.getPlayer());
 			}
-			
-			Vector velocity = velocityLocation.subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(3.8);
-			
-			launchPlayer(p, hook, velocity);
-			
+
+			Vector velocity = velocityLocation.clone().subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(3.8);
+
+			double distance = velocityLocation.distance(p.getLocation());
+			System.out.println(distance);
+			if (distance < 10) {
+				launchPlayer(p, hook, velocity.multiply((distance/10)));
+				return;
+			}
+			launchPlayer(p, hook, velocity.multiply((1 + (distance/400))));
 			return;
 		}
 		
