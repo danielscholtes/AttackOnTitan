@@ -204,7 +204,6 @@ public class ODMLaunch implements Listener {
 			Vector velocity = velocityLocation.clone().subtract(Bukkit.getPlayer(hook.getPlayer()).getLocation()).toVector().normalize().multiply(3.8);
 
 			double distance = velocityLocation.distance(p.getLocation());
-			System.out.println(distance);
 			if (distance < 10) {
 				launchPlayer(p, hook, velocity.multiply((distance/10)));
 				return;
