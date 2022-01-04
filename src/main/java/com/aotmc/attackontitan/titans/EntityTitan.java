@@ -13,10 +13,10 @@ public class EntityTitan extends EntityGiantZombie {
     }
 
     protected void initPathfinder() {
-        this.goalSelector.a(8, (PathfinderGoal)new PathfinderGoalLookAtPlayer((EntityInsentient)this, EntityHuman.class, 0.0F));
-        this.goalSelector.a(7, (PathfinderGoal)new PathfinderGoalRandomStrollLand((EntityCreature)this, 0.5D));
-        this.goalSelector.a(1, (PathfinderGoal)new PathfinderGoalMeleeAttack((EntityCreature)this, 0.5D, false));
-        this.targetSelector.a(2, (PathfinderGoal)new PathfinderGoalNearestAttackableTarget((EntityInsentient)this, EntityHuman.class, true));
+        this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 0.0F));
+        this.goalSelector.a(7, new PathfinderGoalRandomStrollLand(this, 0.5D));
+        this.goalSelector.a(1, new PathfinderGoalMeleeAttack(this, 0.5D, false));
+        this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget(this, EntityHuman.class, true));
     }
 
     public void tick() {
