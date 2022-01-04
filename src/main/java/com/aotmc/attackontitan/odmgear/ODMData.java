@@ -1,5 +1,6 @@
 package com.aotmc.attackontitan.odmgear;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,6 +9,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
+import com.aotmc.attackontitan.general.util.Utils;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -38,7 +42,10 @@ public class ODMData {
 	private Map<UUID, Integer> playerTasksEffect = new HashMap<UUID, Integer>();
 
 	// List of all players currently boosting
-	private Set<UUID> boosting = new HashSet<UUID>();
+	private Set<UUID> boosting = new HashSet<>();
+
+	// List of all players currently on a cooldown
+	private Set<UUID> boostCooldown = new HashSet<>();
 	
 	private Map<UUID, ArmorStand> wearingODM = new HashMap<UUID, ArmorStand>();
 	
@@ -91,14 +98,11 @@ public class ODMData {
 			}
 		}, 3L, 1L);
 	}
-	
+
 	public void startAlignODMTask() {
-		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
-			@Override
-			public void run() {
-				for (UUID uuid : wearingODM.keySet()) {
-					wearingODM.get(uuid).setRotation(Bukkit.getPlayer(uuid).getLocation().getYaw(), wearingODM.get(uuid).getLocation().getPitch());
-				}
+		Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+			for (UUID uuid : wearingODM.keySet()) {
+				wearingODM.get(uuid).setRotation(Bukkit.getPlayer(uuid).getLocation().getYaw(), wearingODM.get(uuid).getLocation().getPitch());
 			}
 		}, 3L, 5L);
 	}
@@ -116,7 +120,7 @@ public class ODMData {
 			}
 		}, 3L, 7L);
 	}
-	
+
 	public Map<UUID, ArmorStand> getWearingODM() {
 		return wearingODM;
 	}
@@ -172,6 +176,15 @@ public class ODMData {
 	 */
 	public Set<UUID> getBoosting() {
 		return boosting;
+	}
+
+	/**
+	 * Returns list of all players who are on a boosting cooldown
+	 *
+	 * @return		list of all players who on a boosting cooldown
+	 */
+	public Set<UUID> getBoostCooldown() {
+		return boostCooldown;
 	}
 	
 	public Map<UUID, Long> getLastODMActivate() {

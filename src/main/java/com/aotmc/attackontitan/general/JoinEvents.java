@@ -1,5 +1,7 @@
 package com.aotmc.attackontitan.general;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -11,6 +13,9 @@ import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.general.util.Utils;
 import com.aotmc.attackontitan.odmgear.ODMData;
 import com.codeitforyou.lib.api.item.ItemUtil;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 
 public class JoinEvents implements Listener {
 	
@@ -31,15 +36,11 @@ public class JoinEvents implements Listener {
 		}
 		
 		Player player = event.getPlayer();
-		
-		Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), new Runnable() {
-			
-			@Override
-			public void run() {
-				ArmorStand armorStand = Utils.createODMArmorStand(player.getLocation());
-				player.addPassenger(armorStand);
-				odmData.getWearingODM().put(player.getUniqueId(), armorStand);
-			}
+
+		Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), () -> {
+			ArmorStand armorStand = Utils.createODMArmorStand(player.getLocation());
+			player.addPassenger(armorStand);
+			odmData.getWearingODM().put(player.getUniqueId(), armorStand);
 		}, 5L);
 	}
 

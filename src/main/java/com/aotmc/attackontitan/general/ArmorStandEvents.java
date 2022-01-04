@@ -1,5 +1,7 @@
 package com.aotmc.attackontitan.general;
 
+import com.aotmc.attackontitan.AttackOnTitan;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -56,6 +58,7 @@ public class ArmorStandEvents implements Listener {
 		if (data.getWearingODM() == null || !data.getWearingODM().containsKey(player.getUniqueId())) {
 			return;
 		}
+
 		event.setCancelled(true);
 	}
 

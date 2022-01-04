@@ -4,15 +4,15 @@ import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import net.minecraft.server.v1_16_R3.Entity;
+import net.minecraft.server.v1_16_R3.EntityZombie;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Chicken;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Giant;
-import org.bukkit.entity.Slime;
-import org.bukkit.entity.Zombie;
+import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
+import org.bukkit.entity.*;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -22,9 +22,8 @@ import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.general.util.Utils;
 
 public class Titan {
-	
+
 	private Giant giant;
-	private Zombie zombie;
 	private Slime slime;
 	private int size;
 	private TitanType titanType;
@@ -34,8 +33,16 @@ public class Titan {
 	private TitanData data;
 	private UUID grabbedPlayer;
 
-	public Titan(Location spawnLocation, TitanType titanType, int size, TitanData data) {
-		this.size = size;
+	public Titan(Location spawnLocation, TitanType titanType, TitanData data) {
+		if (titanType == TitanType.LARGE) {
+			size = AttackOnTitan.getInstance().getRandom().nextInt((15 - 11) + 1) + 11;
+		}
+		if (titanType == TitanType.MEDIUM) {
+			size = AttackOnTitan.getInstance().getRandom().nextInt((10 - 7) + 1) + 7;
+		}
+		if (titanType == TitanType.SMALL) {
+			size = AttackOnTitan.getInstance().getRandom().nextInt((6 - 3) + 1) + 3;
+		}
 		this.titanType = titanType;
 		this.data = data;
 		spawnTitan(spawnLocation);
@@ -44,46 +51,43 @@ public class Titan {
 
 	@SuppressWarnings("deprecation")
 	public void spawnTitan(Location spawnLocation) {
-		zombie = (Zombie) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.ZOMBIE);
+		/*zombie = (Zombie) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.ZOMBIE);
 		zombie.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
 		zombie.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 1, false, false));
 		zombie.setSilent(true);
 		zombie.setCustomNameVisible(false);
 		zombie.setCanPickupItems(false);
 		zombie.setInvulnerable(true);
-		zombie.setTarget(null);
+		zombie.setAI(true);
 		zombie.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
 		zombie.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
 		if (zombie.getVehicle() != null) {
 			zombie.getVehicle().remove();
 		}
-		zombie.setPersistent(false);
-		
-		giant = (Giant) spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.GIANT);
+		zombie.setPersistent(false);*/
+
+		EntityTitan titan = new EntityTitan(spawnLocation.getWorld());
+		titan.setPositionRotation(spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ(), spawnLocation.getYaw(), spawnLocation.getPitch());
+		((CraftWorld)spawnLocation.getWorld()).getHandle().addEntity(titan, CreatureSpawnEvent.SpawnReason.CUSTOM);
+		giant = (Giant) Bukkit.getEntity(titan.getUniqueID());
 		giant.setSilent(true);
 		giant.setCustomNameVisible(true);
 		giant.setCustomName(Utils.color("&6" + size + " Meter Titan"));
 		giant.setCanPickupItems(false);
 		giant.setInvulnerable(true);
-		giant.setAI(false);
 		giant.setPersistent(false);
 		
-		slime = (Slime) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 7.8D, 0D), EntityType.SLIME);
-		slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
+		slime = (Slime) spawnLocation.getWorld().spawnEntity(spawnLocation.add(0D, 7.5D, 0D), EntityType.SLIME);
 		slime.setSize(6);
 		slime.setCustomNameVisible(false);
 		slime.setCanPickupItems(false);
 		slime.setAI(false);
 		slime.setGravity(false);
-		slime.setMaxHealth(20);
+		slime.setMaxHealth(size * 100);
 		slime.setHealth(slime.getMaxHealth());
 		slime.setPersistent(false);
-		Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), new Runnable() {
-			@Override
-			public void run() {
-				slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
-				slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
-			}
+		Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), () -> {
+			slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
 		}, 3L);
 		data.getTitans().put(slime.getEntityId(), this);
 	}
@@ -102,20 +106,8 @@ public class Titan {
 	public Slime getSlime() {
 		return this.slime;
 	}
-	
-	public Zombie getZombie() {
-		return this.zombie;
-	}
 
 	public void syncEntities() {
-		for (int i = 1; i <= 10; i++) {
-			if (this.zombie.getLocation().add(0D, i, 0D).getBlock().getType() != Material.AIR) {
-				this.zombie.teleport(slime.getLocation().add(0D, -7.8D, 0D));
-				break;
-			}
-		}
-		this.giant.teleport(this.zombie);
-
 		float nang = this.giant.getLocation().getYaw() + 90;
 
 		if (nang < 0) {
@@ -170,6 +162,7 @@ public class Titan {
 		grabEntity.setCustomNameVisible(false);
 		grabEntity.setGravity(false);
 		grabEntity.setSilent(true);
+		grabEntity.setPersistent(false);
 		grabEntity.addPassenger(Bukkit.getPlayer(uuid));
 		grabEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(0);
 		data.getGrabbedPlayers().put(uuid, grabEntity.getEntityId());
@@ -183,6 +176,7 @@ public class Titan {
 						data.getGrabbedPlayers().remove(uuid);
 					}
 					isGrabbing = false;
+					grabEntity.remove();
 					this.cancel();
 					return;
 				}
@@ -194,6 +188,7 @@ public class Titan {
 						data.getGrabbedPlayers().remove(uuid);
 					}
 					isGrabbing = false;
+					grabEntity.remove();
 					this.cancel();
 					return;
 				}
@@ -214,7 +209,6 @@ public class Titan {
 		}
 		this.slime.remove();
 		this.giant.remove();
-		this.zombie.remove();
 		if (grabEntity != null) {
 			if (grabbedPlayer != null){
 				this.grabEntity.removePassenger(Bukkit.getPlayer(grabbedPlayer));

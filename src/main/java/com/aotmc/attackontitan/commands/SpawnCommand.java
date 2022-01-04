@@ -2,6 +2,8 @@ package com.aotmc.attackontitan.commands;
 
 import java.util.Arrays;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 
 import com.aotmc.attackontitan.AttackOnTitan;
@@ -28,13 +30,13 @@ public class SpawnCommand {
 		sender.sendMessage(Utils.color("&cAdmin &8» &7You have spawned a &2" + titanType + " &7Titan!"));
 		switch (titanType) {
 			case "SMALL":
-				new Titan(sender.getLocation(), TitanType.SMALL, AttackOnTitan.getInstance().getRandom().nextInt((6 - 2) + 1) + 2, titanData);
+				new Titan(sender.getLocation(), TitanType.SMALL, titanData);
 				return;
 			case "MEDIUM":
-				new Titan(sender.getLocation(), TitanType.MEDIUM, AttackOnTitan.getInstance().getRandom().nextInt((10 - 7) + 1) + 7, titanData);
+				new Titan(sender.getLocation(), TitanType.MEDIUM, titanData);
 				return;
 			case "LARGE":
-				new Titan(sender.getLocation(), TitanType.LARGE, AttackOnTitan.getInstance().getRandom().nextInt((15 - 11) + 1) + 11, titanData);
+				new Titan(sender.getLocation(), TitanType.LARGE, titanData);
 				return;
 			default:
 				return;

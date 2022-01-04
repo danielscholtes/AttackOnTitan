@@ -3,12 +3,19 @@ package com.aotmc.attackontitan.odmgear;
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
+import com.codeitforyou.lib.api.item.ItemBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftSnowball;
+import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Silverfish;
 import org.bukkit.entity.Snowball;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -25,7 +32,6 @@ public class Hook {
 	private UUID hookID;
 	private boolean left;
 	private AttackOnTitan plugin;
-	private Vector playerVector;
 	private Silverfish playerEntity;
 	private Vector hookVector;
 	
@@ -34,7 +40,6 @@ public class Hook {
 		this.left = left;
 		this.hookID = UUID.randomUUID();
 		this.plugin = plugin;
-		this.playerVector = createVector();
 	}
 
 	/**
@@ -59,6 +64,7 @@ public class Hook {
 		playerEntity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0));
 		playerEntity.setSilent(true);
 		playerEntity.setPersistent(false);
+		playerEntity.setAI(false);
 		
 		/*
 		 * Creates the hook
@@ -68,14 +74,25 @@ public class Hook {
 		projectile.setShooter(p);
 		projectile.setMetadata("HookID", new FixedMetadataValue(plugin, hookID.toString()));
 		projectile.setPersistent(false);
-		
+		ItemStack item = new ItemStack(Material.SNOWBALL);
+		ItemMeta meta = item.getItemMeta();
+
+		if (meta != null) {
+			meta.setCustomModelData(3);
+			item.setItemMeta(meta);
+		}
+
+		net.minecraft.server.v1_16_R3.EntitySnowball entitySnowball = ((CraftSnowball) projectile).getHandle();
+		net.minecraft.server.v1_16_R3.ItemStack stack = CraftItemStack.asNMSCopy(item);
+		entitySnowball.setItem(stack);
+
 		/*
 		 * Calculates vector and shoots the hook
 		 */
 		if (!fromPlayer) {
 			double yaw;
 			double pitch = ((p.getLocation().getPitch() + 88) * Math.PI) / 180;
-			if (left) {
+			if (!left) {
 				if (wide) {
 					yaw = ((p.getLocation().getYaw() + 115) * Math.PI) / 180;
 				} else {
@@ -138,26 +155,6 @@ public class Hook {
 			playerEntity.remove();
 		}
 	}
-
-
-	/**
-	 * Calculates and sets the vector for player to be shot at
-	 */
-	private Vector createVector() {
-		if (Bukkit.getPlayer(player) == null) {
-			return null;
-		}
-		
-		Player p = Bukkit.getPlayer(player);
-		
-		double yaw = ((p.getEyeLocation().getYaw() + 90)  * Math.PI) / 180;
-		double pitch = ((p.getEyeLocation().getPitch() + 77) * Math.PI) / 180;
-		double x = Math.sin(pitch) * Math.cos(yaw);
-		double y = Math.sin(pitch) * Math.sin(yaw);
-		double z = Math.cos(pitch);
-		
-		return new Vector(x, z, y).normalize();
-	}
 	
 	/**
 	 * Returns the player UUID set for this hook
@@ -175,16 +172,6 @@ public class Hook {
 	 */
 	public UUID getHookID() {
 		return hookID;
-	}
-
-	/**
-	 * Returns the vector that was calculated for the player
-	 * The player will be shot with this velocity
-	 *
-	 * @return		vector for player
-	 */
-	public Vector getPlayerVector() {
-		return playerVector;
 	}
 
 	/**

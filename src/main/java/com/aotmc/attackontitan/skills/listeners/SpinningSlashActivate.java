@@ -1,10 +1,10 @@
 package com.aotmc.attackontitan.skills.listeners;
 
-import net.minecraft.server.v1_16_R2.DataWatcher;
-import net.minecraft.server.v1_16_R2.DataWatcherRegistry;
-import net.minecraft.server.v1_16_R2.EntityPlayer;
+import net.minecraft.server.v1_16_R3.DataWatcher;
+import net.minecraft.server.v1_16_R3.DataWatcherRegistry;
+import net.minecraft.server.v1_16_R3.EntityPlayer;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -43,6 +43,10 @@ public class SpinningSlashActivate implements Listener {
 		 * Checks if player is using their main hand
 		 */
 		if (event.getHand() != EquipmentSlot.HAND) {
+			return;
+		}
+
+		if (event.getPlayer().isSneaking()) {
 			return;
 		}
 		

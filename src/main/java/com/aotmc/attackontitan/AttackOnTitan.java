@@ -4,7 +4,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.UUID;
+import java.util.logging.Logger;
 
+import com.aotmc.attackontitan.materials.PlayerListener;
+import com.aotmc.attackontitan.upgrade.UpgradeCommand;
+import com.aotmc.attackontitan.general.*;
+import com.aotmc.attackontitan.materials.MaterialData;
+import com.aotmc.attackontitan.odmgear.listeners.*;
+import com.aotmc.attackontitan.titans.*;
+import com.aotmc.attackontitan.upgrade.UpgradeListener;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.SoundCategory;
@@ -15,14 +24,10 @@ import org.bukkit.entity.Giant;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.Zombie;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.aotmc.attackontitan.commands.listener.ConverterListener;
 import com.aotmc.attackontitan.commands.manager.CommandsManager;
-import com.aotmc.attackontitan.general.ArmorStandEvents;
-import com.aotmc.attackontitan.general.JoinEvents;
-import com.aotmc.attackontitan.general.LogoutEvents;
-import com.aotmc.attackontitan.general.WorldChangeListener;
 import com.aotmc.attackontitan.general.util.TabComplete;
 import com.aotmc.attackontitan.general.util.Utils;
 import com.aotmc.attackontitan.music.Music;
@@ -30,15 +35,7 @@ import com.aotmc.attackontitan.music.MusicPlayer;
 import com.aotmc.attackontitan.odmgear.Hook;
 import com.aotmc.attackontitan.odmgear.ODMData;
 import com.aotmc.attackontitan.odmgear.equip.ArmorListener;
-import com.aotmc.attackontitan.odmgear.listeners.BoostListener;
-import com.aotmc.attackontitan.odmgear.listeners.ODMGearActivate;
-import com.aotmc.attackontitan.odmgear.listeners.ODMGearEquip;
-import com.aotmc.attackontitan.odmgear.listeners.ODMLaunch;
 import com.aotmc.attackontitan.skills.listeners.SpinningSlashActivate;
-import com.aotmc.attackontitan.titans.Titan;
-import com.aotmc.attackontitan.titans.TitanData;
-import com.aotmc.attackontitan.titans.TitanEvents;
-import com.aotmc.attackontitan.titans.TitanZombieFire;
 import com.codeitforyou.lib.api.item.ItemUtil;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
@@ -52,6 +49,8 @@ public class AttackOnTitan extends JavaPlugin {
 	private static TitanData titanData;
 	private ODMData odmData;
 	private MusicPlayer musicPlayer;
+	private MaterialData materialData;
+	private static Economy econ = null;
 
 	/**
 	 * Runs when server is loaded
@@ -65,27 +64,42 @@ public class AttackOnTitan extends JavaPlugin {
 	 * Runs when server is enabled
 	 */
 	public void onEnable() {
+
+		if (!setupEconomy() ) {
+			Logger.getLogger("Minecraft").severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+
 		instance = this;
 		// Registers all events
 		titanData = new TitanData(this);
 		CommandsManager manager = new CommandsManager(this);
 		odmData = new ODMData(this);
+		materialData = new MaterialData(this);
 		
 		musicPlayer = new MusicPlayer();
-		
-		getServer().getPluginManager().registerEvents(new TitanZombieFire(), this);
+
+		getServer().getPluginManager().registerEvents(new SpinningSlashActivate(this), this);
 		getServer().getPluginManager().registerEvents(new ODMGearActivate(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new ODMLaunch(this, odmData), this);
 		getServer().getPluginManager().registerEvents(new LogoutEvents(odmData, titanData, musicPlayer), this);
-		getServer().getPluginManager().registerEvents(new TitanEvents(titanData), this);
+		getServer().getPluginManager().registerEvents(new TitanEvents(titanData, odmData, materialData), this);
 		getServer().getPluginManager().registerEvents(new BoostListener(odmData), this);
-		getServer().getPluginManager().registerEvents(new ConverterListener(), this);
 		getServer().getPluginManager().registerEvents(new ODMGearEquip(odmData), this);
 		getServer().getPluginManager().registerEvents(new ArmorListener(new ArrayList<>()), this);
 		getServer().getPluginManager().registerEvents(new JoinEvents(odmData), this);
+		getServer().getPluginManager().registerEvents(new DeathEvent(odmData), this);
 		getServer().getPluginManager().registerEvents(new ArmorStandEvents(odmData), this);
 		getServer().getPluginManager().registerEvents(new WorldChangeListener(musicPlayer), this);
-		
+		getServer().getPluginManager().registerEvents(new TeleportListener(odmData, titanData), this);
+		getServer().getPluginManager().registerEvents(new TitanSpawning(titanData), this);
+		getServer().getPluginManager().registerEvents(new UpgradeListener(materialData), this);
+		getServer().getPluginManager().registerEvents(new PlayerListener(materialData), this);
+		getServer().getPluginManager().registerEvents(new GasCanisterListener(), this);
+
+		getCommand("upgrade").setExecutor(new UpgradeCommand());
+
 		// Start all tasks
 		titanData.startFollowTask();
 		titanData.startPlayerDetectionTask();
@@ -97,49 +111,47 @@ public class AttackOnTitan extends JavaPlugin {
 		manager.registerCommand();
 		getCommand("aot").setTabCompleter(new TabComplete());
 		
-		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-			@Override
-			public void run() {
-				for (World world : Bukkit.getWorlds()) {
-					for (Entity entity : world.getEntities()) {
-						if (!(entity instanceof Slime) && !(entity instanceof Zombie) && !(entity instanceof Giant)) {
-							continue;
-						}
-						if (titanData.getTitans() != null && titanData.getTitans().containsKey(entity.getEntityId())) {
-							titanData.getTitans().get(entity.getEntityId()).remove();
-							titanData.getTitans().remove(entity.getEntityId());
-							continue;
-						}
-						
-						entity.remove();
+		Bukkit.getScheduler().runTaskLater(this, () -> {
+			for (World world : Bukkit.getWorlds()) {
+				for (Entity entity : world.getEntities()) {
+					if (!(entity instanceof Slime) && !(entity instanceof Zombie) && !(entity instanceof Giant)) {
+						continue;
 					}
-				}
-			}
-		}, 10L);
-		
-		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-			@Override
-			public void run() {
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					if (player.getGameMode() == GameMode.SURVIVAL) {
-						player.setAllowFlight(false);
-					}
-					
-					if (odmData.getWearingODM() != null && odmData.getWearingODM().containsKey(player.getUniqueId())) {
+					if (titanData.getTitans() != null && titanData.getTitans().containsKey(entity.getEntityId())) {
+						titanData.getTitans().get(entity.getEntityId()).remove();
+						titanData.getTitans().remove(entity.getEntityId());
 						continue;
 					}
 
-					if (player.getInventory().getLeggings() == null || !Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getLeggings(), "odm"))) {
-						continue;
-					}
-					
-					ArmorStand armorStand = Utils.createODMArmorStand(player.getLocation());
-					odmData.getWearingODM().put(player.getUniqueId(), armorStand);
-					player.addPassenger(armorStand);
-					player.setAllowFlight(true);
+					entity.remove();
 				}
 			}
+		}, 10L);
+
+		Bukkit.getScheduler().runTaskLater(this, () -> {
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				materialData.loadData(player.getUniqueId());
+
+				if (player.getGameMode() == GameMode.SURVIVAL) {
+					player.setAllowFlight(false);
+				}
+
+				if (odmData.getWearingODM() != null && odmData.getWearingODM().containsKey(player.getUniqueId())) {
+					continue;
+				}
+
+				if (player.getInventory().getLeggings() == null || !Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getLeggings(), "odm"))) {
+					continue;
+				}
+
+				ArmorStand armorStand = Utils.createODMArmorStand(player.getLocation());
+				odmData.getWearingODM().put(player.getUniqueId(), armorStand);
+				player.addPassenger(armorStand);
+				player.setAllowFlight(true);
+			}
 		}, 5L);
+
+		Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> materialData.saveAllData(), 5L, 20 * 60 * 30L);
 	}
 	
 	public void onDisable() {
@@ -189,6 +201,24 @@ public class AttackOnTitan extends JavaPlugin {
 				Bukkit.getPlayer(uuid).stopSound(music.getName(), SoundCategory.RECORDS);
 			}
 		}
+
+		materialData.saveAllData();
+	}
+
+	private boolean setupEconomy() {
+		if (getServer().getPluginManager().getPlugin("Vault") == null) {
+			return false;
+		}
+		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+		if (rsp == null) {
+			return false;
+		}
+		econ = rsp.getProvider();
+		return econ != null;
+	}
+
+	public static Economy getEconomy() {
+		return econ;
 	}
 
 	/**

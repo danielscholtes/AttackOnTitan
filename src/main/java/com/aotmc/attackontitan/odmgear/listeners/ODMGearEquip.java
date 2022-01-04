@@ -1,5 +1,7 @@
 package com.aotmc.attackontitan.odmgear.listeners;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -16,6 +18,8 @@ import com.aotmc.attackontitan.odmgear.ODMData;
 import com.aotmc.attackontitan.odmgear.equip.ArmorEquipEvent;
 import com.codeitforyou.lib.api.item.ItemUtil;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class ODMGearEquip implements Listener {
 	
 	private ODMData data;
@@ -29,7 +33,9 @@ public class ODMGearEquip implements Listener {
 		Player player = event.getPlayer();
 		if (event.getOldArmorPiece() != null && Boolean.valueOf(ItemUtil.getNBTString(event.getOldArmorPiece(), "odm"))) {
 			event.setUpdateOld(true);
-			event.setOldArmorPiece(Utils.createODMLeggings());
+			int tier = Integer.parseInt(ItemUtil.getNBTString(event.getOldArmorPiece(), "tier"));
+			int gas = Integer.parseInt(ItemUtil.getNBTString(event.getOldArmorPiece(), "gas"));
+			event.setOldArmorPiece(Utils.createODMLeggings(tier, gas));
 			if (event.getNewArmorPiece() == null || !Boolean.valueOf(ItemUtil.getNBTString(event.getNewArmorPiece(), "odm"))) {
 				if (data.getWearingODM().containsKey(player.getUniqueId())) {
 					data.getWearingODM().get(player.getUniqueId()).remove();
@@ -64,14 +70,12 @@ public class ODMGearEquip implements Listener {
 					player.setAllowFlight(false);
 					player.setFlying(false);
 				}
+				int newTier = Integer.parseInt(ItemUtil.getNBTString(event.getNewArmorPiece(), "tier"));
+				int newGas = Integer.parseInt(ItemUtil.getNBTString(event.getNewArmorPiece(), "gas"));
+
+				Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), () -> player.getEquipment().setLeggings(Utils.createODMHoe(newTier, newGas)), 2L);
 				return;
 			}
-			Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), new Runnable() {
-				@Override
-				public void run() {	
-					player.getEquipment().setLeggings(Utils.createODMHoe());
-				}
-			}, 2L);
 			return;
 		}
 		if (event.getNewArmorPiece() == null || !Boolean.valueOf(ItemUtil.getNBTString(event.getNewArmorPiece(), "odm"))) {
@@ -79,18 +83,17 @@ public class ODMGearEquip implements Listener {
 		}
 		
 		player.setAllowFlight(true);
-		
+
+		int tier = Integer.parseInt(ItemUtil.getNBTString(event.getNewArmorPiece(), "tier"));
+		int gas = Integer.parseInt(ItemUtil.getNBTString(event.getNewArmorPiece(), "gas"));
+
 		ArmorStand armorStand = Utils.createODMArmorStand(player.getLocation());
 		player.addPassenger(armorStand);
 		data.getWearingODM().put(player.getUniqueId(), armorStand);
 		event.setNewArmorPiece(new ItemStack(Material.AIR));
 		event.setUpdateNew(true);
-		Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), new Runnable() {
-			@Override
-			public void run() {
-				player.getEquipment().setLeggings(Utils.createODMHoe());
-			}
-		}, 2L);
+
+		Bukkit.getScheduler().runTaskLater(AttackOnTitan.getInstance(), () -> player.getEquipment().setLeggings(Utils.createODMHoe(tier, gas)), 2L);
 	}
 
 }

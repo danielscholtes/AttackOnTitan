@@ -1,6 +1,7 @@
 package com.aotmc.attackontitan.odmgear.listeners;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Handler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
@@ -34,7 +35,12 @@ public class ODMGearActivate implements Listener {
 	@EventHandler
 	public void onShootHook(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if (event.getAction() != Action.LEFT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_AIR) {
+
+		if (event.getHand() != EquipmentSlot.HAND) {
+			return;
+		}
+
+		if (event.getAction() == Action.PHYSICAL) {
 			return;
 		}
 
@@ -42,7 +48,7 @@ public class ODMGearActivate implements Listener {
 			return;
 		}
 
-		boolean left = (event.getAction() == Action.LEFT_CLICK_AIR);
+		boolean left = (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK);
 
 		if (player.getInventory().getLeggings() == null || !Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getLeggings(), "odm"))) {
 			return;
@@ -84,7 +90,11 @@ public class ODMGearActivate implements Listener {
 		if (player.getInventory().getLeggings() == null || !Boolean.valueOf(ItemUtil.getNBTString(player.getInventory().getLeggings(), "odm"))) {
 			return;
 		}
-		
+
+		if (data.getLastODMActivate().containsKey(player.getUniqueId()) && data.getLastODMActivate().get(player.getUniqueId()) > System.currentTimeMillis()) {
+			return;
+		}
+
 		disableODM(player, true);
 		
 		/*
@@ -111,9 +121,6 @@ public class ODMGearActivate implements Listener {
 	 * lists and maps
 	 */
 	private void disableODM(Player player, boolean bothHooks) {
-		if (data.getLastODMActivate().containsKey(player.getUniqueId()) && data.getLastODMActivate().get(player.getUniqueId()) > System.currentTimeMillis()) {
-			return;
-		}
 		if (bothHooks) {
 			if (data.getPlayerHooks().containsKey(player.getUniqueId())) {
 				for (Hook playerHook : data.getPlayerHooks().get(player.getUniqueId())) {

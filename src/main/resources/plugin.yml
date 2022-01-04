@@ -4,4 +4,8 @@ version: 1.0
 description: Attack On Titan plugin
 main: com.aotmc.attackontitan.AttackOnTitan
 api-version: 1.15
-depend: [ProtocolLib]
+depend: [ProtocolLib, Essentials, Vault]
+
+commands:
+  upgrade:
+    description: Upgrade blades or ODM

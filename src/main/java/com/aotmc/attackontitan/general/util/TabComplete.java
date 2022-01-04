@@ -2,7 +2,7 @@ package com.aotmc.attackontitan.general.util;
 
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.blades.BladeType;
-import com.aotmc.attackontitan.materials.Materials;
+import com.aotmc.attackontitan.odmgear.ODMType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -47,25 +47,7 @@ public class TabComplete implements TabCompleter
             players.add(player.getName());
         }
 
-        if (args[0].equalsIgnoreCase("givematerial"))
-        {
-            if (args.length == 2)
-            {
-                return players;
-            }
-            else if (args.length == 3)
-            {
-                final List<String> materials = new ArrayList<>();
-
-                for (Materials material : Materials.values())
-                {
-                    materials.add(material.toString());
-                }
-
-                return materials;
-            }
-        }
-        else if (args[0].equalsIgnoreCase("spawn"))
+        if (args[0].equalsIgnoreCase("spawn"))
         {
             return Arrays.asList("SMALL", "MEDIUM", "LARGE");
         }
@@ -97,9 +79,19 @@ public class TabComplete implements TabCompleter
             {
                 return Collections.singletonList("give");
             }
-            else if (args.length == 3)
-            {
+            else if (args.length == 3) {
                 return players;
+            }
+            else if (args.length == 4)
+            {
+                final List<String> odm = new ArrayList<>();
+
+                for (ODMType odmType : ODMType.values())
+                {
+                    odm.add(odmType.toString());
+                }
+
+                return odm;
             }
         }
         return Collections.emptyList();

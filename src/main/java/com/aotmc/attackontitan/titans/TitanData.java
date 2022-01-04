@@ -12,6 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import com.aotmc.attackontitan.AttackOnTitan;
+import org.bukkit.entity.Zombie;
 
 public class TitanData {
 	
@@ -61,44 +62,35 @@ public class TitanData {
 		/*
 		 * Every 2 ticks makes the silverfish teleport to player
 		 */
-		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
-			@Override
-			public void run() {
-				if (titans != null) {
-					titanloop:
-					for (Titan titan : titans.values()) {
-						if (!titan.getGiant().isValid()) {
-							toRemove.add(titan);
+		Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+			if (titans != null) {
+				titanloop:
+				for (Titan titan : titans.values()) {
+					if (!titan.getGiant().isValid() || !titan.getSlime().isValid()) {
+						toRemove.add(titan);
+						continue titanloop;
+					}
+
+					/*
+					if (!titan.isGrabbing()) {
+						entityloop:
+						for (Entity entity : titan.getSlime().getNearbyEntities(5, 7, 5)) {
+							if (!(entity instanceof Player)) {
+								continue entityloop;
+							}
+							if (Math.random() < 0.4 && !grabbedPlayers.containsKey(entity.getUniqueId())) {
+								titan.grabPlayer((entity).getUniqueId());
+							}
 							continue titanloop;
 						}
-						/*if (!titan.isGrabbing()) {
-							entityloop:
-							for (Entity entity : titan.getSlime().getNearbyEntities(5, 7, 5)) {
-								if (!(entity instanceof Player)) {
-									continue entityloop;
-								}
-								if (Math.random() < 0.4 && !grabbedPlayers.containsKey(entity.getUniqueId())) {
-									titan.getZombie().setAI(true);
-									titan.grabPlayer((entity).getUniqueId());
-								}
-								continue titanloop;
-							}	
-						}*/
-						boolean chance = rand.nextBoolean();
-						if (chance) {
-							titan.getZombie().setAI(false);
-						} else {
-							titan.getZombie().setAI(true);
-						}
-						titan.getZombie().setTarget(null);
+					}*/
+				}
+				if (toRemove != null) {
+					for (Titan titan : toRemove) {
+						titans.remove(titan.getSlime().getEntityId());
+						titan.remove();
 					}
-					if (toRemove != null) {
-						for (Titan titan : toRemove) {
-							titans.remove(titan.getSlime().getEntityId());
-							titan.remove();
-						}
-						toRemove.clear();
-					}
+					toRemove.clear();
 				}
 			}
 		}, 3L, 20 * 5L).getTaskId();
