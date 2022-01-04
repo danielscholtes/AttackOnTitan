@@ -1,12 +1,17 @@
 package com.aotmc.attackontitan.odmgear;
 
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
+import com.aotmc.attackontitan.general.util.Utils;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -17,29 +22,34 @@ import org.bukkit.entity.Player;
 import com.aotmc.attackontitan.AttackOnTitan;
 
 public class ODMData {
-
+	
 	// Map of all active hooks
 	private Map<UUID, Hook> hooks = new WeakHashMap<UUID, Hook>();
 	
 	// Map of all players' hooks
-	private Map<UUID, List<Hook>> playerHooks = new WeakHashMap<UUID, List<Hook>>();
+	private Map<UUID, Set<Hook>> playerHooks = new HashMap<UUID, Set<Hook>>();
 	
 	// Map of all players' distances for first attached hook
-	private Map<UUID, Location> locationHooks = new WeakHashMap<UUID, Location>();
+	private Map<UUID, Location> locationRightHook = new HashMap<UUID, Location>();
+
+	// Map of all players' distances for first attached hook
+	private Map<UUID, Location> locationLeftHook = new HashMap<UUID, Location>();
 	
 	// Map of all players' tasks for landing
-	private Map<UUID, Integer> playerTasksLanding = new WeakHashMap<UUID, Integer>();
+	private Map<UUID, Integer> playerTasksLanding = new HashMap<UUID, Integer>();
 	
 	// Map of all players' tasks for potion effect
-	private Map<UUID, Integer> playerTasksEffect = new WeakHashMap<UUID, Integer>();
+	private Map<UUID, Integer> playerTasksEffect = new HashMap<UUID, Integer>();
 
-	// List of all players who have their first hook attached
-	private List<UUID> attachedHook = new ArrayList<>();
-	
 	// List of all players currently boosting
-	private List<UUID> boosting = new ArrayList<>();
+	private Set<UUID> boosting = new HashSet<>();
+
+	// List of all players currently on a cooldown
+	private Set<UUID> boostCooldown = new HashSet<>();
 	
-	private Map<UUID, ArmorStand> wearingODM = new WeakHashMap<UUID, ArmorStand>();
+	private Map<UUID, ArmorStand> wearingODM = new HashMap<UUID, ArmorStand>();
+	
+	private Map<UUID, Long> lastODMActivate = new HashMap<UUID, Long>();
 	
 	private AttackOnTitan plugin;
 	
@@ -88,14 +98,11 @@ public class ODMData {
 			}
 		}, 3L, 1L);
 	}
-	
+
 	public void startAlignODMTask() {
-		Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
-			@Override
-			public void run() {
-				for (UUID uuid : wearingODM.keySet()) {
-					wearingODM.get(uuid).setRotation(Bukkit.getPlayer(uuid).getLocation().getYaw(), wearingODM.get(uuid).getLocation().getPitch());
-				}
+		Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+			for (UUID uuid : wearingODM.keySet()) {
+				wearingODM.get(uuid).setRotation(Bukkit.getPlayer(uuid).getLocation().getYaw(), wearingODM.get(uuid).getLocation().getPitch());
 			}
 		}, 3L, 5L);
 	}
@@ -113,7 +120,7 @@ public class ODMData {
 			}
 		}, 3L, 7L);
 	}
-	
+
 	public Map<UUID, ArmorStand> getWearingODM() {
 		return wearingODM;
 	}
@@ -132,17 +139,16 @@ public class ODMData {
 	 * 
 	 * @return		map of all players' hooks
 	 */
-	public Map<UUID, List<Hook>> getPlayerHooks() {
+	public Map<UUID, Set<Hook>> getPlayerHooks() {
 		return playerHooks;
 	}
 
-	/**
-	 * Returns map of all location' distances for first attached hook
-	 * 
-	 * @return		map of all players' location for first attached hook
-	 */
-	public Map<UUID, Location> getLocationHooks() {
-		return locationHooks;
+	public Map<UUID, Location> getLocationHookRight() {
+		return locationRightHook;
+	}
+
+	public Map<UUID, Location> getLocationHookLeft() {
+		return locationLeftHook;
 	}
 
 	/**
@@ -164,21 +170,26 @@ public class ODMData {
 	}
 
 	/**
-	 * Returns list of all players who have their first hook attached
-	 * 
-	 * @return		list of all players who have their first hook attached
-	 */
-	public List<UUID> getAttachedHook() {
-		return attachedHook;
-	}
-
-	/**
 	 * Returns list of all players who are boosting
 	 * 
 	 * @return		list of all players who are boosting
 	 */
-	public List<UUID> getBoosting() {
+	public Set<UUID> getBoosting() {
 		return boosting;
 	}
+
+	/**
+	 * Returns list of all players who are on a boosting cooldown
+	 *
+	 * @return		list of all players who on a boosting cooldown
+	 */
+	public Set<UUID> getBoostCooldown() {
+		return boostCooldown;
+	}
+	
+	public Map<UUID, Long> getLastODMActivate() {
+		return lastODMActivate;
+	}
+
 	
 }

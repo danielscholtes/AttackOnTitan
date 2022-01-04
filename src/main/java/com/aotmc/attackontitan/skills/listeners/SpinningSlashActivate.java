@@ -1,7 +1,10 @@
 package com.aotmc.attackontitan.skills.listeners;
 
+import net.minecraft.server.v1_16_R3.DataWatcher;
+import net.minecraft.server.v1_16_R3.DataWatcherRegistry;
+import net.minecraft.server.v1_16_R3.EntityPlayer;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,10 +17,6 @@ import org.bukkit.potion.PotionEffectType;
 import com.aotmc.attackontitan.AttackOnTitan;
 import com.aotmc.attackontitan.general.util.Utils;
 import com.codeitforyou.lib.api.item.ItemUtil;
-
-import net.minecraft.server.v1_15_R1.DataWatcher;
-import net.minecraft.server.v1_15_R1.DataWatcherRegistry;
-import net.minecraft.server.v1_15_R1.EntityPlayer;
 
 public class SpinningSlashActivate implements Listener {
 
@@ -44,6 +43,10 @@ public class SpinningSlashActivate implements Listener {
 		 * Checks if player is using their main hand
 		 */
 		if (event.getHand() != EquipmentSlot.HAND) {
+			return;
+		}
+
+		if (event.getPlayer().isSneaking()) {
 			return;
 		}
 		
